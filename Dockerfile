@@ -56,7 +56,6 @@ USER cuahsi
 WORKDIR /home/cuahsi
 
 # Compile the NWM
-RUN wget http://public.cuahsi.org/nwm/wrf-hydro-nwm-1.2.tar.gz
 RUN tar -xf wrf-hydro-nwm-1.2.tar.gz
 ENV NETCDF=/usr/local
 RUN cd wrf_hydro_nwm/trunk/NDHMS && ./configure 6 && ./compile_offline_NoahMP.sh
