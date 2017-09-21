@@ -1,0 +1,22 @@
+###################################
+# WRF-Hydro Development docker
+# Purpose:
+#   1) Compile code on the host system (non-interactive mode)
+##     Usage
+#   2) Run code on the host system     (non-interactive mode)
+#   3) Interactive use. 
+#   
+# Authors: Tony Castronova, James McCreight
+# Email:  acastronova@cuahsi.org, jamesmcc@ucar.edu
+# Date:  8.29.2017, 9.15.2017
+###################################
+
+FROM wrf_hydro_dev
+
+MAINTAINER jamesmcc@ucar.edu
+
+####################################
+########## docker user #############
+####################################
+USER docker
+WORKDIR /wrf_hydro
