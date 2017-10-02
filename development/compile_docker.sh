@@ -12,23 +12,11 @@
 ## Default image is wrf_hydro_dev
 image=${1-wrf_hydro_dev}
 
-## grab the environment + absolute path to wrf_hydro_tools
-## get the path to wrf_hydro_tools
-whtPath=`grep "wrf_hydro_tools=" ~/.wrf_hydro_tools | cut -d '=' -f2 | tr -d ' '`
-source $whtPath/utilities/sourceMe.sh
-
-## Pass the envrionment
-envToPass="$(for i in `henv`; do echo "-e $i";done)"
-#envToPass="$envToPass -e LOCAL_USER_ID=`id -u $USER`"
-#printf -- "$envToPass"
-
-##directories to mount
-topLevWrfHydro=$(dirname $(dirname `pwd`))
-dirsToMnt="-v ${topLevWrfHydro}:/wrf_hydro -v $whtPath:/wrf_hydro_tools"
+## JLM:how do we know where this script is?
+source ~/WRF_Hydro/wrf_hydro_docker/development/prelude_to_docker_run.sh || exit 1
 
 ## pass the environment and the working dir to 
-docker run -t ${envToPass} ${dirsToMnt} $image compile
+docker run -it ${envToPass} ${dirsToMnt} $image compile
 ## JLM: support make/compileTag?
-## multithreaded make?
 
 exit 0
