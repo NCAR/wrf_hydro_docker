@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Purpose: Run WRF-Hydro using MPI in a docker container in-place on host.
+#          
+# Arguments:
+#    1: number of processors/cores, required.
+#    2: the binary, required.
+#    3: the name of the docker container image (optional, default=wrf_hydro_dev)
+#
+# Note: standard error and standard out are both teed, so they appear in terminal and
+#       on file, to wrf_hydro.stdout and wrf_hydro.stderr, respectively.
+#
+# Usage:
+# ./run_docker.sh 4 wrf_hydro.exe [some_other_image]
+
+# Default image is wrf_hydro_dev
+image=${3-wrf_hydro_dev}
+
+# JLM: how do we know where this script is?
+source ~/WRF_Hydro/wrf_hydro_docker/development/prelude_to_docker_run.sh || exit 1
+
+# pass the environment and the working dir to 
+docker run -it ${envToPass} ${dirsToMnt} $image run `pwd` $1 $2
+
+
+exit 0
