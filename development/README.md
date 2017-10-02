@@ -62,7 +62,7 @@ of that file has details:
 # ./compile_docker.sh [some_other_image]
 ```
 ## Usage Description:
-Simply run as a substitute for the standard `./compile_NoahMP.sh`
+Run as a substitute for the standard `./compile_NoahMP.sh`
     1. Call it from `wrf_hydro_model/trunk/NDHMS` (actually anywhere in a
        model repo will work).
     2. NOTE: it does not use setEnvars.sh. Compile options are set in the calling
@@ -90,6 +90,14 @@ of that file has details:
 # Usage:
 # ./run_docker.sh 4 wrf_hydro.exe [some_other_image]
 ```
+## Usage Description:
+Run as a substitute for mpiexec... sort of. Syntax is slightly
+different (no -n or -np argument and you dong have to `./` the binary)
+and standard output and error are handled for you with tee so that you
+also see the output on screen while it is running.
+
+Note that the `run_docker` command currently mounts OSX `/Users/` to `/Users` in
+the container.
 
 # Interactive Mode
 The function in `wrf_hydro_tools`
@@ -108,3 +116,8 @@ of that file has details:
 # Usage:
 # ./interactive_docker.sh [some_other_image]
 ```
+## Usage Description:
+Basically: enter the container at the same location where the command
+is issued. The `interactive_docker` command currently mounts OSX `/Users/` to `/Users` in
+the container. The initialization (entrypoint) script puts you in the
+working directory from which the command was called. 
