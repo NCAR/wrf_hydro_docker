@@ -7,7 +7,7 @@
 ## Dependencies:
 ##   wrf_hydro_tools repository installed locally. 
 ## Usage:
-## ./compile_docker.sh [some_other_image]
+## ./interactive_docker.sh [some_other_image]
 
 ## Default image is wrf_hydro_dev
 image=${1-wrf_hydro_dev}
