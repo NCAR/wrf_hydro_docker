@@ -36,10 +36,36 @@ RUN apt-get install -yq --no-install-recommends \
     m4 \
     make\ 
     libswitch-perl \ 
-    mpich \
     libopenmpi-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+#### MPICH INSTALLATION ####
+ARG MPICH_VERSION="3.2"
+ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx"
+ARG MPICH_MAKE_OPTIONS
+
+# Download, build, and install MPICH
+# apt-get install mpich seems to give mp but not mpi
+RUN mkdir /tmp/mpich-src
+WORKDIR /tmp/mpich-src
+RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
+      && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
+      && cd mpich-${MPICH_VERSION}  \
+      && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
+      && make ${MPICH_MAKE_OPTIONS} && make install \
+      && rm -rf /tmp/mpich-src
+
+# TEST MPICH
+#RUN mkdir /tmp/mpich-test
+#WORKDIR /tmp/mpich-test
+#COPY mpich-test .
+#RUN sh test.sh
+#RUN rm -rf /tmp/mpich-test
+
+#### CLEAN UP ####
+WORKDIR /
+#RUN rm -rf /tmp/*
 
 # install netcdf-C
 RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz -P /tmp  

@@ -36,12 +36,17 @@ if [[ "${1}" == 'compile' ]]; then
     
     ## Bring a runnable binary back to the host machine.
     ## JLM: WHY does this work of the in-place compilation is a permissions issue?
-    lastBin=`ls -rt Run/* | tail -n1`
-    chmod 777 $lastBin
-    cp -L  $lastBin /wrf_hydro/trunk/NDHMS/Run/.
-
+    if [[ $? -eq 0 ]]; then
+        lastBin=`ls -rt Run/* | tail -n1`
+        chmod 777 $lastBin
+        cp -L  $lastBin /wrf_hydro/trunk/NDHMS/Run/.
+    else
+        echo 'Compilation not successful'
+        exit 1
+    fi
+        
     ## Cleanup
-    rm -rf ~/wrf_hydro ~/.wrf_hydro_tools
+    ## rm -rf ~/wrf_hydro ~/.wrf_hydro_tools
     exit $?
     
 fi
@@ -99,6 +104,3 @@ if [[ "${1}" == 'interactive' ]]; then
     exit $?
 
 fi
-
-
-
