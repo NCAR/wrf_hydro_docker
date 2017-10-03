@@ -29,6 +29,9 @@ moved back to the HOST system. However, the intermediate,
 c-preprocessed files are not moved back to the host. So the state of
 the source repo (the untracked files) remains unchanged.  
 
+No one who cares about windows has yet to contribute to make this
+generalizable beyond OSX
+
 # Requirements
 
 The `wrf_hydro_tools` repository must be installed with the proper
@@ -43,6 +46,10 @@ jamesmcc@chimayo[541]:~> cat ~/.wrf_hydro_tools
 wrf_hydro_tools=~/WRF_Hydro/wrf_hydro_tools
 wrf_hydro_docker=~/WRF_Hydro/wrf_hydro_docker
 ```
+
+And, of course, the `wrf_hydro_tools/utilities/sourceMe.sh` file needs
+to be sourced (either manually or by your `~/.bash_profile`) for the
+functions to be available in your path.
 
 # Compile Mode
 The function in `wrf_hydro_tools`
@@ -121,3 +128,6 @@ Basically: enter the container at the same location where the command
 is issued. The `interactive_docker` command currently mounts OSX `/Users/` to `/Users` in
 the container. The initialization (entrypoint) script puts you in the
 working directory from which the command was called. 
+
+Note that you can not currently compile the code in a mounted HOST
+directory. See the Caveats section above.
