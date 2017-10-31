@@ -6,7 +6,7 @@ the docker container. The target audience is developers of the
 WRF-Hydro model.
 
 More specifically, code and the run directories are mounted to the container
-by shell commands which are presented as function in
+by shell commands which are presented as functions in
 `wrf_hydro_tools`. (These functions export working directories and the
 HOST user's environment to the docker container without any work on
 the user's part).

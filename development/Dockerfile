@@ -91,6 +91,13 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     git
 
 ###################################
+## DART stuff, untill I create a separate containder for it
+## Csh may also be a legacy WRF-Hydro dependency
+RUN apt-get install -yq --no-install-recommends \
+     tcsh
+RUN update-alternatives --config csh
+
+###################################
 ## create joedocker user
 RUN useradd -ms /bin/bash joedocker
 RUN usermod -aG sudo joedocker
