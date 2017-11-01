@@ -11,8 +11,9 @@ echo -e "\e[4;49;34m WRF-Hydro Development Docker: $1 mode \e[0m"
 ###################################
 ## setup wrf_hydro_tools
 echo "wrf_hydro_tools=/wrf_hydro_tools" > ~/.wrf_hydro_tools
+echo "# Following established in interface.sh entrypoint:" >> ~/.bashrc
 echo "source /wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
-echo "PS1=\"\e[0;49;34m\\u@\\h\e[0m:\\w> \"" >> ~/.bashrc
+echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> ~/.bashrc
 
 ###################################
 ## compile
@@ -98,6 +99,10 @@ if [[ "${1}" == 'interactive' ]]; then
     
     if [[ ! -z $2 ]]; then cd $2; fi
 
+    ## OSX: The mounting is setup to only include the requesting user from /Users/`whoami`
+    ##      Under other systems, this will fail silently (no way to detect HOST system?).
+    cp /Users/*/.wrf_hydro_tools ~/. > /dev/null 2>&1
+    
     exec /bin/bash
 
     #exec "$@"
