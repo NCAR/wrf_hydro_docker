@@ -33,7 +33,7 @@ RUN apt-get install -yq --no-install-recommends \
     libfontconfig1 \
     libxext6 \
     nco \
-	nano \
+    nano \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

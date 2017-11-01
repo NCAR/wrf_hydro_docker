@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build -t wrf_hydro_dev .
+docker build -t wrfhydro/dev .
 
 exit $?
