@@ -1,0 +1,23 @@
+database: 
+  image: postgres
+  volumes:
+      - /Volumes/d1/jmills/sandbox/pgData:/var/lib/postgresql/data
+  ports:
+    - "5430:5432"
+  environment:
+    - POSTGRES_PASSWORD=nwmadmin_test
+  restart: always
+
+
+shiny: 
+  image: rocker/shiny:latest 
+  ports: 
+    - "3838:3838"
+  restart: always
+  volumes:
+    - /Volumes/d1/jmills/sandbox/shinyapps:/srv/shiny-server/
+
+Rstudio:
+  image: rocker/rstudio
+  ports:
+    - "8787:8787"
