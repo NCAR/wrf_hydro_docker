@@ -1,45 +1,52 @@
 ###################################
-# Author: Tony Castronova <acastronova@cuahsi.org>
-# Author: Joe Mills <jmills@ucar.edu>
-# Date:  9.27.2017
+# WRF-Hydro Development docker
+# Purpose:
+#   1) Compile code on the host system (non-interactive mode)
+#   2) Run code on the host system     (non-interactive mode)
+#   3) Interactive use. 
+# The above is achieved through entrypoint and host-side scripting.
+#
+# Authors: Tony Castronova, James McCreight, Joe Mills
+# Email:  acastronova@cuahsi.org, jamesmcc@ucar.edu, jmills@ucar.edu
+# Date:  8.29.2017, 9.15.2017, 10.1.2017
 ###################################
 
 FROM ubuntu:16.04
-
-MAINTAINER jmills@ucar.edu
-USER root
+MAINTAINER jamesmcc@ucar.edu
 
 ####################################
 ########## ROOT USER  ##############
 ####################################
-ARG MPICH_VERSION="3.2"
-ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx"
-ARG MPICH_MAKE_OPTIONS
+USER root
 
-#Get all library dependencies for NCL, wrf_hydro, and mpich
+###################################
+## System-wide updates
 RUN apt-get update
+
+
+####################################
+## WRF-Hydro dependencies
 RUN apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
     ca-certificates \
-    vim \
-    ncview \
+    vim \ 
     libhdf5-dev \
     gfortran \
     m4 \
-    make\
-    libswitch-perl \
-    libxrender1 \
-    libfontconfig1 \
-    libxext6 \
-    nco \
-    nano \
+    make\ 
+    libswitch-perl \ 
+    libopenmpi-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
+#### MPICH INSTALLATION ####
+ARG MPICH_VERSION="3.2"
+ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx"
+ARG MPICH_MAKE_OPTIONS
 
 # Download, build, and install MPICH
+# apt-get install mpich seems to give mp but not mpi
 RUN mkdir /tmp/mpich-src
 WORKDIR /tmp/mpich-src
 RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
@@ -49,13 +56,12 @@ RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VE
       && make ${MPICH_MAKE_OPTIONS} && make install \
       && rm -rf /tmp/mpich-src
 
-#### TEST MPICH INSTALLATION ####
+# TEST MPICH
 #RUN mkdir /tmp/mpich-test
 #WORKDIR /tmp/mpich-test
 #COPY mpich-test .
 #RUN sh test.sh
 #RUN rm -rf /tmp/mpich-test
-
 
 #### CLEAN UP ####
 WORKDIR /
@@ -79,27 +85,33 @@ RUN cd /tmp/netcdf-fortran-4.4.4/ && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCD
 RUN cd /tmp/netcdf-fortran-4.4.4 && make
 RUN cd /tmp/netcdf-fortran-4.4.4 && make install
 
+###################################
+## wrf_hydro_tools dependencies
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    git
+
+###################################
+## DART stuff, untill I create a separate containder for it
+## Csh may also be a legacy WRF-Hydro dependency
+RUN apt-get install -yq --no-install-recommends \
+     tcsh
+RUN update-alternatives --config csh
+
+###################################
+## create joedocker user
+RUN useradd -ms /bin/bash joedocker
+RUN usermod -aG sudo joedocker
 ENV NETCDF=/usr/local
 
-# install NCL
-RUN wget https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=154af009-fa02-11e6-a976-00c0f03d5b7c \
-  && mkdir /usr/local/ncl-6.4.0 \
-  && tar -xzf fileDownload.html?logicalFileId=154af009-fa02-11e6-a976-00c0f03d5b7c -C /usr/local/ncl-6.4.0 \
-  && rm fileDownload.html?logicalFileId=154af009-fa02-11e6-a976-00c0f03d5b7c
-
-#Get the model code from https://github.com/NCAR/wrf_hydro_nwm/archive/master.zip
-ADD wrf_hydro_source /home/cuahsi/wrf_hydro_source
-RUN chmod 777 -R /home/cuahsi/wrf_hydro_source
-
-#Add cuahsi user
-RUN useradd -ms /bin/bash cuahsi
-RUN usermod -aG sudo cuahsi
+###################################
+## wrf-hydro development docker interface script
+COPY ./interface.sh /.
 
 ####################################
-########## CUAHSI USER #############
+######### joedocker user ###########
 ####################################
-USER cuahsi
-WORKDIR /home/cuahsi
-ENV NETCDF=/usr/local
-ENV NCARG_ROOT=/usr/local/ncl-6.4.0
-ENV PATH=$NCARG_ROOT/bin:$PATH
+USER joedocker
+RUN cp /interface.sh ~/.
+RUN cd $HOME
+ENTRYPOINT ["/interface.sh"]
+CMD ["interactive"]

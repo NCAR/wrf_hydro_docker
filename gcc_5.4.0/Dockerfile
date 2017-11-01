@@ -1,17 +1,12 @@
 ###################################
-# WRF-Hydro Development docker
-# Purpose:
-#   1) Compile code on the host system (non-interactive mode)
-#   2) Run code on the host system     (non-interactive mode)
-#   3) Interactive use. 
-# The above is achieved through entrypoint and host-side scripting.
-#
-# Authors: Tony Castronova, James McCreight, Joe Mills
-# Email:  acastronova@cuahsi.org, jamesmcc@ucar.edu, jmills@ucar.edu
-# Date:  8.29.2017, 9.15.2017, 10.1.2017
+# Author: Tony Castronova <acastronova -at- cuahsi.org>
+# Author: Joe Mills <jmills -at- ucar.edu>
+# Author: James McCreight <jamesmcc -at- ucar.edu>
+# Date:  11.1.17
 ###################################
 
-FROM ubuntu:16.04
+FROM ubuntu:17.04
+
 MAINTAINER jamesmcc@ucar.edu
 
 ####################################
@@ -19,13 +14,14 @@ MAINTAINER jamesmcc@ucar.edu
 ####################################
 USER root
 
-###################################
-## System-wide updates
 RUN apt-get update
 
+## Keep the large pieces away from the small pieces to speed up re-builds.
 
 ####################################
 ## WRF-Hydro dependencies
+
+## Core wrf-hydro compiler stuff
 RUN apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
@@ -35,39 +31,29 @@ RUN apt-get install -yq --no-install-recommends \
     gfortran \
     m4 \
     make\ 
-    libswitch-perl \ 
-    libopenmpi-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libswitch-perl 
 
-#### MPICH INSTALLATION ####
+## Download, build, and install MPICH
 ARG MPICH_VERSION="3.2"
 ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx"
 ARG MPICH_MAKE_OPTIONS
-
-# Download, build, and install MPICH
-# apt-get install mpich seems to give mp but not mpi
 RUN mkdir /tmp/mpich-src
 WORKDIR /tmp/mpich-src
 RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
-      && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
-      && cd mpich-${MPICH_VERSION}  \
-      && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
-      && make ${MPICH_MAKE_OPTIONS} && make install \
-      && rm -rf /tmp/mpich-src
+    && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
+    && cd mpich-${MPICH_VERSION}  \
+    && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
+    && make ${MPICH_MAKE_OPTIONS} && make install \
+    && rm -rf /tmp/mpich-src
 
-# TEST MPICH
+#### TEST MPICH INSTALLATION ####
 #RUN mkdir /tmp/mpich-test
 #WORKDIR /tmp/mpich-test
 #COPY mpich-test .
 #RUN sh test.sh
 #RUN rm -rf /tmp/mpich-test
 
-#### CLEAN UP ####
-WORKDIR /
-#RUN rm -rf /tmp/*
-
-# install netcdf-C
+## install netcdf-C
 RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz -P /tmp  
 RUN tar -xf /tmp/netcdf-4.4.1.1.tar.gz -C /tmp
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
@@ -85,26 +71,20 @@ RUN cd /tmp/netcdf-fortran-4.4.4/ && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCD
 RUN cd /tmp/netcdf-fortran-4.4.4 && make
 RUN cd /tmp/netcdf-fortran-4.4.4 && make install
 
-###################################
-## wrf_hydro_tools dependencies
-RUN apt-get update && apt-get -y --no-install-recommends install \
-    git
-
-###################################
-## create joedocker user
-RUN useradd -ms /bin/bash joedocker
-RUN usermod -aG sudo joedocker
 ENV NETCDF=/usr/local
 
-###################################
-## wrf-hydro development docker interface script
-COPY ./interface.sh /.
+## Extras to make it nice/convenient
+## May separate these into a separate container
+RUN apt-get install -yq --no-install-recommends \
+    git \
+    nano \
+    tcsh \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-####################################
-######### joedocker user ###########
-####################################
-USER joedocker
-RUN cp /interface.sh ~/.
-RUN cd $HOME
-ENTRYPOINT ["/interface.sh"]
-CMD ["interactive"]
+RUN update-alternatives --config csh
+
+#### CLEAN UP ####
+WORKDIR /
+#RUN rm -rf /tmp/*
+
