@@ -14,7 +14,7 @@
 # ./run_docker.sh 4 wrf_hydro.exe [some_other_image]
 
 # Default image is wrf_hydro_dev
-image=${3-wrf_hydro_dev}
+image=${3-wrfhydro/dev}
 
 # JLM: how do we know where this script is?
 whDockerPath=`grep "wrf_hydro_docker=" ~/.wrf_hydro_tools | cut -d '=' -f2 | tr -d ' '` 

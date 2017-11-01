@@ -10,7 +10,7 @@
 ## ./interactive_docker.sh [some_other_image]
 
 ## Default image is wrf_hydro_dev
-image=${1-wrf_hydro_dev}
+image=${1-wrfhydro/dev}
 
 ## JLM:how do we know where this script is?
 whDockerPath=`grep "wrf_hydro_docker=" ~/.wrf_hydro_tools | cut -d '=' -f2 | tr -d ' '` 
