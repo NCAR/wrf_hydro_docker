@@ -5,7 +5,7 @@
 # Date:  11.1.17
 ###################################
 
-FROM ubuntu:17.04
+FROM ubuntu:16.04
 
 MAINTAINER jamesmcc@ucar.edu
 USER root

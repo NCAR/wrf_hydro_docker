@@ -21,7 +21,7 @@ else
 	echo "Warning: wrf_hydro_docker path ($whDockerPath) does not exist."
     fi
 fi
-source $whDockerPath/development/prelude_to_docker_run.sh compile || exit 1
+source $whDockerPath/dev/prelude_to_docker_run.sh compile || exit 1
 
 ## pass the environment and the working dir to 
 docker run -it ${envToPass} ${dirsToMnt} $image compile `pwd`

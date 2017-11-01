@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build -t wrfhydro/nc_tools .
+docker build "$@" -t wrfhydro/nc_tools .
 
 exit $?
