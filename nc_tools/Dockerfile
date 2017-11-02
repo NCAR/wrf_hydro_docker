@@ -5,7 +5,7 @@
 # Date:  11.1.17
 ###################################
 
-FROM ubuntu:16.04
+FROM wrfhydro/ubuntu
 
 MAINTAINER jamesmcc@ucar.edu
 USER root
@@ -13,7 +13,6 @@ USER root
 ####################################
 ########## ROOT USER  ##############
 ####################################
-#Get all library dependencies for NCL, wrf_hydro, and mpich
 RUN apt-get update
 RUN apt-get install -yq --no-install-recommends \
     wget \
