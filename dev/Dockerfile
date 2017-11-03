@@ -7,21 +7,19 @@
 # The above is achieved through entrypoint and host-side scripting.
 #
 # Authors: Tony Castronova, James McCreight, Joe Mills
-# Email:  acastronova@cuahsi.org, jamesmcc@ucar.edu, jmills@ucar.edu
+# Email:  acastronova-at-cuahsi.org, jamesmcc-at-ucar.edu, jmills-at-ucar.edu
 # Date:  8.29.2017, 9.15.2017, 10.1.2017, 11.1.2017
 ###################################
-
 FROM wrfhydro/gcc_default AS builder
 
-FROM wrfhydro/nc_tools
+FROM wrfhydro/nco
 COPY --from=builder / /
 ## JLM: I dont understand the failure of libmpi.so.12
 ## JLM: `ldd wrf_hydro...exe` only implies the following. 
 #COPY --from=builder /usr /usr
 #COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 
-
-MAINTAINER jamesmcc@ucar.edu
+MAINTAINER jamesmcc
 
 ###################################
 ## create docker user

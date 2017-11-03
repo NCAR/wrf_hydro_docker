@@ -3,13 +3,14 @@
 # Date:  11.1.17
 ###################################
 
-FROM wrfhydro/gcc_5.4.0
+## FROM docker-library/gcc
+FROM wrfhydro/gcc_default
 
-MAINTAINER jamesmcc@ucar.edu
+MAINTAINER jamesmcc
 
 ####################################
 ########## ROOT USER  ##############
-####################################
+
 USER root
 
 #RUN apt-get update
@@ -17,18 +18,24 @@ USER root
 
 ## Download open-coarrays
 
-#WORKDIR /tmp
+WORKDIR /tmp
 
 ARG OPEN_COARRAYS_VERSION="1.9.2"
+ARG OPEN_COARRAYS_INST="/tmp/open-coarrays_inst"
 RUN wget https://github.com/sourceryinstitute/OpenCoarrays/releases/download/1.9.2/OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
     && tar xvzf OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
-    && mkdir open-coarrays_inst \
+    && mkdir ${OPEN_COARRAYS_INST}  \
     && cd OpenCoarrays-${OPEN_COARRAYS_VERSION} \
-    && ./install.sh --package gcc \ 
-    --from-url https://github.com/sourceryinstitute/gcc/archive/teams-20170919.tar.gz \
-    --install-version teams-20170919 \
-    --install-prefx /tmp/open-coarrays_inst \
-    --disable-bootstrap
+    && export TERM=xterm \
+    && ./install.sh -y -n --install-prefix=${OPEN_COARRAYS_INST}
+
+##--install-version teams-20170919
+
+#--package gcc \ 
+#    --from-url https://github.com/sourceryinstitute/gcc/archive/teams-20170919.tar.gz \
+#    --install-version teams-20170919 \
+#    --install-prefx /tmp/open-coarrays_inst \
+#    --disable-bootstrap
 
 
 ## Download, build, and install MPICH
