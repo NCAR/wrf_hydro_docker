@@ -14,7 +14,7 @@
 # ./run_docker.sh 4 wrf_hydro.exe [some_other_image]
 
 # Default image is wrf_hydro_dev
-image=${3-wrf_hydro_dev}
+image=${3-wrfhydro/dev}
 
 # JLM: how do we know where this script is?
 whDockerPath=`grep "wrf_hydro_docker=" ~/.wrf_hydro_tools | cut -d '=' -f2 | tr -d ' '` 
@@ -25,7 +25,7 @@ else
 	echo "Warning: wrf_hydro_docker path ($whDockerPath) does not exist."
     fi
 fi
-source $whDockerPath/development/prelude_to_docker_run.sh || exit 1
+source $whDockerPath/dev/prelude_to_docker_run.sh || exit 1
 
 # pass the environment and the working dir to 
 docker run -it ${envToPass} ${dirsToMnt} $image run `pwd` $1 $2

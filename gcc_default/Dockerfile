@@ -5,7 +5,7 @@
 # Date:  11.1.17
 ###################################
 
-FROM ubuntu:17.04
+FROM wrfhydro/ubuntu
 
 MAINTAINER jamesmcc@ucar.edu
 
@@ -54,22 +54,34 @@ RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VE
 #RUN rm -rf /tmp/mpich-test
 
 ## install netcdf-C
-RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz -P /tmp  
-RUN tar -xf /tmp/netcdf-4.4.1.1.tar.gz -C /tmp
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 ENV NCDIR=/usr/local
-RUN cd /tmp/netcdf-4.4.1.1 && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local
-RUN cd /tmp/netcdf-4.4.1.1 && make
-RUN cd /tmp/netcdf-4.4.1.1 && make install
+ARG NETCDF_C_VERSION="4.4.1.1"
+RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
+    && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && make \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && make install \
+    && rm -rf /tmp/netcdf-${NETCDF_C_VERSION}
+
 
 # install netcdf-Fortran
-RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-4.4.4.tar.gz
-RUN tar -xf netcdf-fortran-4.4.4.tar.gz -C /tmp
 ENV NFDIR=/usr/local
 ENV LD_LIBRARY_PATH=${NCDIR}/lib
-RUN cd /tmp/netcdf-fortran-4.4.4/ && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR}
-RUN cd /tmp/netcdf-fortran-4.4.4 && make
-RUN cd /tmp/netcdf-fortran-4.4.4 && make install
+ARG NETCDF_F_VERSION="4.4.4"
+RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz -C /tmp \
+    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION}/ \
+    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
+    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
+    && make \
+    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
+    && make install \
+    && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
+## JLM: Clean up the above.
 
 ENV NETCDF=/usr/local
 
@@ -86,5 +98,7 @@ RUN update-alternatives --config csh
 
 #### CLEAN UP ####
 WORKDIR /
-#RUN rm -rf /tmp/*
+
+## just to be sure 
+RUN rm -rf /tmp/*
 
