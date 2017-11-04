@@ -13,23 +13,51 @@ MAINTAINER jamesmcc
 
 USER root
 
-#RUN apt-get update
-#RUN  apt-get install gcc-7.2.0 g++-7.2.0
+RUN apt-get install -y software-properties-common python-software-properties
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
 
-## Download open-coarrays
+RUN apt-get update
+RUN apt-get install gcc-snapshot -y
+RUN apt-get update
+RUN apt-get install gcc-7 g++-7 gfortran-7 -y
+RUN apt-get update
 
-WORKDIR /tmp
+RUN gcc-7 --version
+RUN g++-7 --version
+RUN gfortran-7 --version
 
-ARG OPEN_COARRAYS_VERSION="1.9.2"
-ARG OPEN_COARRAYS_INST="/tmp/open-coarrays_inst"
-RUN wget https://github.com/sourceryinstitute/OpenCoarrays/releases/download/1.9.2/OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
-    && tar xvzf OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
-    && mkdir ${OPEN_COARRAYS_INST}  \
-    && cd OpenCoarrays-${OPEN_COARRAYS_VERSION} \
-    && export TERM=xterm \
-    && ./install.sh -y -n --install-prefix=${OPEN_COARRAYS_INST}
+## Download, build, and install MPICH
+ARG MPICH_VERSION="3.2"
+ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx CC=gcc-7 CXX=g++-7 FC=gfortran-7 F77=gfortran-7"
+#ARG MPICH_MAKE_OPTIONS
+RUN mkdir /tmp/mpich-src
+WORKDIR /tmp/mpich-src
+RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
+    && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
+    && cd mpich-${MPICH_VERSION}  \
+    && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
+    && make ${MPICH_MAKE_OPTIONS} \
+    && make install \
+    && rm -rf /tmp/mpich-src
 
-##--install-version teams-20170919
+
+# Download open-coarrays
+#WORKDIR /tmp
+
+#ARG OPEN_COARRAYS_VERSION="1.9.2"
+#ARG OPEN_COARRAYS_INST="/tmp/open-coarrays_inst"
+#RUN wget https://github.com/sourceryinstitute/OpenCoarrays/releases/download/1.9.2/OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
+#    && tar xvzf OpenCoarrays-${OPEN_COARRAYS_VERSION}.tar.gz \
+#    && mkdir ${OPEN_COARRAYS_INST}  \
+#    && cd OpenCoarrays-${OPEN_COARRAYS_VERSION} \
+#    && export TERM=xterm \
+#    && ./install.sh -y -n \
+     --install-prefix ${OPEN_COARRAYS_INST} \
+     --with-c gcc-7 \
+     --with-cxx g++-7 \
+     --with-fortran gfortran-7 \
+     --install-version teams-20170919 \
+     --disable-bootstrap
 
 #--package gcc \ 
 #    --from-url https://github.com/sourceryinstitute/gcc/archive/teams-20170919.tar.gz \

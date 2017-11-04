@@ -10,6 +10,7 @@
 # Email:  acastronova-at-cuahsi.org, jamesmcc-at-ucar.edu, jmills-at-ucar.edu
 # Date:  8.29.2017, 9.15.2017, 10.1.2017, 11.1.2017
 ###################################
+
 FROM wrfhydro/gcc_default AS builder
 
 FROM wrfhydro/nco
@@ -25,7 +26,6 @@ MAINTAINER jamesmcc
 ## create docker user
 RUN useradd -ms /bin/bash docker
 RUN usermod -aG sudo docker
-ENV NETCDF=/usr/local
 
 ###################################
 ## wrf-hydro development docker interface script

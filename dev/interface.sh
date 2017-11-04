@@ -33,6 +33,9 @@ if [[ "${1}" == 'compile' ]]; then
     cp -r /wrf_hydro .
     cd wrf_hydro/trunk/NDHMS
     henv
+    if [[ ! -e use_env_compileTag_offline_NoahMP.sh ]]; then
+        cp /wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
+    fi
     ./use_env_compileTag_offline_NoahMP.sh 6
     
     ## Bring a runnable binary back to the host machine.
