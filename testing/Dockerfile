@@ -7,17 +7,26 @@
 # Date:  11.2.2017
 ###################################
 
-FROM wrfhydro/gcc_default AS compiler
-
+FROM wrfhydro/gcc_default AS builder
 
 FROM wrfhydro/dev
-COPY --from=compiler / /
+COPY --from=builder / /
 ## JLM: I dont understand the failure of libmpi.so.12
 ## JLM: `ldd wrf_hydro...exe` only implies the following. 
 #COPY --from=builder /usr /usr
 #COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 
 MAINTAINER jamesmcc
+
+###################################
+USER root
+###################################
+## wrf-hydro development docker interface script
+#COPY ./entrypoint.sh /.
+
+###################################
+USER docker
+RUN cd $HOME
 
 ###################################
 # wrf_hydro_nwm repo
@@ -36,20 +45,6 @@ MAINTAINER jamesmcc
 # Eventually, have a service that will pull data on the fly.
 COPY test.files.frng.nwm test.files.frng.nwm
 
-###################################
-## wrf-hydro development docker interface script
-#COPY ./entrypoint.sh /.
 
-###################################
-## create docker user
-RUN useradd -ms /bin/bash docker
-RUN usermod -aG sudo docker
-
-####################################
-######### docker user ###########
-####################################
-USER docker
-#RUN cp /interface.sh ~/.
-RUN cd $HOME
-ENTRYPOINT ["/interface.sh"]
-CMD ["interactive"]
+#ENTRYPOINT ["/interface.sh"]
+#CMD ["interactive"]
