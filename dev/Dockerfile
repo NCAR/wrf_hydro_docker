@@ -23,13 +23,13 @@ COPY --from=builder / /
 MAINTAINER jamesmcc
 
 ###################################
+## wrf-hydro development docker interface script
+COPY ./interface.sh /.
+
+###################################
 ## create docker user
 RUN useradd -ms /bin/bash docker
 RUN usermod -aG sudo docker
-
-###################################
-## wrf-hydro development docker interface script
-COPY ./interface.sh /.
 
 ####################################
 ######### docker user ###########

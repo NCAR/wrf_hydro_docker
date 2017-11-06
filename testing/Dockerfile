@@ -22,11 +22,24 @@ MAINTAINER jamesmcc
 USER root
 ###################################
 ## wrf-hydro development docker interface script
-#COPY ./entrypoint.sh /.
+COPY ./entrypoint.sh /.
+
+###################################
+## create docker user
+RUN rm -rf /home/docker
+RUN useradd -ms /bin/bash docker
+RUN usermod -aG sudo docker
+
+WORKDIR /home/docker
+
+###################################
+# DATA for test.
+# Eventually, have a service that will pull data on the fly.
+COPY test.files.frng.nwm test.files.frng.nwm
+RUN chmod -R 777 /home/docker/test.files.frng.nwm
 
 ###################################
 USER docker
-RUN cd $HOME
 
 ###################################
 # wrf_hydro_nwm repo
@@ -40,11 +53,6 @@ RUN cd $HOME
 # local   : entrypoint checks out the code
 # JLM: how to give it a specific commit?
 
-###################################
-# DATA for test.
-# Eventually, have a service that will pull data on the fly.
-COPY test.files.frng.nwm test.files.frng.nwm
 
-
-#ENTRYPOINT ["/interface.sh"]
-#CMD ["interactive"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["interactive"]
