@@ -9,6 +9,11 @@ FROM wrfhydro/ubuntu
 
 MAINTAINER jamesmcc@ucar.edu
 
+## Sizes
+## wrfhydro/ubuntu (FROM)                  225MB
+## wrfhydro/gcc_default (this image)       600MB
+## + (git + nano + tsch inclusion margin) ( 24MB)
+## + emacs                                (300MB)
 ####################################
 ########## ROOT USER  ##############
 ####################################
@@ -22,7 +27,9 @@ RUN apt-get update
 ## WRF-Hydro dependencies
 
 ## Core wrf-hydro compiler stuff
-RUN apt-get install -yq --no-install-recommends \
+RUN add-apt-repository ppa:ubuntu-elisp/ppa \
+    && apt-get update \
+    && apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
     ca-certificates \
@@ -30,16 +37,24 @@ RUN apt-get install -yq --no-install-recommends \
     libhdf5-dev \
     gfortran \
     m4 \
-    make\ 
-    libswitch-perl 
+    make \ 
+    libswitch-perl \
+    git \
+    nano \
+    tcsh \
+    emacs-snapshot \
+    emacs-snapshot-el \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --config csh
 
 ## Download, build, and install MPICH
-ARG MPICH_VERSION="3.2"
-ARG MPICH_CONFIGURE_OPTIONS="--disable-cxx"
-ARG MPICH_MAKE_OPTIONS
-RUN mkdir /tmp/mpich-src
-WORKDIR /tmp/mpich-src
-RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
+RUN MPICH_VERSION="3.2" \
+    && MPICH_CONFIGURE_OPTIONS="--disable-cxx" \
+    && MPICH_MAKE_OPTIONS='' \
+    && mkdir /tmp/mpich-src \
+    && cd /tmp/mpich-src \
+    && wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
     && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
     && cd mpich-${MPICH_VERSION}  \
     && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
@@ -47,17 +62,18 @@ RUN wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VE
     && rm -rf /tmp/mpich-src
 
 #### TEST MPICH INSTALLATION ####
-#RUN mkdir /tmp/mpich-test
+## Where is this from? Should we run the test?
 #WORKDIR /tmp/mpich-test
 #COPY mpich-test .
-#RUN sh test.sh
-#RUN rm -rf /tmp/mpich-test
+#RUN mkdir /tmp/mpich-test \
+#    && test.sh \
+#    && RUN rm -rf /tmp/mpich-test
 
 ## install netcdf-C
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 ENV NCDIR=/usr/local
-ARG NETCDF_C_VERSION="4.4.1.1"
-RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
+RUN NETCDF_C_VERSION="4.4.1.1" \
+    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
     && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
     && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
@@ -67,36 +83,21 @@ RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz
     && make install \
     && rm -rf /tmp/netcdf-${NETCDF_C_VERSION}
 
-
 # install netcdf-Fortran
 ENV NFDIR=/usr/local
 ENV LD_LIBRARY_PATH=${NCDIR}/lib
-ARG NETCDF_F_VERSION="4.4.4"
-RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
-    && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz -C /tmp \
-    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION}/ \
+RUN NETCDF_F_VERSION="4.4.4" \
+    && cd /tmp \
+    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
     && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
-    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
     && make \
-    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
     && make install \
+    && cd / \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
-## JLM: Clean up the above.
 
 ENV NETCDF=/usr/local
-
-## Extras to make it nice/convenient
-## May separate these into a separate container
-RUN apt-get install -yq --no-install-recommends \
-    git \
-    nano \
-    tcsh \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN update-alternatives --config csh
-
-#### CLEAN UP ####
 WORKDIR /
 
 ## just to be sure 
