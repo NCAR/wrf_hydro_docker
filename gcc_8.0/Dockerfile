@@ -3,8 +3,7 @@
 # Date:  11.1.17
 ###################################
 
-## FROM docker-library/gcc
-FROM wrfhydro/gcc_default
+FROM wrfhydro/gcc_7
 
 MAINTAINER jamesmcc
 
@@ -13,12 +12,11 @@ MAINTAINER jamesmcc
 
 USER root
 
-#RUN apt-get update
-#RUN  apt-get install gcc-7.2.0 g++-7.2.0
+# Download open-coarrays
+#WORKDIR /tmp
 
-## Download open-coarrays
-
-WORKDIR /tmp
+RUN apt-get update \
+    && apt-get install -y flex
 
 ARG OPEN_COARRAYS_VERSION="1.9.2"
 ARG OPEN_COARRAYS_INST="/tmp/open-coarrays_inst"
@@ -27,15 +25,20 @@ RUN wget https://github.com/sourceryinstitute/OpenCoarrays/releases/download/1.9
     && mkdir ${OPEN_COARRAYS_INST}  \
     && cd OpenCoarrays-${OPEN_COARRAYS_VERSION} \
     && export TERM=xterm \
-    && ./install.sh -y -n --install-prefix=${OPEN_COARRAYS_INST}
-
-##--install-version teams-20170919
-
-#--package gcc \ 
-#    --from-url https://github.com/sourceryinstitute/gcc/archive/teams-20170919.tar.gz \
-#    --install-version teams-20170919 \
-#    --install-prefx /tmp/open-coarrays_inst \
-#    --disable-bootstrap
+    && ln -sf `which cpp-7` /lib/cpp \
+    && ln -sf `which cpp-7` /usr/bin/cpp \
+    && ln -sf `which gcc-7` /usr/bin/gcc \
+    && ln -sf `which g++-7` /usr/bin/g++ \
+    && ln -sf `which gfortran-7` /usr/bin/gfortran \	
+    && ./install.sh -y -n \
+    --install-prefix ${OPEN_COARRAYS_INST} \
+    --package gcc \ 
+    --from-url https://github.com/sourceryinstitute/gcc/archive/teams-20170919.tar.gz \
+    --install-version teams-20170919 \
+    --with-c gcc-7 \
+    --with-cxx g++-7 \
+    --with-fortran gfortran-7 \
+    --disable-bootstrap
 
 
 ## Download, build, and install MPICH

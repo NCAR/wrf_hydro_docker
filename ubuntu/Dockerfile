@@ -5,7 +5,8 @@
 # Date   : 11.1.17
 ###################################
 
-FROM ubuntu:16.04
+#FROM ubuntu:16.04
+FROM phusion/baseimage
 
 MAINTAINER jamesmcc
 
