@@ -32,11 +32,30 @@ if [[ "${1}" == 'compile' ]]; then
     ##      using gosu. See docker file gosu section. Is it a permissions issue?
     cp -r /wrf_hydro .
     cd wrf_hydro/trunk/NDHMS
-    henv
+
+    ## Enforce gfortran, skip the configure script with this
+
+    echo "NETCDF_INC = ${NETCDF}/include" > macros.tmp
+    echo "NETCDF_LIB = ${NETCDF}/lib" >> macros.tmp
+    echo "NETCDFLIB  = -L\$(NETCDF_LIB) -lnetcdff -lnetcdf" >> macros.tmp
+    if [[ -e macros ]]; then rm -f macros; fi
+    cp arc/macros.mpp.gfort macros 
+    cp arc/Makefile.mpp Makefile.comm
+    if [[ ! -e lib ]]; then mkdir lib; fi
+    if [[ ! -e mod ]]; then mkdir mod; fi
+    if [[ -e macros.tmp ]]; then
+	cat macros macros.tmp > macros.a
+	rm -f macros.tmp; mv macros.a macros
+    fi
+
+    cat macros
+    
+    ## Make build
     if [[ ! -e use_env_compileTag_offline_NoahMP.sh ]]; then
         cp /wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
     fi
-    ./use_env_compileTag_offline_NoahMP.sh 6
+    ## pass a dummy argument for no configure selection
+    ./use_env_compileTag_offline_NoahMP.sh Z
     
     ## Bring a runnable binary back to the host machine.
     ## JLM: WHY does this work of the in-place compilation is a permissions issue?
