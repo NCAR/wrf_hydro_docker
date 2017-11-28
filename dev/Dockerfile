@@ -46,6 +46,7 @@ RUN usermod -aG sudo docker
 ######### docker user ###########
 ####################################
 USER docker
+ENV NETCDF=/usr/local
 RUN cp /interface.sh ~/.
 RUN cd $HOME
 ENTRYPOINT ["/interface.sh"]
