@@ -39,7 +39,7 @@ COPY test.files.frng.nwm test.files.frng.nwm
 RUN chmod -R 777 /home/docker/test.files.frng.nwm
 
 ###################################
-USER docker
+#USER docker
 
 ###################################
 # wrf_hydro_nwm repo

@@ -39,7 +39,6 @@ echo "source /home/docker/wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
 echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> ~/.bashrc
 
 cd wrf_hydro_nwm/trunk/NDHMS/
-#git checkout gnu_fix
 
 echo
 cp ~/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
@@ -50,7 +49,9 @@ source /home/docker/wrf_hydro_tools/utilities/sourceMe.sh
 setHenv -RLS
 
 echo
+## 2 is gfort
 ./use_env_compileTag_offline_NoahMP.sh 2
+
 theBinary=`pwd`/Run/`ls -rt Run | tail -n1`
 cd /home/docker/test.files.frng.nwm/
 cp $theBinary .

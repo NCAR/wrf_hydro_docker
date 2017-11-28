@@ -36,6 +36,7 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     vim \ 
     libhdf5-dev \
     gfortran \
+    valgrind \
     m4 \
     make \ 
     libswitch-perl \

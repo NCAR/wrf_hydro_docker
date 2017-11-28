@@ -30,6 +30,33 @@ if [[ "${1}" == 'compile' ]]; then
     ## WRF-Hydro source
     ## JLM: I would like to compile in place and NOT copy, but get strange CPP? behavoir even
     ##      using gosu. See docker file gosu section. Is it a permissions issue?
+
+echo "    _-\`\`\`\`\`-,           ,- '- ."
+echo " .'   .- - |          | - -.  \`."
+echo " /.'  /                     \`.   \ "
+echo ":/   :      _...   ..._      \`\`   :"
+echo "::   :     /._ .\`:'_.._\.    ||   :"
+echo "::    \`._ ./  ,\`  :    \ . _.''   ."
+echo "\`:.      /   |  -.  \-. \\_      /"
+echo "  \:._ _/  .'   .@)  \@) \` \`\ ,.'"
+echo "     _/,--'       .- .\,-.\`--\`."
+echo "       ,'/''     (( \ \`  )    "
+echo "        /'/'  \    \`-'  (      "
+echo "         '/''  \`._,-----' "
+echo "          ''/'    .,---'"
+echo "           ''/'      ;:"
+echo "             ''/''  ''/"
+echo "               ''/''/''"
+echo "                 '/'/'"
+echo "                  \`;"
+echo
+echo "          _______   ____  __"
+echo "         / ____/ | / / / / / "
+echo "        / / __/  |/ / / / /"
+echo "       / /_/ / /|  / /_/ /"
+echo "       \____/_/ |_/\____/"
+echo
+
     cp -r /wrf_hydro .
     cd wrf_hydro/trunk/NDHMS
     henv
@@ -37,7 +64,7 @@ if [[ "${1}" == 'compile' ]]; then
         cp /wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
     fi
     ./use_env_compileTag_offline_NoahMP.sh 6
-    
+
     ## Bring a runnable binary back to the host machine.
     ## JLM: WHY does this work of the in-place compilation is a permissions issue?
     if [[ $? -eq 0 ]]; then
@@ -48,7 +75,8 @@ if [[ "${1}" == 'compile' ]]; then
         echo 'Compilation not successful'
         exit 1
     fi
-        
+
+
     ## Cleanup
     ## rm -rf ~/wrf_hydro ~/.wrf_hydro_tools
     exit $?

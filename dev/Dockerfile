@@ -11,16 +11,27 @@
 # Date:  8.29.2017, 9.15.2017, 10.1.2017, 11.1.2017
 ###################################
 
-FROM wrfhydro/gcc_default AS builder
+FROM wrfhydro/gcc_default
+#AS builder
 
-FROM wrfhydro/nco
-COPY --from=builder / /
+#FROM wrfhydro/nco
+#COPY --from=builder / /
 ## JLM: I dont understand the failure of libmpi.so.12
 ## JLM: `ldd wrf_hydro...exe` only implies the following. 
-#COPY --from=builder /usr /usr
-#COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+##COPY --from=builder /usr /usr
+##COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+## this fails miserably now...
 
 MAINTAINER jamesmcc
+
+###################################
+## build nco here. really not what I was hpoing for.
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    nco \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/*
 
 ###################################
 ## wrf-hydro development docker interface script
