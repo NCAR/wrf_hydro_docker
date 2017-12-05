@@ -18,6 +18,8 @@ WORKDIR /root
 ###################################
 ## wrf-hydro development docker interface script
 COPY ./entrypoint.sh /.
+COPY ./gnu.txt /.
+COPY ./comp_nco.sh /.
 
 ###################################
 ## create docker user

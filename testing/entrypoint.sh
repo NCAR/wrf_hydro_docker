@@ -42,7 +42,8 @@ fi
 
 ###################################
 ## setup ncoScripts & wrf_hydro_tools
-echo "tmpPath=/glade/scratch/jamesmcc/jlmTmp" > /root/.ncoScripts
+mkdir /root/ncoTmp
+echo "tmpPath=/root/ncoTmp" > /root/.ncoScripts
 source /root/ncoScripts/ncFilters.sh
 
 echo "wrf_hydro_tools=/root/wrf_hydro_tools" > /root/.wrf_hydro_tools
@@ -66,6 +67,9 @@ cp /root/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
 
 ## 2 is gfort  >>>> FRAGILE <<<<
 ./use_env_compileTag_offline_NoahMP.sh 2 || { echo "Compilation failed."; exit 1; }
+echo -e "\e[5;49;32mCompilation successful under GNU!\e[0m"
+source /gnu.txt
+sleep 2
 theBinary=`pwd`/Run/`ls -rt Run | tail -n1`
 
 ###################################
@@ -119,39 +123,58 @@ if [[ $nSuccess -ne $nCoresFull ]]; then
     exit 4
 fi
 
-
-allOldFinalFiles=`ls *201306020000* *2013-06-02_00:00*`
-
 cd ../
 
 echo
 echo "------------------------------------"
 echo "Comparing the results."
+source /comp_nco.sh
+comp_nco run.2.old run.1.new
+
+###################################
+## Run 3: perfect restarts
+echo
+echo "------------------------------------"
+echo "Running run.3.restart_new"
+
+cd /root/sixmile_docker_tests/run.3.restart_new
+cp $theBinary .
+nCoresFull=2
+mpirun -np $nCoresFull ./`basename $theBinary` 1> `date +'%Y-%m-%d_%H-%M-%S.stdout'` 2> `date +'%Y-%m-%d_%H-%M-%S.stderr'` 
+
+## did the model finish successfully?
+## This grep is >>>> FRAGILE <<<<. But fortran return codes are un reliable. 
+nSuccess=`grep 'The model finished successfully.......' diag_hydro.* | wc -l`
+if [[ $nSuccess -ne $nCoresFull ]]; then
+    echo Run run.1.new failed.
+    exit 2
+fi
+
+cd ../
+echo
+echo "------------------------------------"
+echo "Comparing the results."
+comp_nco run.1.new run.3.restart_new
 
 
-for ff in $allOldFinalFiles; do
+###################################
+## Run 4: ncores test
+echo
+echo "------------------------------------"
+echo "Running run.4.ncores_new"
 
-    echo
-    echo -^-^-^-^-^-^-^-^-^-^-^-
-    echo "$ff file comparison"
-    ncdiff -O run.1.new/$ff \
-              run.2.old/$ff  diff.nc || { echo "New file run.1.new/$ff is missing." ; exit 5; }
-    
-    
-    ## This is super ad-hoc >>>> FRAGILE <<<<
-    theVars=`ncVarList diff.nc`
-    for vv in $theVars; do
-        theResult=`ncVarRng $vv diff.nc`
-        #echo $theResult
-        tmp=`echo $theResult | cut -d'(' -f2- | tr -d '\n' | sed 's/[^0-9]*//g' | egrep [1-9]  `
-        anyNonZeros=`echo $tmp | wc -w`
-        if [[ $anyNonZeros -ne 0 ]]; then
-            echo "The result was not zero for variable $vv"
-            echo $theResult
-        fi   
-    done
-    
-done
+cd /root/sixmile_docker_tests/run.4.ncores_new
+cp $theBinary .
+nCoresTest=3
+mpirun -np $nCoresTest ./`basename $theBinary` 1> `date +'%Y-%m-%d_%H-%M-%S.stdout'` 2> `date +'%Y-%m-%d_%H-%M-%S.stderr'` 
+
+cd ../
+echo
+echo "------------------------------------"
+echo "Comparing the results."
+comp_nco run.1.new run.4.ncores_new
+
+
 
 exec /bin/bash
 
