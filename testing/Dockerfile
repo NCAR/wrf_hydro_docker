@@ -13,13 +13,19 @@ MAINTAINER jamesmcc
 
 ###################################
 USER root
+
+RUN apt-get install -yq --no-install-recommends software-properties-common \
+    && apt-add-repository universe \
+    && apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    python
+    
 WORKDIR /root
 
 ###################################
 ## wrf-hydro development docker interface script
 COPY ./entrypoint.sh /.
 COPY ./gnu.txt /.
-COPY ./comp_nco.sh /.
 
 ###################################
 ## create docker user
@@ -37,19 +43,6 @@ RUN  tar xf sixmile_docker_tests.tar
 
 ###################################
 #USER docker
-
-###################################
-# wrf_hydro_nwm repo
-# circleCI: cheked out by .circleci/config.yml
-# local   : entrypoint checks out the code 
-# JLM: how to give it specific commit?
-
-###################################
-# wrf_hydro_tools repo
-# circleCI: cheked out by .circleci/config.yml
-# local   : entrypoint checks out the code
-# JLM: how to give it a specific commit?
-
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]
