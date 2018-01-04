@@ -61,46 +61,93 @@ if [[ "${1}" == '--help' ]]; then echo "$theHelp"; exit 0; fi
 
 echo -e "\e[4;49;34m WRF-Hydro Testing Container\e[0m"
 
-## Work in $HOME
+###################################
+#Setup directory structure in HOME directory
+
+##Set variables for each directory for easy change later
+testRepoDir=$HOME/wrf_hydro_CItesting/repos/test
+refRepoDir=$HOME/wrf_hydro_CItesting/repos/reference
+toolboxDir=$HOME/wrf_hydro_CItesting/toolbox
+testsDir=$HOME/wrf_hydro_CItesting/tests
+
+#Make directories
 cd $HOME
+mkdir -p $testRepoDir
+mkdir -p $refRepoDir
+mkdir -p $toolboxDir
+mkdir -p $testsDir
+
 
 ###################################
-## local
-if [[ "${1}" == 'local' ]]; then
+##Setup github authitcation
+doExit=0
+if [[ -z ${GITHUB_USERNAME} ]]; then
+    echo "The required environment variable GITHUB_USERNAME has 
+          not been passed to the container. Please try 
+          'docker run wrfhydro/testing --help' 
+          for help. Exiting"
+    doExit=1
+fi
+if [[ -z ${GITHUB_AUTHTOKEN} ]] ; then
+    echo "The required environment variable GITHUB_AUTHTOKEN has 
+          not been passed to the container. Please try 
+          'docker run wrfhydro/testing --help' 
+          for help. Exiting"
+    doExit=1
+fi
+if [[ $doExit -eq 1 ]]; then exit 1; fi
 
-    doExit=0
-    if [[ -z ${GITHUB_USERNAME} ]]; then
-        echo "The required environment variable GITHUB_USERNAME has 
-              not been passed to the container. Please try 
-              'docker run wrfhydro/testing --help' 
-              for help. Exiting"
-        doExit=1
-    fi
-    if [[ -z ${GITHUB_AUTHTOKEN} ]] ; then
-        echo "The required environment variable GITHUB_AUTHTOKEN has 
-              not been passed to the container. Please try 
-              'docker run wrfhydro/testing --help' 
-              for help. Exiting"
-        doExit=1
-    fi
-    if [[ $doExit -eq 1 ]]; then exit 1; fi
-    
-    authInfo=${GITHUB_USERNAME}:${GITHUB_AUTHTOKEN}
-    if [[ -z ${testFork} ]]; then testFork=${GITHUB_USERNAME}/wrf_hydro_nwm; fi
-    if [[ -z ${testBranchCommit} ]]; then testBranchCommit=master; fi
-    if [[ -z ${referenceFork} ]]; then referenceFork=NCAR/wrf_hydro_nwm; fi
-    if [[ -z ${referenceBranchCommit} ]]; then referenceBranchCommit=master; fi
-    
-    echo
+authInfo=${GITHUB_USERNAME}:${GITHUB_AUTHTOKEN}
+if [[ -z ${testFork} ]]; then testFork=${GITHUB_USERNAME}/wrf_hydro_nwm; fi
+if [[ -z ${testBranchCommit} ]]; then testBranchCommit=master; fi
+if [[ -z ${referenceFork} ]]; then referenceFork=NCAR/wrf_hydro_nwm; fi
+if [[ -z ${referenceBranchCommit} ]]; then referenceBranchCommit=master; fi
+
+###################################
+###Clone required tool repos into toolbox directory
+cd $toolboxDir
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "\e[7;49;32mCloning testing dependencies\e[0m"
+git clone https://${authInfo}@github.com/jmccreight/ncoScripts
+
+###################################
+###Clone tests repo into tests directory
+cd $testsDir
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "\e[7;49;32mCloning testing dependencies\e[0m"
+git clone https://${authInfo}@github.com/NCAR/wrf_hydro_ci
+
+###Source necessary tool scripts
+source $testsDir/comp_nco.sh
+
+###################################
+###Clone reference fork into repos directory
+cd $refRepoDir
+# reference fork
     echo -e "\e[0;49;32m-----------------------------------\e[0m"
-    echo -e "\e[7;49;32mCloning testing dependencies\e[0m"
-    git clone https://${authInfo}@github.com/jmccreight/ncoScripts
+    echo -e "\e[7;49;32mReference fork: $referenceFork\e[0m"
+    git clone https://${authInfo}@github.com/$referenceFork    
+    cd `basename $referenceFork`
+    git checkout $referenceBranchCommit || \
+        { echo "Unsuccessful checkout of $referenceBranchCommit from $referenceFork."; exit 1; }
+    echo -e "\e[0;49;32mRepo in\e[0m `pwd`"
+    echo -e "\e[0;49;32mReference branch:\e[0m    `git branch`"
+    echo -e "\e[0;49;32mReference commit:\e[0m"
+    git log -n1
+
+###################################
+##check if running in circleCI or locally. This is specified using environment variables passed to docker
+##If running locally, clone specified test fork, otherwise in circleCI the current PR/Commit is used as test
+
+if [[ -z ${CIRCLECI} ]]; then 
+    ##Local 
+
+    cd $testRepoDir
 
     echo
-    git clone https://${authInfo}@github.com/NCAR/wrf_hydro_tools
-   
-    echo
-    # test fork
+    # git clone specified test fork
     echo -e "\e[0;49;32m-----------------------------------\e[0m"
     echo -e "\e[7;49;32mTest fork: $testFork\e[0m"
     git clone https://${authInfo}@github.com/$testFork
@@ -112,45 +159,25 @@ if [[ "${1}" == 'local' ]]; then
     echo -e "\e[0;49;32mTest branch:\e[0m    `git branch`"
     echo -e "\e[0;49;32mTesting commit:\e[0m"
     git log -n1
-    cd ..
-    
-    echo
-    # reference fork
-    echo -e "\e[0;49;32m-----------------------------------\e[0m"
-    echo -e "\e[7;49;32mReference fork: $referenceFork\e[0m"
-    git clone https://${authInfo}@github.com/$referenceFork    
-    cd `basename $referenceFork`
-    git checkout $referenceBranchCommit || \
-        { echo "Unsuccessful checkout of $referenceBranchCommit from $referenceFork."; exit 1; }
-    echo -e "\e[0;49;32mRepo in\e[0m `pwd`"
-    echo -e "\e[0;49;32mReference branch:\e[0m    `git branch`"
-    echo -e "\e[0;49;32mReference commit:\e[0m"
-    git log -n1
-    cd ..
-    
+else
+    #CircleCI
+
 fi
 
 ###################################
-## circleci
-#if [[ "${1}" == 'circleci' ]]; then
-#    ## stuff handled in circleci
-##fi
-
-
-###################################
 ## setup ncoScripts & wrf_hydro_tools
-mkdir /root/ncoTmp
-echo "tmpPath=/root/ncoTmp" > /root/.ncoScripts
-source /root/ncoScripts/ncFilters.sh
+#mkdir /root/ncoTmp
+#echo "tmpPath=/root/ncoTmp" > /root/.ncoScripts
+source $toolboxDir/ncoScripts/ncFilters.sh
 
-echo "wrf_hydro_tools=/root/wrf_hydro_tools" > /root/.wrf_hydro_tools
-echo "# Following established in interface.sh entrypoint:" >> /root/.bashrc
-echo "source /root/wrf_hydro_tools/utilities/sourceMe.sh" >> /root/.bashrc
-echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> /root/.bashrc
+#echo "wrf_hydro_tools=/root/wrf_hydro_tools" > /root/.wrf_hydro_tools
+#echo "# Following established in interface.sh entrypoint:" >> /root/.bashrc
+#echo "source /root/wrf_hydro_tools/utilities/sourceMe.sh" >> /root/.bashrc
+#echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> /root/.bashrc
 ## CD to the testing repo
-source /root/.bashrc
-source /root/wrf_hydro_tools/utilities/sourceMe.sh
-setHenv -RNLS
+#source /root/.bashrc
+#source /root/wrf_hydro_tools/utilities/sourceMe.sh
+#setHenv -RNLS
 
 ###################################
 ## COMPILE
@@ -158,19 +185,25 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mCompiling the new binary.\e[0m"
 
-cd /root/wrf_hydro_test/trunk/NDHMS/
+cd testRepoDir/trunk/NDHMS/
 echo
-cp /root/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
+#cp /root/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
 
 ## 2 is gfort  >>>> FRAGILE <<<<
-./use_env_compileTag_offline_NoahMP.sh 2 || { echo "Compilation failed."; exit 1; }
+#./use_env_compileTag_offline_NoahMP.sh 2 || { echo "Compilation failed."; exit 1; }
+
+#Set environment variables. This will likely need to be hard coded so that people don't change compile time options
+./setEnvar.sh
+./configure 2
+./compile_offline_NoahMP.sh || { echo "Compilation failed."; exit 1; }
+
 echo -e "\e[5;49;32mCompilation successful under GNU!\e[0m"
 source /gnu.txt
 sleep 2
 theBinary=`pwd`/Run/`ls -rt Run | tail -n1`
 
 ###################################
-## Run 1
+## Test Run = run 1
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRunning run.1.new\e[0m"
@@ -189,18 +222,24 @@ if [[ $nSuccess -ne $nCoresFull ]]; then
 fi
 
 ###################################
-## Run 2:
+## Reference Run = run 2:
 ## THis requires compiling the old binary, which in theory is not an issue. 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mCompiling the reference (old) code\e[0m"
 
-cd /root/wrf_hydro_nwm/trunk/NDHMS/
+cd refRepoDir/trunk/NDHMS/
 echo
-cp /root/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
+#cp /root/wrf_hydro_tools/utilities/use_env_compileTag_offline_NoahMP.sh .
 
 ## 2 is gfort  >>>> FRAGILE <<<<
-./use_env_compileTag_offline_NoahMP.sh 2 || { echo "Compilation failed."; exit 3; }
+#./use_env_compileTag_offline_NoahMP.sh 2 || { echo "Compilation failed."; exit 3; }
+
+#Set environment variables. This will likely need to be hard coded so that people don't change compile time options
+./setEnvar.sh
+./configure 2
+./compile_offline_NoahMP.sh || { echo "Compilation failed."; exit 1; }
+
 theRefBinary=`pwd`/Run/`ls -rt Run | tail -n1`
 
 echo
@@ -220,12 +259,11 @@ if [[ $nSuccess -ne $nCoresFull ]]; then
     exit 4
 fi
 
-cd ../
-
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mComparing the results.\e[0m"
-source /comp_nco.sh
+
+
 comp_nco run.2.old run.1.new
 
 ###################################
