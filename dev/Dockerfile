@@ -6,23 +6,105 @@
 #   3) Interactive use. 
 # The above is achieved through entrypoint and host-side scripting.
 #
-# Authors: Tony Castronova, James McCreight, Joe Mills
-# Email:  acastronova-at-cuahsi.org, jamesmcc-at-ucar.edu, jmills-at-ucar.edu
-# Date:  8.29.2017, 9.15.2017, 10.1.2017, 11.1.2017
+# Authors: James McCreight, Joe Mills
+# Email:  jamesmcc-at-ucar.edu, jmills-at-ucar.edu
+# Date:  2018-02-08
 ###################################
 
-FROM wrfhydro/gcc_default
-#AS builder
+###################################
+# Author: James McCreight <jamesmcc -at- ucar.edu>
+# Author: Joe Mills <jmills -at- ucar.edu>
+# Date:  2018-02-08
+###################################
 
-#FROM wrfhydro/nco
-#COPY --from=builder / /
-## JLM: I dont understand the failure of libmpi.so.12
-## JLM: `ldd wrf_hydro...exe` only implies the following. 
-##COPY --from=builder /usr /usr
-##COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
-## this fails miserably now...
+FROM phusion/baseimage
 
-MAINTAINER jamesmcc
+MAINTAINER jamesmcc@ucar.edu
+
+####################################
+########## ROOT USER  ##############
+####################################
+USER root
+
+####################################
+## WRF-Hydro dependencies
+
+## Core wrf-hydro compiler stuff
+RUN add-apt-repository ppa:ubuntu-elisp/ppa \
+    && apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    vim \ 
+    libhdf5-dev \
+    gfortran \
+    valgrind \
+    m4 \
+    make \ 
+    libswitch-perl \
+    git \
+    nano \
+    tcsh \
+    emacs-snapshot \
+    emacs-snapshot-el \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && update-alternatives --config csh
+
+## Download, build, and install MPICH
+RUN MPICH_VERSION="3.2" \
+    && MPICH_CONFIGURE_OPTIONS="--disable-cxx" \
+    && MPICH_MAKE_OPTIONS='' \
+    && mkdir /tmp/mpich-src \
+    && cd /tmp/mpich-src \
+    && wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
+    && tar xfz mpich-${MPICH_VERSION}.tar.gz  \
+    && cd mpich-${MPICH_VERSION}  \
+    && ./configure ${MPICH_CONFIGURE_OPTIONS}  \
+    && make ${MPICH_MAKE_OPTIONS} && make install \
+    && rm -rf /tmp/mpich-src
+
+#### TEST MPICH INSTALLATION ####
+## Where is this from? Should we run the test?
+#WORKDIR /tmp/mpich-test
+#COPY mpich-test .
+#RUN mkdir /tmp/mpich-test \
+#    && test.sh \
+#    && RUN rm -rf /tmp/mpich-test
+
+## install netcdf-C
+ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
+ENV NCDIR=/usr/local
+RUN NETCDF_C_VERSION="4.4.1.1" \
+    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
+    && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && make \
+    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && make install \
+    && rm -rf /tmp/netcdf-${NETCDF_C_VERSION}
+
+# install netcdf-Fortran
+ENV NFDIR=/usr/local
+ENV LD_LIBRARY_PATH=${NCDIR}/lib
+RUN NETCDF_F_VERSION="4.4.4" \
+    && cd /tmp \
+    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
+    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
+    && make \
+    && make install \
+    && cd / \
+    && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
+
+ENV NETCDF=/usr/local
+
+## just to be sure 
+RUN rm -rf /tmp/*
 
 ###################################
 ## build nco here. really not what I was hpoing for.
@@ -46,7 +128,7 @@ RUN usermod -aG sudo docker
 ######### docker user ###########
 ####################################
 USER docker
-ENV NETCDF=/usr/local
+WORKDIR /home/docker
 RUN cp /interface.sh ~/.
 RUN cd $HOME
 ENTRYPOINT ["/interface.sh"]
