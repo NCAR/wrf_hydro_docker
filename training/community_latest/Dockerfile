@@ -19,7 +19,7 @@ RUN chmod -R 777 /home/docker/domain/Croton_NY_0137462010
 USER docker
 WORKDIR /home/docker
 
-COPY ./introTutorial.sh /home/docker
+COPY ./introDemo.sh /home/docker
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]
