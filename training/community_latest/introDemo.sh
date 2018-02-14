@@ -104,7 +104,7 @@ read progress
 ls
 
 echo 
-echo -e "\e[1mNow copy the necessary files from the RUN directory to our domain directory.\e[0m" 
+echo -e "\e[1mNow lets copy the necessary files from the Run directory to the NWM directory.\e[0m" 
 echo -e "\e[1mNote that this is one of many ways to organize your files and more sophisticated methods are available.\e[0m" 
 read progress 
 echo -e "cp /home/docker/wrf_hydro_community_v*/Run/*.TBL ." 
