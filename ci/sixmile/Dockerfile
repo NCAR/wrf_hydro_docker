@@ -13,11 +13,14 @@ FROM wrfhydro/dev
 
 USER root
 
+RUN mkdir /home/docker/repos
+
 #Grab domain from previous domain layer
 COPY --from=domain /home/docker/domain/sixmile_NY /home/docker/domain
 
 #set permissions
 RUN chmod -R 777 /home/docker/domain
+RUN chmod -R 777 /home/docker/repos
 
 #set user back to docker
 USER docker
