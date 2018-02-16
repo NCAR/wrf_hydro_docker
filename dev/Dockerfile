@@ -26,11 +26,13 @@ MAINTAINER jamesmcc@ucar.edu
 ####################################
 USER root
 
+
 ####################################
 ## WRF-Hydro dependencies
 
 ## Core wrf-hydro compiler stuff
 RUN add-apt-repository ppa:ubuntu-elisp/ppa \
+    && add-apt-repository ppa:remik-ziemlinski/nccmp \
     && apt-get update \
     && apt-get install -yq --no-install-recommends \
     wget \
@@ -46,6 +48,7 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     git \
     nano \
     tcsh \
+    nccmp \
     emacs-snapshot \
     emacs-snapshot-el \
     && apt-get clean \
@@ -105,6 +108,7 @@ ENV NETCDF=/usr/local
 
 ## just to be sure 
 RUN rm -rf /tmp/*
+
 
 ###################################
 ## build nco here. really not what I was hpoing for.

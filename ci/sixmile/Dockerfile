@@ -10,24 +10,17 @@
 FROM wrfhydro/domains:sixmile as domain
 #Get the environment
 FROM wrfhydro/dev
+
 USER root
 
-#Get all scripts and tests from local directory
-RUN mkdir wrf_hydro_ci
-#COPY . wrf_hydro_ci/	
-
-#Make directory to hold repos
+RUN mkdir /home/docker/repos
 
 #Grab domain from previous domain layer
-COPY --from=domain /test_domain wrf_hydro_ci/test_domain
+COPY --from=domain /home/docker/domain/sixmile_NY /home/docker/domain
 
-#Get NCCMP to compare netcdf files
-RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
-		apt-get update && \
-		apt-get install nccmp
+#set permissions
+RUN chmod -R 777 /home/docker/domain
+RUN chmod -R 777 /home/docker/repos
 
-#Move the domain into the testing folder
-#RUN mv test_domain $HOME/wrf_hydro_ci
-
-#Set workign directory
-WORKDIR wrf_hydro_ci
+#set user back to docker
+USER docker
