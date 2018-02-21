@@ -55,6 +55,27 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
 
+###########################
+#Install python3 miniconda
+
+#remove old python3
+RUN rm -rf /usr/bin/python3
+
+#Fetch latest miniconda and install
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -p /usr/bin/miniconda3 \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+
+#Set environment variables
+ENV conda=/usr/bin/miniconda3/bin/conda
+ENV python=/usr/bin/miniconda3/bin/python3
+ENV python3=/usr/bin/miniconda3/bin/python3
+
+#Install modules
+RUN conda install -y xarray
+RUN conda install -y -c conda-forge plotnine
+
+#############################
 ## Download, build, and install MPICH
 RUN MPICH_VERSION="3.2" \
     && MPICH_CONFIGURE_OPTIONS="--disable-cxx" \
@@ -76,6 +97,7 @@ RUN MPICH_VERSION="3.2" \
 #    && test.sh \
 #    && RUN rm -rf /tmp/mpich-test
 
+#############################
 ## install netcdf-C
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 ENV NCDIR=/usr/local
