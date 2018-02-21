@@ -4,7 +4,7 @@
 # Date:  2018-02-05
 ###################################
 FROM wrfhydro/domains:croton_NY as domain
-FROM wrfhydro/dev
+FROM wrfhydro/dev:conda
 
 MAINTAINER jmills@ucar.edu
 USER root

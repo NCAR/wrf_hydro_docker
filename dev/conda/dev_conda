@@ -1,0 +1,28 @@
+FROM wrfhydro/dev
+
+MAINTAINER jamesmcc@ucar.edu
+
+####################################
+########## ROOT USER  ##############
+####################################
+USER root
+
+###########################
+#Install python3 miniconda
+
+#remove old python3
+RUN rm -rf /usr/bin/python3
+
+#Fetch latest miniconda and install
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -p /usr/bin/miniconda3 \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+
+#Set environment variables
+ENV conda=/usr/bin/miniconda3/bin/conda
+ENV python=/usr/bin/miniconda3/bin/python3
+ENV python3=/usr/bin/miniconda3/bin/python3
+
+#Install modules
+RUN conda install -y xarray
+RUN conda install -y -c conda-forge plotnine
