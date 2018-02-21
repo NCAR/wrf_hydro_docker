@@ -3,7 +3,7 @@
 # Author: Joe Mills <jmills@ucar.edu>
 # Date:  2018-02-05
 ###################################
-FROM wrfhydro/domains:croton as domain
+FROM wrfhydro/domains:croton_NY as domain
 FROM wrfhydro/dev
 
 MAINTAINER jmills@ucar.edu

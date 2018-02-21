@@ -71,11 +71,11 @@ echo -e "\e[0;49;1m-----------------------------------\e[0m"
 echo -e "\e[7;49;1mNext we will prepare to run the model.\e[0m" 
 echo -e "\e[1mFor this demo, we will run a simulation of the West Branch of the Croton River, NY, USA during hurricane Irene, 2011-08-26 to 2011-09-02.\e[0m" 
 echo -e "\e[1mFirst we need to copy the files in the Run directory to our directory containing the domain and forcing files.\e[0m" 
-echo -e "\e[1mFor this demo, these files are located in /home/docker/domain/Croton_NY_0137462010\e[0m" 
+echo -e "\e[1mFor this demo, these files are located in /home/docker/domain/croton_NY\e[0m" 
 read progress 
-echo -e "cd /home/docker/domain/Croton_NY_0137462010" 
+echo -e "cd /home/docker/domain/croton_NY" 
 read progress 
-cd /home/docker/domain/Croton_NY_0137462010 
+cd /home/docker/domain/croton_NY
 echo -e "ls" 
 read progress 
 ls
@@ -89,9 +89,9 @@ echo -e "\e[1mAlso, note that there is only 1 FORCING directory. The same forcin
 echo -e "\e[1mWe will only be running National Water Model (NWM) routing for this demo, but a similar process can be repeated for the other two configurations.\e[0m" 
 echo -e "\e[1mGive it a go on your own after this demo!\e[0m" 
 read progress 
-echo -e "cd /home/docker/domain/Croton_NY_0137462010/NWM" 
+echo -e "cd /home/docker/domain/croton_NY/NWM" 
 read progress 
-cd /home/docker/domain/Croton_NY_0137462010/NWM 
+cd /home/docker/domain/croton_NY/NWM 
 echo -e "ls" 
 read progress 
 ls
