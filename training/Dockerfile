@@ -14,12 +14,13 @@ COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
 
 COPY --from=domain /home/docker/domain/croton_NY /home/docker/domain/croton_NY
-#RUN chmod -R 777 /home/docker/domain/
+RUN chmod -R 777 /home/docker/domain/
 
 USER docker
 WORKDIR /home/docker
 
 COPY ./introDemo.sh /home/docker
+COPY ./plot_hydrograph.py /home/docker
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]

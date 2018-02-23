@@ -1,5 +1,5 @@
 
  
-docker build "$@" --no-cache -t wrfhydro/training:latest . 
+docker build "$@" -t wrfhydro/training:latest . 
 
 exit $?

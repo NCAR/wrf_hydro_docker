@@ -1,0 +1,1 @@
+../../DOMAIN/soil_properties.nc

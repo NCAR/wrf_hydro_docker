@@ -1,4 +1,4 @@
-FROM wrfhydro/dev
+FROM wrfhydro/dev:base
 
 MAINTAINER jamesmcc@ucar.edu
 
@@ -22,7 +22,8 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 ENV PATH="/usr/bin/miniconda3/bin:${PATH}"
 
 #Install modules
-RUN conda install -y xarray
+RUN conda install -y xarray netcdf4 dask
+
 #Install plotnine, this funky error catch has to be done because of a known conda bug
 #If the command is run twice it succeeds on the second try
 #Will be fixed in conda version 4.4.11. See https://github.com/conda/conda/issues/6811

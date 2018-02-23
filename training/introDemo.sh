@@ -119,7 +119,8 @@ echo -e "\e[1mWe will now run the model using mpirun with 2 cores\e[0m"
 read progress 
 echo -e "mpirun -np 2 ./wrf_hydro.exe" 
 read progress 
-mpirun -np 2 ./wrf_hydro.exe echo -e "ls" ls
+mpirun -np 2 ./wrf_hydro.exe 
+echo -e "ls" ls
 
 echo 
 echo -e "\e[0;49;1m-----------------------------------\e[0m" 
@@ -134,10 +135,26 @@ echo -e "\e[1mWith these output settings the streamflow at observation points fo
 echo -e "\e[1mIf we had all output on, the streamflow output would be in *CHRTOUT*.nc files.\e[0m"
 echo -e "\e[1mThere are also RESTART and HYDRO_RST output files for restarting the model at a given timestep.\e[0m"
 echo -e "\e[1mFor a complete description of output files and variables see the Technical Description and User Guides located at https://ral.ucar.edu/projects/wrf_hydro.\e[0m"
+read progress 
 
+echo 
+echo -e "\e[0;49;1m-----------------------------------\e[0m" 
+echo -e "\e[7;49;1mNow lets plot a hydrograph of the modelled and observed streamflow at a gage point.\e[0m"
+echo -e "\e[7;49;1mThe observation data for USGS gage 01374559 has been provided as a csv file in Croton_usgsObs_01374559.csv.\e[0m"
+echo -e "\e[7;49;1mWe will use these data, the *CHANOBS* model output files, and the included python script plot_hydrograph.py.\e[0m"
+echo -e "\e[7;49;1mThe first argument to the python script is the directory containing the model output.\e[0m"
+echo -e "\e[7;49;1mThe second argument to the python script is the path for the output plot.\e[0m"
+read progress 
+echo -e "python3 /home/docker/plot_hydrograph.py"
+read progress  
+python3 /home/docker/plot_hydrograph.py /home/docker/domain/croton_NY/NWM /home/docker/hydrograph.png
+echo -e "\e[7;49;1mIf you would like to view this image on your host system please see the Docker documentation about mounting a local drive.\e[0m"
+echo -e "\e[7;49;1mYou can mount a folder form this container, e.g. '/home/docker/host', to a folder on your local host and copy files to it.\e[0m"
 
-echo -e "\e[1mNow, try it on your own for the Gridded and Reach configurations, or continue on to our brief visualization demo.\e[0m" 
+read progress  
+echo -e "\e[1mNow, try it on your own for the Gridded and Reach configurations.\e[0m" 
 
+read progress  
 echo 
 echo -e "\e[0;49;1m-----------------------------------\e[0m" 
 echo -e "\e[7;49;1mThis concludes the wrf_hydro_nwm_public introductory demonstration.\e[0m"
