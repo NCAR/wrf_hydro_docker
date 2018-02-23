@@ -111,22 +111,24 @@ RUN rm -rf /tmp/*
 
 
 ###################################
-## build nco here. really not what I was hpoing for.
-RUN apt-get update
-RUN apt-get install -yq --no-install-recommends \
-    nco \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/*
-
+## build nco and nccmp here. really not what I was hpoing for.
+#Get NCCMP to compare netcdf files
+RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
+        apt-get update && \
+        apt-get install -yq --no-install-recommends \
+	nco \
+	nccmp \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /tmp/*
+	
 ###################################
 ## wrf-hydro development docker interface script
 COPY ./interface.sh /.
 
 ###################################
 ## create docker user
-RUN useradd -ms /bin/bash docker
-RUN usermod -aG sudo docker
+#RUN useradd -ms /bin/bash docker
+#RUN usermod -aG sudo docker
 
 ####################################
 ######### docker user ###########
