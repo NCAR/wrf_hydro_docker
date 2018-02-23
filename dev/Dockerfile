@@ -41,13 +41,13 @@ COPY ./interface.sh /.
 
 ###################################
 ## create docker user
-RUN useradd -ms /bin/bash docker
-RUN usermod -aG sudo docker
+#RUN useradd -ms /bin/bash docker
+#RUN usermod -aG sudo docker
 
 ####################################
 ######### docker user ###########
 ####################################
-USER docker
+#USER docker
 ENV NETCDF=/usr/local
 RUN cp /interface.sh ~/.
 RUN cd $HOME

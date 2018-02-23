@@ -10,7 +10,7 @@
 ## setup wrf_hydro_tools
 echo "wrf_hydro_tools=/wrf_hydro_tools" > ~/.wrf_hydro_tools
 echo "# Following established in interface.sh entrypoint:" >> ~/.bashrc
-echo "source /wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
+#echo "source /wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
 echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> ~/.bashrc
 
 ###################################
@@ -168,7 +168,8 @@ fi
 ## Otherwise
 echo -e "\e[4;49;34m WRF-Hydro Development Docker: command mode \e[0m"
 
-exec "$@"
+#exec "$@"
+"$@"
 retValue=$?
 echo $retValue
 
