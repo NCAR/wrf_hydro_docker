@@ -17,8 +17,7 @@
 # Date:  2018-02-08
 ###################################
 
-FROM phusion/baseimage
-
+FROM ubuntu:latest
 MAINTAINER jamesmcc@ucar.edu
 
 ####################################
@@ -28,12 +27,29 @@ USER root
 
 
 ####################################
-## WRF-Hydro dependencies
-
-## Core wrf-hydro compiler stuff
+##Additional linux and command-line tools
+#Install add-apt-repository. This needs to be done starting Ubuntu 16.x
+RUN apt-get update \
+	&& apt-get install -yq --no-install-recommends \
+	software-properties-common \
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+#Install additional tools
 RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     && add-apt-repository ppa:remik-ziemlinski/nccmp \
     && apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    nccmp \
+    curl \
+    emacs-snapshot \
+    emacs-snapshot-el \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+####################################
+## WRF-Hydro dependencies
+## Core wrf-hydro compiler stuff
+RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
@@ -48,9 +64,6 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     git \
     nano \
     tcsh \
-    nccmp \
-    emacs-snapshot \
-    emacs-snapshot-el \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
@@ -127,8 +140,8 @@ COPY ./interface.sh /.
 
 ###################################
 ## create docker user
-#RUN useradd -ms /bin/bash docker
-#RUN usermod -aG sudo docker
+RUN useradd -ms /bin/bash docker
+RUN usermod -aG sudo docker
 
 ####################################
 ######### docker user ###########
