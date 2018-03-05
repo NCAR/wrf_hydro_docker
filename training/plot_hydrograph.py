@@ -1,3 +1,7 @@
+# Force matplotlib to not use any Xwindows backend.
+import matplotlib
+matplotlib.use('Agg')
+
 import sys
 from plotnine import *
 import xarray as xr
