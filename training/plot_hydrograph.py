@@ -1,3 +1,7 @@
+# Force matplotlib to not use any Xwindows backend.
+import matplotlib
+matplotlib.use('Agg')
+
 import sys
 from plotnine import *
 import xarray as xr
@@ -54,7 +58,7 @@ def plot_hydrographs(channel_files: list,image_filename: str,feature_id: int,obs
         hydrograph = ggplot(chrtout_data,aes(x='time',y='value',color='variable')) + \
             geom_line() + \
             scale_x_datetime(breaks='1 days') + \
-            labs(x='Date',y='Streamflow, cms',title='Modelled and Observed streamflow at West Branch of Croton River, USGS site 01374559') + \
+            labs(x='Date',y='Streamflow, cms',title='Modelled and Observed streamflow at feature_id '+feature_id) + \
             theme_bw()
         hydrograph.save(image_filename,'png',height=8,width=8)
     else:
@@ -62,7 +66,7 @@ def plot_hydrographs(channel_files: list,image_filename: str,feature_id: int,obs
         hydrograph = ggplot(chrtout_data,aes(x='time',y='streamflow')) + \
             geom_line() + \
             scale_x_datetime(breaks='1 days') + \
-            labs(x='Date',y='Streamflow, cms',title='Modelled streamflow at West Branch of Croton River, USGS site 01374559') + \
+            labs(x='Date',y='Streamflow, cms',title='Modelled and Observed streamflow at feature_id '+feature_id) + \
             theme_bw()
         hydrograph.save(image_filename,'png',height=8,width=8)
 
