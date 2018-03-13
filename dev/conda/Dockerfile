@@ -25,8 +25,6 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 
 #Install modules
 RUN conda install -y xarray netcdf4 dask 
-#f90nml
-#deep diff
 
 #Install plotnine, this funky error catch has to be done because of a known conda bug
 #If the command is run twice it succeeds on the second try
