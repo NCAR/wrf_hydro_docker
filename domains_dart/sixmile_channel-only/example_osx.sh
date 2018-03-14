@@ -21,11 +21,11 @@ WRF_HYDRO_DIR=/Users/jamesmcc/WRF_Hydro/wrf_hydro_nwm_myFork
 ## OUTSIDE DOCKER (OS X terminal)
 
 docker pull wrfhydro/dev:conda
-docker pull wrfhydro/domains_dart:matthew_channel-only
+docker pull wrfhydro/domains_dart:sixmile_channel-only
 
-# Create a new data container from the matthew_channel-only.
+# Create a new data container from the sixmile_channel-only.
 # Call it something slightly different to emphasise that the created container is a copy.
-docker create --name matthew_channel-only_test wrfhydro/domains_dart:matthew_channel-only
+docker create --name sixmile_channel-only_test wrfhydro/domains_dart:sixmile_channel-only
 
 # These are where the dart repo and nwm repos will be mounted
 # on the docker file system.
@@ -46,7 +46,7 @@ docker run -it \
        -e DART_DIR=$DART_DIR_DOCKER \
        -v $DART_DIR:$DART_DIR_DOCKER \
        -v $WRF_HYDRO_DIR:$WRF_HYDRO_DIR_DOCKER \
-       --volumes-from matthew_channel-only_test \
+       --volumes-from sixmile_channel-only_test \
        wrfhydro/dev:conda 
 
 
@@ -69,8 +69,8 @@ export WRF_HYDRO_RAPID=0
 export NCEP_WCOSS=0
 export WRF_HYDRO_NUDGING=0
 ./compile_offline_NoahMP.sh
-cp Run/wrf_hydro.exe /home/docker/domain_dart/matthew_channel-only/.
-cd /home/docker/domain_dart/matthew_channel-only/
+cp Run/wrf_hydro.exe /home/docker/domain_dart/sixmile_channel-only/.
+cd /home/docker/domain_dart/sixmile_channel-only/
 
 # DART (if necessary): compile
 cd /home/docker/wrf_hydro_dart/mkmf
@@ -78,8 +78,8 @@ ln -sf mkmf.template.gfortran_5.4.0_docker mkmf.template
 cd /home/docker/wrf_hydro_dart/models/wrfHydro/work
 ./quickbuild.csh
 
-# Matthew test run
-cd /home/docker/domain_dart/matthew_channel-only/
+# Sixmile test run
+cd /home/docker/domain_dart/sixmile_channel-only/
 ./setup_filter.csh forceCopyAll
 ./setup_filter.csh forceCopyAll ## again, with feeling.
 ./run_filter.csh
@@ -95,6 +95,6 @@ cd /home/docker/domain_dart/matthew_channel-only/
 #   container should stay available under that name and the data will
 #   persist, even if you restart docker or you computer (as far as i have seen).
 # THIS DESTROYS THE CONTAINER AND THE DATA IN IT. CONSIDER THAT.
-docker rm -v matthew_channel-only_test
+docker rm -v sixmile_channel-only_test
 
 
