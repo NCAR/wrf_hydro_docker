@@ -1,5 +1,6 @@
 #!/bin/bash
 
+theHelp="
 ## Purpose: Pass the native OS environment variables and
 ##          the working directory to a docker for compile.
 ## Arguments:
@@ -8,6 +9,12 @@
 ##   wrf_hydro_tools repository installed locally. 
 ## Usage:
 ## ./interactive_docker.sh [some_other_image]
+"
+
+if [[ $1 == '--help' ]]; then
+    echo "$theHelp"
+    exit 0
+fi
 
 ## Default image is wrfhydro/dev:base
 image=${1-wrfhydro/dev:base}

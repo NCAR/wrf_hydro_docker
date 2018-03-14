@@ -1,5 +1,6 @@
 #!/bin/bash
 
+theHelp="
 # Purpose: Run WRF-Hydro using MPI in a docker container in-place on host.
 #          
 # Arguments:
@@ -12,6 +13,11 @@
 #
 # Usage:
 # ./run_docker.sh 4 wrf_hydro.exe [some_other_image]
+"
+if [[ $1 == '--help' ]]; then
+    echo "$theHelp"
+    exit 0
+fi
 
 # Default image is wrfhydro/dev:base
 image=${3-wrfhydro/dev:base}
