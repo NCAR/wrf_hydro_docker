@@ -7,10 +7,7 @@
 #4: the binary. required for run mode.
 
 ###################################
-## setup wrf_hydro_tools
-echo "wrf_hydro_tools=/wrf_hydro_tools" > ~/.wrf_hydro_tools
 echo "# Following established in interface.sh entrypoint:" >> ~/.bashrc
-#echo "source /wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
 echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> ~/.bashrc
 
 ###################################
