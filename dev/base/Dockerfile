@@ -1,34 +1,55 @@
 ###################################
-# Author: Tony Castronova <acastronova -at- cuahsi.org>
-# Author: Joe Mills <jmills -at- ucar.edu>
-# Author: James McCreight <jamesmcc -at- ucar.edu>
-# Date:  11.1.17
+# WRF-Hydro Development docker
+# Purpose:
+#   1) Compile code on the host system (non-interactive mode)
+#   2) Run code on the host system     (non-interactive mode)
+#   3) Interactive use. 
+# The above is achieved through entrypoint and host-side scripting.
+#
+# Authors: James McCreight, Joe Mills
+# Email:  jamesmcc-at-ucar.edu, jmills-at-ucar.edu
+# Date:  2018-02-08
 ###################################
 
-FROM wrfhydro/ubuntu
+###################################
+# Author: James McCreight <jamesmcc -at- ucar.edu>
+# Author: Joe Mills <jmills -at- ucar.edu>
+# Date:  2018-02-08
+###################################
 
+FROM ubuntu:latest
 MAINTAINER jamesmcc@ucar.edu
 
-## Sizes
-## wrfhydro/ubuntu (FROM)                  225MB
-## wrfhydro/gcc_default (this image)       600MB
-## + (git + nano + tsch inclusion margin) ( 24MB)
-## + emacs                                (300MB)
 ####################################
 ########## ROOT USER  ##############
 ####################################
 USER root
 
-RUN apt-get update
 
-## Keep the large pieces away from the small pieces to speed up re-builds.
+####################################
+##Additional linux and command-line tools
+#Install add-apt-repository. This needs to be done starting Ubuntu 16.x
+RUN apt-get update \
+	&& apt-get install -yq --no-install-recommends \
+	software-properties-common \
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+#Install additional tools
+RUN add-apt-repository ppa:ubuntu-elisp/ppa \
+    && add-apt-repository ppa:remik-ziemlinski/nccmp \
+    && apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    nccmp \
+    curl \
+    emacs-snapshot \
+    emacs-snapshot-el \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ####################################
 ## WRF-Hydro dependencies
-
 ## Core wrf-hydro compiler stuff
-RUN add-apt-repository ppa:ubuntu-elisp/ppa \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
@@ -43,8 +64,6 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     git \
     nano \
     tcsh \
-    emacs-snapshot \
-    emacs-snapshot-el \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
@@ -99,8 +118,37 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
 
 ENV NETCDF=/usr/local
-WORKDIR /
 
 ## just to be sure 
 RUN rm -rf /tmp/*
 
+
+###################################
+## build nco and nccmp here. really not what I was hpoing for.
+#Get NCCMP to compare netcdf files
+RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
+        apt-get update && \
+        apt-get install -yq --no-install-recommends \
+	nco \
+	nccmp \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /tmp/*
+	
+###################################
+## wrf-hydro development docker interface script
+COPY ./interface.sh /.
+
+###################################
+## create docker user
+RUN useradd -ms /bin/bash docker
+RUN usermod -aG sudo docker
+
+####################################
+######### docker user ###########
+####################################
+USER docker
+WORKDIR /home/docker
+RUN cp /interface.sh ~/.
+RUN cd $HOME
+ENTRYPOINT ["/interface.sh"]
+CMD ["interactive"]
