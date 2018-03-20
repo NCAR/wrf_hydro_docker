@@ -6,18 +6,15 @@
 #3: number of processors/cores. required for run mode.
 #4: the binary. required for run mode.
 
-echo -e "\e[4;49;34m WRF-Hydro Development Docker: $1 mode \e[0m"
-
 ###################################
-## setup wrf_hydro_tools
-echo "wrf_hydro_tools=/wrf_hydro_tools" > ~/.wrf_hydro_tools
 echo "# Following established in interface.sh entrypoint:" >> ~/.bashrc
-echo "source /wrf_hydro_tools/utilities/sourceMe.sh" >> ~/.bashrc
 echo 'PS1="\[\e[0;49;34m\]\\u@\h[\!]:\[\e[m\]\\w> "' >> ~/.bashrc
 
 ###################################
 ## compile
 if [[ "${1}" == 'compile' ]]; then
+
+    echo -e "\e[4;49;34m WRF-Hydro Development Docker: $1 mode \e[0m"
 
     ## Work in $HOME
     cd $HOME
@@ -106,6 +103,8 @@ fi
 ## run
 if [[ "${1}" == 'run' ]]; then
 
+    echo -e "\e[4;49;34m WRF-Hydro Development Docker: $1 mode \e[0m"
+    
     workDir=$2
     nCores=$3
     theBin=$4
@@ -147,6 +146,8 @@ fi
 ## interactive
 if [[ "${1}" == 'interactive' ]]; then
     
+    echo -e "\e[4;49;34m WRF-Hydro Development Docker: $1 mode \e[0m"
+
     if [[ ! -z $2 ]]; then cd $2; fi
 
     ## OSX: The mounting is setup to only include the requesting user from /Users/`whoami`
@@ -159,3 +160,18 @@ if [[ "${1}" == 'interactive' ]]; then
     exit $?
 
 fi
+
+
+## Otherwise
+echo -e "\e[4;49;34m WRF-Hydro Development Docker: command mode \e[0m"
+
+#exec "$@"
+"$@"
+retValue=$?
+echo $retValue
+
+if [[ $retValue -ne 0 ]]; then
+    exec /bin/bash
+fi
+
+exit 0
