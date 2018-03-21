@@ -28,7 +28,7 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 #Install modules
 RUN conda install -y xarray netcdf4 dask
-RUN pip install f90nml deepdiff
+RUN pip install f90nml deepdiff pytest pytest-datadir-ng
 
 #Install plotnine, this funky error catch has to be done because of a known conda bug
 #If the command is run twice it succeeds on the second try
