@@ -6,12 +6,15 @@ MAINTAINER jamesmcc@ucar.edu
 ########## ROOT USER  ##############
 ####################################
 USER root
-
-###########################
-#Install python3 miniconda
-
 #remove old python3
 RUN rm -rf /usr/bin/python3
+
+###########################
+#Install python3 miniconda as docker user
+USER docker
+
+#Set environment variables
+ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 ####################################
 ######### docker user ###########
@@ -22,13 +25,15 @@ USER docker
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
     && rm Miniconda3-latest-Linux-x86_64.sh
+    && conda update -n base conda
 
 #Set environment variables
 ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 #Install modules
-RUN conda install -y xarray netcdf4 dask
-RUN pip install f90nml deepdiff pytest pytest-datadir-ng
+RUN conda install -y xarray netcdf4 dask f90nml deepdiff
+RUN pip install pytest pytest-datadir-ng
+
 
 #Install plotnine, this funky error catch has to be done because of a known conda bug
 #If the command is run twice it succeeds on the second try
