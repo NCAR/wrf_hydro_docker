@@ -7,4 +7,3 @@ RUN chmod -R 777 /home/docker/domain/croton_NY
 #COPY --from=0 --chown=docker /home/docker/domain/croton_NY /home/docker/domain/croton_NY
 VOLUME /home/docker/domain/croton_NY
 
-ENTRYPOINT ["dummy/entry/point"]
