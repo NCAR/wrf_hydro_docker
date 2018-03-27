@@ -133,22 +133,19 @@ RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
 	nccmp \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /tmp/*
-	
-###################################
-## wrf-hydro development docker interface script
-COPY ./interface.sh /.
 
 ###################################
 ## create docker user
 RUN useradd -ms /bin/bash docker
 RUN usermod -aG sudo docker
 
+###################################
+## wrf-hydro development docker interface script
+COPY ./interface.sh /home/docker/runTimeScripts/
+RUN chmod -R 777 /home/docker/runTimeScripts/
+
 ####################################
 ######### docker user ###########
 ####################################
 USER docker
 WORKDIR /home/docker
-RUN cp /interface.sh ~/.
-RUN cd $HOME
-ENTRYPOINT ["/interface.sh"]
-CMD ["interactive"]
