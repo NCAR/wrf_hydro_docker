@@ -36,10 +36,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 #Install additional tools
 RUN add-apt-repository ppa:ubuntu-elisp/ppa \
-    && add-apt-repository ppa:remik-ziemlinski/nccmp \
     && apt-get update \
     && apt-get install -yq --no-install-recommends \
-    nccmp \
     curl \
     emacs-snapshot \
     emacs-snapshot-el \
