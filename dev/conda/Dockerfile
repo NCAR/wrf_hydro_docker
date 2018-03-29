@@ -34,7 +34,7 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 RUN conda install -y xarray 
 RUN conda install -c conda-forge -y --no-update-deps netcdf4 dask f90nml deepdiff
 RUN pip install pytest pytest-datadir-ng 
-RUN pip 
+RUN pip install wrfhydropy
 
 #Install plotnine, this funky error catch has to be done because of a known conda bug
 #If the command is run twice it succeeds on the second try
