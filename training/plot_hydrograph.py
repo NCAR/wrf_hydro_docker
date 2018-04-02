@@ -77,7 +77,7 @@ def main(chanout_dir: str,image_filename: str)->None:
 
     Args:
         chanout_dir: A string specifying the directory containing the wrf-hydro CHANOBS files
-        filename: A string s[ecifying the output path for the plot.
+        image_filename: A string specifying the output path for the plot.
 
     Returns:
         Returns None and outputs a plot to the specified path

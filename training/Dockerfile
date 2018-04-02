@@ -9,6 +9,8 @@ FROM wrfhydro/dev:conda
 MAINTAINER jmills@ucar.edu
 USER root
 
+RUN rm -r /home/docker/runTimeScripts
+
 #Get the script to download the code release
 COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
@@ -16,11 +18,17 @@ RUN chmod 777 /entrypoint.sh
 COPY --from=domain /home/docker/domain/croton_NY /home/docker/domain/croton_NY
 RUN chmod -R 777 /home/docker/domain/
 
+COPY ./introDemo.sh /home/docker/howto/
+COPY ./walkthrough.md /home/docker/howto/
+COPY ./walkthrough.html /home/docker/howto/
+
+COPY ./plot_hydrograph.py /home/docker/utilities/
+COPY ./create_SoilProperties.R /home/docker/utilities/
+COPY ./README_create_SoilProperties.txt /home/docker/utilities/
+RUN chmod -R 777 /home/docker/utilities
+
 USER docker
 WORKDIR /home/docker
-
-COPY ./introDemo.sh /home/docker
-COPY ./plot_hydrograph.py /home/docker
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]
