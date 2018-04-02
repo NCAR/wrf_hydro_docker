@@ -23,8 +23,6 @@ COPY ./walkthrough.md /home/docker/howto/
 COPY ./walkthrough.html /home/docker/howto/
 
 COPY ./plot_hydrograph.py /home/docker/utilities/
-COPY ./create_SoilProperties.R /home/docker/utilities/
-COPY ./README_create_SoilProperties.txt /home/docker/utilities/
 RUN chmod -R 777 /home/docker/utilities
 
 USER docker
