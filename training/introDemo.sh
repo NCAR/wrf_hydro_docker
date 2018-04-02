@@ -20,7 +20,7 @@ echo -e "\e[1mFirst we must change directories to the code repository directory.
 read progress 
 echo -e "cd wrf_hydro_nwm_public*/trunk/NDHMS" 
 read progress 
-cd wrf_hydro_nwm_public*/trunk/NDHMS
+cd /home/docker/wrf_hydro_nwm_public*/trunk/NDHMS
 
 echo 
 echo -e "\e[0;49;1m-----------------------------------\e[0m" 
@@ -111,6 +111,17 @@ read progress
 ls
 
 echo 
+echo -e "\e[1mNow we also need to copy the forcing data in FORCING directory to the NWM directory.\e[0m" 
+echo -e "\e[1mSince these data can be rather large, we will create a symlink to the directory rather than copying the actual files.\e[0m" 
+read progress 
+echo -e "cp -as /home/docker/domain/croton_NY/FORCING /home/docker/domain/croton_NY/NWM" 
+read progress 
+cp -as /home/docker/domain/croton_NY/FORCING /home/docker/domain/croton_NY/NWM
+echo -e "ls" 
+read progress 
+ls
+
+echo 
 echo -e "\e[0;49;1m-----------------------------------\e[0m" 
 echo -e "\e[7;49;1mNext we will run the model\e[0m"
 echo -e "\e[1mNote that there are many options and filepaths that need to be set in the two namelist files hydro.namelist and namelist.hrldas.\e[0m" 
@@ -147,7 +158,7 @@ echo -e "\e[7;49;1mThe second argument to the python script is the path for the 
 read progress 
 echo -e "python3 /home/docker/plot_hydrograph.py"
 read progress  
-python3 /home/docker/plot_hydrograph.py /home/docker/domain/croton_NY/NWM /home/docker/hydrograph.png
+python3 /home/docker/utilities/plot_hydrograph.py /home/docker/domain/croton_NY/NWM /home/docker/hydrograph.png
 echo -e "\e[7;49;1mIf you would like to view this image on your host system please see the Docker documentation about mounting a local drive.\e[0m"
 echo -e "\e[7;49;1mYou can mount a folder form this container, e.g. '/home/docker/host', to a folder on your local host and copy files to it.\e[0m"
 
