@@ -1,0 +1,20 @@
+sudo: required
+dist: trusty
+services:
+  - docker
+env:
+  - REGISTRY_USER=wrfhydrobot
+  # REGISTRY_PASS=...
+  - secret: "<something long>"
+
+install: []
+before_script: []
+script:
+  - bash build_all.sh
+
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+
+deploy:
+  provider: script
+  script: bash deploy_all.sh
