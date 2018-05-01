@@ -1,9 +1,18 @@
 FROM alpine:latest
 MAINTAINER Joe Mills <jmills@ucar.edu>
-COPY domain/ /home/docker/domain/croton_NY
+USER root
+
+# Get domain from google drive
+## Get download script
+COPY gdrive_dl_docker.sh /gdrive_dl_docker.sh
+RUN chmod 777 gdrive_dl_docker.sh
+
+RUN /bin/sh gdrive_dl_docker.sh 1EHgWeM8k2-Y3jNMLri6C0u_fIUQIonO_ croton_NY.tar.gz && \
+	mkdir -p /home/docker/domain && \
+	tar -xf croton_NY.tar.gz && \
+	mv croton_NY /home/docker/domain
+
 RUN chmod -R 777 /home/docker/domain/croton_NY
 
-#FROM scratch
-#COPY --from=0 --chown=docker /home/docker/domain/croton_NY /home/docker/domain/croton_NY
 VOLUME /home/docker/domain/croton_NY
 
