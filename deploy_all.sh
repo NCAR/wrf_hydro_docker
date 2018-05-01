@@ -1,11 +1,10 @@
 #!/bin/bash
 
-depends="$(cat deploy_dependencies.txt)"
+depends="$(cat build_deploy_deps.txt)"
 
 for dd in $depends; do
 
     echo '------------------------------'
-    echo "Building:  $dd"
 
     dd_dirname=$(dirname $dd)
     cd $dd_dirname
@@ -13,16 +12,13 @@ for dd in $depends; do
     build_cmd=$(grep wrfhydro build.sh)
     cmd_arr=(${build_cmd//;/ })
     name_tag=$(printf -- '%s\n' "${cmd_arr[@]}" | grep wrfhydro)
-    #echo $name_tag
-
-    ./build.sh
+    echo "Deploying: $name_tag"
 
     docker push $name_tag
 
     cd - 2&>1 > /dev/null
-    echo
-        
-    
+    echo       
+   
 done
 
 exit 0
