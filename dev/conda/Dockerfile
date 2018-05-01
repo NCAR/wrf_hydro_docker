@@ -37,7 +37,7 @@ RUN conda config --add channels conda-forge --force
 #RUN source activate docker_conda
 
 #Install modules
-RUN conda install -y jupyter cartopy rasterio netcdf4 dask f90nml deepdiff xarray plotnine
+RUN conda install -y jupyter cartopy rasterio netcdf4 dask f90nml deepdiff xarray plotnine boltons
 #RUN conda install -c conda-forge -y --no-update-deps netcdf4 dask f90nml deepdiff xarray
 RUN pip install pytest pytest-datadir-ng 
 RUN pip install wrfhydropy
