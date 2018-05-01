@@ -2,10 +2,6 @@ sudo: required
 dist: trusty
 services:
   - docker
-env:
-  - REGISTRY_USER=wrfhydrobot
-  # REGISTRY_PASS=...
-  - secret: "<something long>"
 
 install: []
 before_script: []
