@@ -17,7 +17,7 @@
 # Date:  2018-02-08
 ###################################
 
-FROM ubuntu:latest
+FROM ubuntu:xenial
 MAINTAINER jamesmcc@ucar.edu
 
 ####################################
