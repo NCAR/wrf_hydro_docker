@@ -12,12 +12,13 @@ script:
   - echo "building training:latest"; cd $TRAVIS_BUILD_DIR/training; bash build.sh; 
 #  - travis_wait 30 bash build_all.sh
 
-before_deploy:
-  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+#before_deploy:
+#  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
-deploy:
-  provider: script
+
+after_success:
   script:
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
     - docker push wrfhydro/dev:base
     - docker push wrfhydro/dev:conda
     - docker push wrfhydro/domains:croton_NY
