@@ -17,7 +17,6 @@ script:
 
 
 after_success:
-  script:
     - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
     - docker push wrfhydro/dev:base
     - docker push wrfhydro/dev:conda
