@@ -1,5 +1,4 @@
 domains/croton_NY/build.sh
-domains_dart/sixmile_channel-only/build.sh
 dev/base/build.sh
 dev/conda/build.sh
 training/build.sh

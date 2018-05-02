@@ -6,11 +6,19 @@ services:
 install: []
 before_script: []
 script:
-  - bash build_all.sh
+  - echo "building dev:base"; cd $TRAVIS_BUILD_DIR/dev/base/; travis_wait 30 bash build.sh; #Long running build add in travis wait
+  - echo "building dev:conda"; cd $TRAVIS_BUILD_DIR/dev/conda/; travis_wait 30 bash build.sh;
+  - echo "building domains:croton_NY"; cd $TRAVIS_BUILD_DIR/domains/croton_NY/; bash build.sh;
+  - echo "building training:latest"; cd $TRAVIS_BUILD_DIR/training; bash build.sh; 
+#  - travis_wait 30 bash build_all.sh
 
 before_deploy:
   - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
 deploy:
   provider: script
-  script: bash deploy_all.sh
+  script:
+    - docker push wrfhydro/dev:base
+    - docker push wrfhydro/dev:conda
+    - docker push wrfhydro/domains:croton_NY
+    - docker push wrfhydro/training
