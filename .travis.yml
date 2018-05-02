@@ -6,10 +6,10 @@ services:
 install: []
 before_script: []
 script:
-  - cd dev/base/; bash build.sh; cd -
-  - cd dev/conda/; bash build.sh; cd -
-  - cd domains/croton_NY/; bash build.sh; cd -
-  - cd training; bash build.sh; cd -
+  - travis_wait 30 cd dev/base/; bash build.sh; cd - #Long running build add in travis wait
+  - echo "-------------------------"; echo "building dev:conda"; cd dev/conda/; bash build.sh; cd -
+  - echo "-------------------------"; echo "building domains:croton_NY"; cd domains/croton_NY/; bash build.sh; cd -
+  - echo "-------------------------"; echo "building training:latest";cd training; bash build.sh; cd -
 #  - travis_wait 30 bash build_all.sh
 
 before_deploy:
