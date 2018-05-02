@@ -15,7 +15,6 @@ script:
 #before_deploy:
 #  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
-
 after_success:
     - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
     - docker push wrfhydro/dev:base
