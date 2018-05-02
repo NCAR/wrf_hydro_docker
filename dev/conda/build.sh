@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build "$@" -t -q wrfhydro/dev:conda .
+docker build "$@" -q -t wrfhydro/dev:conda .
 
 exit $?

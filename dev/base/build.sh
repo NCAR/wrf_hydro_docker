@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build "$@" -t -q wrfhydro/dev:base .
+docker build "$@" -q -t wrfhydro/dev:base .
 
 exit $?
