@@ -16,8 +16,8 @@ script:
 #  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
 after_success:
-    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
-    - docker push wrfhydro/dev:base
-    - docker push wrfhydro/dev:conda
-    - docker push wrfhydro/domains:croton_NY
-    - docker push wrfhydro/training
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  - docker push wrfhydro/dev:base
+  - docker push wrfhydro/dev:conda
+  - docker push wrfhydro/domains:croton_NY
+  - docker push wrfhydro/training
