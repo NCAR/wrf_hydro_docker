@@ -198,8 +198,8 @@ and files:
     ```
     -project_directory
             |___domain
-            |___croton_NY
-            |___NWM
+                |___croton_NY
+                |___NWM
                     |___DOMAIN/
                           |___RESTART/
                           |___nudgingTimeSliceObs/

@@ -14,4 +14,4 @@ tar -xf wrf_hydro_nwm_public-*.tar.gz
 rm wrf_hydro_nwm_public-*.tar.gz
 echo "Retrieved the following release: $version"
 
-/bin/bash
+jupyter notebook --ip 0.0.0.0 --no-browser
