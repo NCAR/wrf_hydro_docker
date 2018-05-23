@@ -16,6 +16,9 @@ RUN rm -r /home/docker/runTimeScripts
 COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
 
+#Get jupyter config
+COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
+
 # Copy in the domain
 COPY --from=domain /home/docker/domain/croton_NY /home/docker/domain/croton_NY
 RUN chmod -R 777 /home/docker/domain/

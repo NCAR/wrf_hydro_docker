@@ -12,6 +12,22 @@ assetURL=$(echo "$release" | grep "browser_download_url" | cut -d : -f 2,3 |  tr
 echo "$assetURL" | wget -qi -
 tar -xf wrf_hydro_nwm_public-*.tar.gz
 rm wrf_hydro_nwm_public-*.tar.gz
+mv wrf_hydro_nwm_public-* wrf_hydro_nwm_public
 echo "Retrieved the following release: $version"
 
-jupyter notebook --ip 0.0.0.0 --no-browser
+jupyter notebook --ip 0.0.0.0 --no-browser &> /dev/null &
+
+
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "\e[7;49;32mTraining Jupyter notebook server running\e[0m"
+echo
+echo "Open your browser to the following address to access notebooks"
+echo "localhost:8888"
+echo
+echo "The password to login is 'nwmtraining'"
+echo 
+echo "Type ctrl-C then y to shut down container." 
+echo "NOTE ALL WORK WILL BE LOST UNLESS copied out of the container"
+
+sleep infinity
