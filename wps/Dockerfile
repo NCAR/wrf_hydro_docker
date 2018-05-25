@@ -48,12 +48,26 @@ RUN rm -r /home/docker/WRF_WPS/WPSV3.9 \
 RUN chmod -R 777 /home/docker/WRF_WPS
 
 ############################
-# Setup stuff for entrypoint
+## Additional python libraries
+RUN pip install wrf-python Image
 
-RUN mv /home/docker/WRF_WPS/WPS/namelist.wps \
-	/home/docker/WRF_WPS/WPS/namelist.wps_orig 
+############################
+# Setup stuff for geogrid script
 
-COPY make_geogrid.py /home/docker/runTimeScripts/make_geogrid.py
+RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
+	&& mv /home/docker/WRF_WPS/WPS/namelist.wps \
+	/home/docker/WRF_WPS/WPS/namelist.wps_orig
+
+COPY make_geogrid.py /home/docker/WRF_WPS/utilities/make_geogrid.py
+COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
+
+COPY geog_conus.tar.gz . 
+RUN	tar -xf geog_conus.tar.gz && \
+	mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus && \
+	rm geog_conus.tar.gz
+
+RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW \
+	/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW
 
 ####################################
 ########## DOCKER USER #############
