@@ -66,7 +66,7 @@ RUN	tar -xf geog_conus.tar.gz && \
 	mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus && \
 	rm geog_conus.tar.gz
 
-RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW \
+RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW.wrf_hydro_training \
 	/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW
 
 ####################################
@@ -76,4 +76,4 @@ USER docker
 WORKDIR /home/docker
 #ENV NETCDF=/usr/local
 
-#ENTRYPOINT python make_geogrid.py 
+ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]

@@ -1,5 +1,6 @@
 #!/bin/bash
-
+mkdir /home/docker/wrf-hydro-training
+chmod -R 777 /home/docker/wrf-hydro-training
 echo -e "\e[4;49;34m WRF-Hydro Training Container\e[0m"
 
 echo
@@ -15,7 +16,8 @@ version=$(echo $version | tr "," " ")
 #rm wrf_hydro_nwm_public-*.tar.gz
 #mv wrf_hydro_nwm_public-* wrf_hydro_nwm_public
 git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public
-mv ~/wrf_hydro_nwm_public ~/wrf-hydro-training/wrf_hydro_nwm_public
+#chmod -R 777 ~/wrf_hydro_nwm_public
+mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public
 echo "Retrieved the following release: $version"
 
 echo
@@ -29,7 +31,8 @@ exampleCaseURL=$(echo "$release" | grep 'testcase' \
 echo "$exampleCaseURL" | wget -qi -
 tar -xf *testcase*.tar.gz
 rm *testcase*.tar.gz
-mv ~/example_case ~/wrf-hydro-training/example_case
+#chmod -R 777 ~/example_case
+mv /home/docker/example_case /home/docker/wrf-hydro-training/example_case
 echo "Retrieved the test case for release: $version"
 
 
