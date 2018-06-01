@@ -1,0 +1,51 @@
+&share
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!  Specify the number of domains
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ max_dom = 1,
+
+/
+
+&geogrid
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Define the extend in west-east (e_we) and south-north (e_sn) directions
+!  Note: will create a domain of size (e_we-1) x (e_sn-1)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ e_we              =  16,
+ e_sn              =  17,
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Define the center point of your domain
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ ref_lat   =   41.47100
+ ref_lon   =  -73.74365
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Define the domain grid spacing (in meters)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ dx = 1000,
+ dy = 1000,
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Define the map projection
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ map_proj = 'lambert',
+ truelat1  =  30.0,
+ truelat2  =  60.0,
+ stand_lon =  -97.00,
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Define the data sources and data path
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ geog_data_res     = 'default',
+ geog_data_path = '/home/docker/WRF_WPS/utilities/geog_conus'
+
+/
