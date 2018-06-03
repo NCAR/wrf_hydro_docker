@@ -6,7 +6,7 @@
 # This Dockerfile compiles WRF and WPS from source using the bare-bones requirements for training purposes.
 # See https://ral.ucar.edu/projects/ncar-docker-wrf for more complete WRF and WPS docker builds with additional functionality
 
-FROM wrfhydro/dev:conda
+FROM wrfhydro/dev:base
 
 MAINTAINER jmills@ucar.edu
 USER root
@@ -48,7 +48,23 @@ RUN rm -r /home/docker/WRF_WPS/WPSV3.9 \
 RUN chmod -R 777 /home/docker/WRF_WPS
 
 ############################
-## Additional python libraries
+## Python
+#Fetch latest miniconda and install
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+
+#Set environment variables
+ENV PATH="/home/docker/miniconda3/bin:${PATH}"
+
+#Setup virtual environment
+RUN conda update conda
+RUN conda config --add channels conda-forge --force
+#RUN conda create -n docker_conda python=3.6 
+#RUN source activate docker_conda
+
+#Install modules
+RUN conda install -y cartopy rasterio netcdf4 f90nml xarray
 RUN pip install wrf-python Image
 
 ############################
