@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 ############################################################
 # R script to create wrfinput file from geogrid.
 # Usage: Rscript create_Wrfinput.R 
@@ -6,7 +8,6 @@
 #          https://github.com/NCAR/hrldas-release/blob/release/HRLDAS/HRLDAS_forcing/lib/module_geo_em.F
 #          from M. Barlage.
 ############################################################
-#!/usr/bin/env Rscript
 library(optparse)
 library(ncdf4)
 
@@ -15,13 +16,14 @@ option_list = list(
               help="Path to input geogrid file", metavar="character"),
   make_option(c("--outfile"), type="character", default="wrfinput_d01.nc", 
               help="output file name [default= %default]", metavar="character"),
-  make_option(c("--filltyp"), type="integer", default=3, help="Soil type to use as a fill value in case conflicts between soil water and land cover water cells.
-If the script encounters a cell that is classified as land in the land use field (LU_INDEX) but is classified as a water soil type, it will replace the soil type with the value you
-              specify below. Ideally there are not very many of these, so you can simply choose the most
-              common soil type in your domain. Alternatively, you can set to a bad value (e.g., -8888)
-              to see how many of these conflicts there are. If you do this DO NOT RUN THE MODEL WITH THESE
-              BAD VALUES. Instead, fix them manually with a neighbor fill or similar fill algorithm.", 
-              metavar="character"),
+  make_option(c("--filltyp"), type="integer", default=3, help="Soil type to use as a fill value in case 
+                conflicts between soil water and land cover water cells. If the script encounters a cell 
+                that is classified as land in the land use field (LU_INDEX) but is classified as a water 
+                soil type, it will replace the soil type with the value you specify. Ideally there are 
+                not very many of these, so you can simply choose the most common soil type in your domain. 
+                Alternatively, you can set to a bad value (e.g., -8888) to see how many of these conflicts 
+                there are. If you do this DO NOT RUN THE MODEL WITH THESE BAD VALUES. Instead, fix them 
+                manually with a neighbor fill or similar fill algorithm. [default= %default]", metavar="character"),
   make_option(c("--laimo"), type="integer", default=8, 
               help="output file name [default= %default]", metavar="character"),
   make_option(c("--missfloat"), type="numeric", default=(-1.e+36), 
