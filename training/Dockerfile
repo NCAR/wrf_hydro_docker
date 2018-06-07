@@ -17,14 +17,20 @@ RUN mkdir /home/docker/wrf-hydro-training
 RUN chmod -R 777 /home/docker/wrf-hydro-training
 COPY ./create_wrfinput.R /home/docker/wrf-hydro-training/wrf_hydro_model_tools/create_wrfinput.R
 
-#Bring in NLDAS data
+#get regridding scripts
 RUN wget https://ral.ucar.edu/sites/default/files/public/ESMFregrid_NLDAS.tar_.gz \
 	&& tar -xf ESMFregrid_NLDAS.tar_.gz \
 	&& mv NLDAS /home/docker/wrf-hydro-training/regridding \
 	&& rm ESMFregrid_NLDAS.tar_.gz
 
 #Get NLDAS forcing for regridding exercise
-COPY ./nldas_forcing.tar.gz /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
+#COPY ./nldas_forcing.tar.gz /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
+
+COPY ./gdrive_download.py gdrive_download.py
+RUN chmod 777 gdrive_download.py
+
+
+RUN python gdrive_download.py --file_id 1PrDTA-hMFNqQrDag1Dm7tX1rT1gQ_25e --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz 
 
 # install NCL
 RUN wget https://www.earthsystemgrid.org/dataset/ncl.640.dap/file/ncl_ncarg-6.4.0-Debian8.6_64bit_gnu492.tar.gz \
@@ -73,6 +79,8 @@ RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
 USER docker
 WORKDIR /home/docker
+
+#Make a temp directory needed for matplotlib
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]

@@ -49,6 +49,8 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 
 ############################
 ## Python
+WORKDIR /
+
 #Fetch latest miniconda and install
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
@@ -69,6 +71,7 @@ RUN pip install wrf-python Image
 
 ############################
 # Setup stuff for geogrid script
+COPY ./namelist.wps_orig /home/docker/WRF_WPS/utilities/namelist.wps_orig
 
 RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
 	&& mv /home/docker/WRF_WPS/WPS/namelist.wps \
@@ -77,10 +80,22 @@ RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
 COPY make_geogrid.py /home/docker/WRF_WPS/utilities/make_geogrid.py
 COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 
-COPY geog_conus.tar.gz . 
-RUN	tar -xf geog_conus.tar.gz && \
-	mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus && \
-	rm geog_conus.tar.gz
+# Get geog data from google drive
+## Get download script
+COPY gdrive_download.py /gdrive_download.py
+RUN chmod 777 /gdrive_download.py
+
+RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest_file geog_conus.tar.gz \
+	&& tar -xf geog_conus.tar.gz \
+	&& mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus \
+	&& rm geog_conus.tar.gz
+
+RUN chmod -R 777 /home/docker/WRF_WPS/utilities/geog_conus
+
+#COPY geog_conus.tar.gz . 
+#RUN	tar -xf geog_conus.tar.gz && \
+#	mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus && \
+#	rm geog_conus.tar.gz
 
 RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW.wrf_hydro_training \
 	/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW
@@ -90,6 +105,10 @@ RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW.wrf_hydro_train
 ####################################
 USER docker
 WORKDIR /home/docker
+
+RUN mkdir /home/docker/tmp/ \
+	&& chmod 777 -R /home/docker/tmp/
+
 #ENV NETCDF=/usr/local
 
 ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]

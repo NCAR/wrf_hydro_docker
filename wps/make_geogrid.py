@@ -22,11 +22,21 @@ import pathlib
 import shutil
 import os
 import time
+<<<<<<< HEAD
+=======
 import matplotlib.pyplot as plt
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
 import cartopy.io.img_tiles as cimgt
 from wrf import (projection, latlonutils)
 import math
 
+<<<<<<< HEAD
+#Setup matlob lib to not use any xwindows backend
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+=======
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
 # Functions
 def build_projparams(ref_lat=0.0, ref_lon=0.0, dx=1000.0, dy=1000.0,
                      map_proj='lambert', truelat1=0.0, truelat2=0.0,
@@ -249,11 +259,19 @@ def main():
                         default='false',
                         help="Only create a plot of the domain. Geogrid will not be created if "
                              "plot_only = true, only a plot of the domain will be created.")
+<<<<<<< HEAD
+    #parser.add_argument("--display",
+    #                    dest="display",
+    #                    default='false',
+    #                    help="Display the image in python. Warning may cause issues in a terminal"
+    #                         "session.")
+=======
     parser.add_argument("--display",
                         dest="display",
                         default='false',
                         help="Display the image in python. Warning may cause issues in a terminal"
                              "session.")
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
 
     # parser.add_argument("--orig_nml_path",
     #                     dest="new_nml_path",
@@ -269,6 +287,16 @@ def main():
     args = parser.parse_args()
 
     patch_nml_path = pathlib.Path(args.namelist_path)
+<<<<<<< HEAD
+    output_dir = args.output_dir
+    plot_only = args.plot_only
+    #display = args.display
+    display = 'false'
+
+    # orig_nml_path = args.orig_nml_path
+    # new_nml_path = args.new_nml_path
+    orig_nml_path = pathlib.Path('/home/docker/WRF_WPS/utilities/namelist.wps_orig')
+=======
     output_dir = pathlib.Path(args.output_dir)
     plot_only = args.plot_only
     display = args.display
@@ -276,6 +304,7 @@ def main():
     # orig_nml_path = args.orig_nml_path
     # new_nml_path = args.new_nml_path
     orig_nml_path = pathlib.Path('/home/docker/WRF_WPS/WPS/namelist.wps_orig')
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
     new_nml_path = pathlib.Path('/home/docker/WRF_WPS/WPS/namelist.wps')
 
     if display.lower() == 'true':
@@ -285,12 +314,20 @@ def main():
 
     if plot_only.lower() == 'true':
         plot_from_wps(patch_nml_path=str(patch_nml_path),
+<<<<<<< HEAD
+                      figFilename=output_dir + '/domain.png',
+=======
                       figFilename=str(output_dir) + '/domain.png',
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
                       display=display)
     else:
         print('Plotting domain')
         plot_from_wps(patch_nml_path=str(patch_nml_path),
+<<<<<<< HEAD
+                      figFilename=output_dir + '/domain.png',
+=======
                       figFilename=str(output_dir) + '/domain.png',
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
                       display=display)
         
         print('Generating geogrid file')
@@ -304,8 +341,13 @@ def main():
         subprocess.run(['./geogrid.exe'],
                        cwd=new_nml_path.parent)
 
+<<<<<<< HEAD
+        shutil.copy(str(new_nml_path.parent / 'geo_em.d01.nc'),
+                    output_dir + '/geo_em.d01.nc')
+=======
         shutil.move(str(new_nml_path.parent / 'geo_em.d01.nc'),
                     str(pathlib.Path(output_dir) / 'geo_em.d01.nc'))
+>>>>>>> c407c2cdd5c461832ff07b5e679470f4ceae81f0
 
 
 if __name__ == '__main__':
