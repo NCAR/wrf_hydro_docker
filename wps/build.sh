@@ -1,4 +1,4 @@
 #!/bin/bash
-docker build "$@" --no-cache -t wrfhydro/wps .
+docker build "$@" -t wrfhydro/wps .
 
 exit $?
