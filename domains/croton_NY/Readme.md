@@ -1,3 +1,6 @@
+# THESE DOCKER DATA CONTAINERS FOR DOMAINS WILL SOON BE DEPRECATED
+These images are a temporary solution until an object store is established.
+
 # Overview 
 
 This test case includes prepared geospatial data and input files for a

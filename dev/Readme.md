@@ -3,4 +3,5 @@
 # Overview
 
 Containers used for WRF-Hydro development. These containers are also suitable options for running
-WRF-Hydro simulations on a single-node system. See sub-directories for details on each container.
+WRF-Hydro simulations on a single-node system. See sub-tags (e.g. 'dev', 'conda') for details on
+each container.
