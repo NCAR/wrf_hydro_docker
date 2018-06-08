@@ -1,3 +1,5 @@
+![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+
 # wrf_hydro_docker
 
 [![Build Status](https://travis-ci.org/NCAR/wrf_hydro_docker.svg?branch=master)](https://travis-ci.org/NCAR/wrf_hydro_docker)

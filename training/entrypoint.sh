@@ -37,11 +37,11 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
-release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_model_tools/releases/latest)
+release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_training/releases/latest)
 version=$(echo "$release" | grep "tag_name" | cut -d : -f 2,3 |  tr -d \")
 version=$(echo $version | tr "," " ")
-#git clone --branch $version https://github.com/NCAR/wrf_hydro_training
-git clone https://github.com/NCAR/wrf_hydro_training
+git clone --branch $version https://github.com/NCAR/wrf_hydro_training
+#git clone https://github.com/NCAR/wrf_hydro_training
 mv /home/docker/wrf_hydro_training/lessons /home/docker/wrf-hydro-training/lessons
 rm -rf /home/docker/wrf_hydro_training/
 

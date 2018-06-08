@@ -1,3 +1,8 @@
+![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+
+# THESE DOCKER DATA CONTAINERS FOR DOMAINS WILL SOON BE DEPRECATED
+These images are a temporary solution until an object store is established.
+
 # Overview 
 
 These docker data containers are used primarily by the WRF-Hydro development team. If you are
