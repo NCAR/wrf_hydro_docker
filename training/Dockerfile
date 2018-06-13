@@ -32,6 +32,7 @@ RUN chmod 777 gdrive_download.py
 RUN mkdir /home/docker/wrf-hydro-training/regridding/data/ \
   && python gdrive_download.py --file_id 1PrDTA-hMFNqQrDag1Dm7tX1rT1gQ_25e --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz 
 
+RUN rm gdrive_download.py
 # install NCL
 RUN wget https://www.earthsystemgrid.org/dataset/ncl.640.dap/file/ncl_ncarg-6.4.0-Debian8.6_64bit_gnu492.tar.gz \
   && mkdir /usr/local/ncl-6.4.0 \
