@@ -66,8 +66,7 @@ The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`
  map_proj = 'lambert',
  truelat1  =  30.0,
  truelat2  =  60.0,
- stand_lon =  -97.00
-
+ stand_lon =  -97.00,
 /
 ```
 ----------
@@ -77,7 +76,7 @@ The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`
 ** Step 1:**  Create a directory to bind-mount to Docker for passing files between your system and docker
 
 ```
-mkdir ~/dockerMount
+mkdir /home/dockerMount
 ```
 
 **Step 2: Create a namelist.wps file for your domain using the above example as a starting point and save it in your mount directory from step 1.**

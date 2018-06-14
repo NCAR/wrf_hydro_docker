@@ -244,9 +244,11 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("--namelist_path",
                         dest="namelist_path",
+                        default='/home/docker/mount/namelist.wps',
                         help="Path to namelist file containing the namelist.wps updates")
     parser.add_argument("--output_dir",
                         dest="output_dir",
+                        default='/home/docker/mount/',
                         help="Path to directory to hold outputs")
     parser.add_argument("--plot_only",
                         dest="plot_only",
