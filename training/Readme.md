@@ -25,7 +25,10 @@ If you have questions regarding the lessons please contact us here https://ral.u
 The best place ask questions or post issues with these lessons is via the Issues page of the GitHub repository at https://github.com/NCAR/wrf_hydro_training/issues.
 
 ## How to run
-Make sure you have Docker installed and that it can access your localhost ports. Most out-of-the-box Docker installations accepting all defaults will have this configuration.
+Make sure you have Docker installed and that it can access your localhost ports. Most out-of-the-box
+Docker installations accepting all defaults will have this configuration. 
+
+**NOTE: THE DEFAULT DOCKER CONFIGURATION IS FOR 2 CPUS, YOU MUST HAVE AT LEAST 2 CPUS AVAILABLE TO THE DOCKER DAEMON FOR THIS TRAINING**
 
 **Step 1: Open a terminal or PowerShell session**
 

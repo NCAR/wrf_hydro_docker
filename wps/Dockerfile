@@ -85,9 +85,10 @@ COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 COPY gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
+RUN echo 'force layer build'
 RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest_file geog_conus.tar.gz \
 	&& tar -xf geog_conus.tar.gz \
-	&& mv geog_training /home/docker/WRF_WPS/utilities/geog_conus \
+	&& mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus \
 	&& rm geog_conus.tar.gz
 
 RUN chmod -R 777 /home/docker/WRF_WPS/utilities/geog_conus
