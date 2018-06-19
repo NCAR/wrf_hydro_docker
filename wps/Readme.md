@@ -67,39 +67,41 @@ The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`
  truelat1  =  30.0,
  truelat2  =  60.0,
  stand_lon =  -97.00,
+
 /
 ```
 ----------
 
 ### Usage
+**Step 1: Pull the image**
+```
+docker pull wrfhydro/dev:conda
+```
 
-** Step 1:**  Create a directory to bind-mount to Docker for passing files between your system and docker
-
+**Step 2:  Create a directory to bind-mount to Docker for passing files between your system and docker**
 ```
 mkdir /home/dockerMount
 ```
 
-**Step 2: Create a namelist.wps file for your domain using the above example as a starting point and save it in your mount directory from step 1.**
+**Step 3: Create a namelist.wps file for your domain using the above example as a starting point and save it in your mount directory from step 1.**
 
-**Step 3: Run Docker invoking the python make_geogrid.py utility with the required arguments.**
+**Step 4: Run Docker invoking the python make_geogrid.py utility with the required arguments.**
 
-**NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM**
-You most likely will only need to change the name of your namelist.wps file in the --namelist_path
-argument. 
+**NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM. ALSO NOTE THAT ALL PATHS MUST BE ABSOLUTE**
 
 ```
 docker run -v <path-to-your-local-mount-folder>:/home/docker/mount \
-	wrfhydro/wps \
-	--namelist_path /home/docker/mount/namelist.wps \
-	--output_dir /home/docker/mount/ \
-	--plot_only False
+    wrfhydro/wps \
+    --namelist_path /home/docker/mount/namelist.wps \
+    --output_dir /home/docker/mount/ \
+    --plot_only False
 ```
 
 #### We will now dissect the pieces of this Docker command.
 
 -----------------
 
-`docker run -v <path-to-your-local-mount-folder>:/home/docker/mount...` - Run the container with the `-v` argument to bind mount a volume on your local system to a folder in the docker container. It is best to leave the folder in the docker container unchanged.
+`docker run -v <path-to-your-local-mount-folder>:/home/docker/mount...` - Run the container with the `-v` argument to bind mount a volume on your local system to a folder in the docker container. It is best to leave the folder in the docker container unchanged. 
 
 `--namelist_path /home/docker/mount/namelist.wps \` - Path to your `namelist` file **ON THE DOCKER FILE SYSTEM**
 
