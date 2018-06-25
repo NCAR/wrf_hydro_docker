@@ -96,6 +96,7 @@ docker run -v <path-to-your-local-mount-folder>:/home/docker/mount \
     --output_dir /home/docker/mount/ \
     --plot_only False
 ```
+**Note: Windows users will need to remove the ``` \``` from the end of each line of the above commands.** 
 
 #### We will now dissect the pieces of this Docker command.
 
