@@ -31,6 +31,5 @@ RUN pip install pytest pytest-datadir-ng wrfhydropy==0.0.5.dev1
 ####################################
 ######### entrypoint ###########
 ####################################
-RUN mkdir /home/docker/entrypoint
-COPY *.py /home/docker/entrypoint/
-ENTRYPOINT ["python", "/home/docker/entrypoint/run_tests.py"]
+COPY entrypoint.py /home/docker
+ENTRYPOINT ["python","/home/docker/entrypoint.py"]
