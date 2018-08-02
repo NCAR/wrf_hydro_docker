@@ -31,5 +31,8 @@ RUN pip install netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.5
 ####################################
 ######### entrypoint ###########
 ####################################
-COPY entrypoint.py /home/docker
-ENTRYPOINT ["python","/home/docker/entrypoint.py"]
+COPY run_tests_docker.py /home/docker
+COPY entrypoint.sh /home/docker
+
+#ENTRYPOINT ["python","/home/docker/entrypoint.py"]
+ENTRYPOINT ["/home/docker/entrypoint.sh"]
