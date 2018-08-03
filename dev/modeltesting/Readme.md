@@ -16,7 +16,7 @@ docker pull wrfhydro/dev:modeltesting
 docker run \
         -v /<local_system_path_for_candidate>/wrf_hydro_nwm_public/:/home/docker/candidate \
         -v /<local_system_path_for_reference>/wrf_hydro_nwm_public/:/home/docker/reference \
-        wrfhydro/dev:modeltesting --config nwm_ana --tag v5.0.1
+        wrfhydro/dev:modeltesting --config nwm_ana --domain_tag v5.0.1
 ```
 
 The `candidate` is the source code you would like to test and the `reference` is the source code you
@@ -25,7 +25,7 @@ your local system and need to be volume mounted into the Docker container file s
 EDIT THE DOCKER SYSTEM PATH OF THE VOLUME MOUNTS, THIS IS HARD CODED INTO THE TESTING**
 
 The `--config` argument is required and specifies the configuration to test, which is one of the
-configs listed in the wrf_hydro_nwm_public/trunk/NDHMS/hydro_namelist.json file keys. The `--tag` argument
+configs listed in the wrf_hydro_nwm_public/trunk/NDHMS/hydro_namelist.json file keys. The `--domain_tag` argument
 specifies a GitHub tagged release version of the testing domain to retrieve. If tag is not
 specified, the bleeding-edge version of the domain is retrieved. Alternatively, you may mount your
 own local domain to use in testing with a volume mount `-v /<local_system_path_for_domain>:/home/docker/example_case`
