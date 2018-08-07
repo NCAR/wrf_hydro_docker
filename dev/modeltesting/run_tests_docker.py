@@ -18,7 +18,8 @@ def main():
             '-v <local_system_path_for_reference>/wrf_hydro_nwm_public/:/home/docker/reference \ \n'
             'wrfhydro/dev:modeltesting \n\n'
     
-            'To mount a user supplied domain add a volume mount like so:\n-v <local_system_path_for_domain_dir>/:/home/docker/example_case\n\n'
+            'To mount a user supplied domain add a volume mount like so:\n'
+            '-v <local_system_path_for_domain_dir>/:/home/docker/example_case\n\n'
 
                                     
             'The candidate is the source code you would like to test and'
@@ -41,9 +42,7 @@ def main():
                         help="The release tag of the domain to use, e.g. v5.0.1. Alternatively, "
                              "mount a local domain to /home/docker/example_case. If a local domain "
                              "is mounted, the mounted domain will be used regardless of tag option")
-    # parser.add_argument('--interactive',
-    #                     action='store_true',
-    #                     help="Run in interactive mode. Container will remain open after tests")
+
     args = parser.parse_args()
 
     run_tests_cmd = "python candidate/tests/local/run_tests.py" \

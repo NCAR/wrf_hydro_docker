@@ -26,7 +26,7 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 #Install modules
-RUN pip install netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.5
+RUN pip install netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.6
 
 ####################################
 ######### entrypoint ###########
