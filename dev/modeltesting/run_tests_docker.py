@@ -50,7 +50,8 @@ def main():
                     " --output_dir /home/docker/test_out" \
                     " --candidate_dir /home/docker/candidate " \
                     " --reference_dir /home/docker/reference " \
-                    " --domain_dir /home/docker/example_case "
+                    " --domain_dir /home/docker/example_case " \
+                    " --print"
     run_tests_cmd += " --config " + ' '.join(args.config)
     if args.domain_tag is not None:
         run_tests_cmd += " --domain_tag " + args.domain_tag
