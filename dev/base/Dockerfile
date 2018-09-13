@@ -62,6 +62,7 @@ RUN apt-get update \
     git \
     nano \
     tcsh \
+    bc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
