@@ -90,6 +90,8 @@ RUN MPICH_VERSION="3.2" \
 
 ## install netcdf-C
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
+ENV HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
+
 ENV NCDIR=/usr/local
 RUN NETCDF_C_VERSION="4.4.1.1" \
     && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
