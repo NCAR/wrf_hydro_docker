@@ -1,4 +1,3 @@
-domains/croton_NY/build.sh
 dev/base/build.sh
 dev/conda/build.sh
 wps/build.sh
