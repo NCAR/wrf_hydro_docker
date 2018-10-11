@@ -8,7 +8,7 @@ This container includes the following:
 * Ubuntu base image
 * WRF and WPS built with the GNU Fortran compiler ‘gfortran’
 * Python 3.6 command line utility for create WRF-Hydro geogrid files using the WPS geogrid.exe program.
-* WRF-WPS Geographical input data for the Continental United States.
+* WRF-WPS Geographical input data for the Continental United States. **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
 
 ## Where to get help and/or post issues
 If you have general questions about Docker, there are ample online resources including the excellent Docker documentation at https://docs.docker.com/.
@@ -94,7 +94,6 @@ docker run -v <path-to-your-local-mount-folder>:/home/docker/mount \
     wrfhydro/wps \
     --namelist_path /home/docker/mount/namelist.wps \
     --output_dir /home/docker/mount/ \
-    --plot_only False
 ```
 
 #### We will now dissect the pieces of this Docker command.
@@ -107,7 +106,7 @@ docker run -v <path-to-your-local-mount-folder>:/home/docker/mount \
 
 `--output_dir /home/docker/mount/  \` - Path to directory **ON THE DOCKER FILE SYSTEM** to hold output. It is easiest to have this be the mounted folder from the `-v` argument
 
- `--plot_only False` - Only create a plot and do not run geogrid. Useful for making changes to the domain location and boundaries.
+ `--plot_only` - Only create a plot and do not run geogrid. Useful for making changes to the domain location and boundaries.
 
 **Note: You can access help on these arguments with the following command**
 

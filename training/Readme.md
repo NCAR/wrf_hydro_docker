@@ -1,7 +1,7 @@
 ![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
 
 # Overview
-This container is used for WRF-Hydro development and single-node WRF-Hydro simulations.
+This container is used for WRF-Hydro training sessions and can be run locally.
 
 This container includes the following:
 
