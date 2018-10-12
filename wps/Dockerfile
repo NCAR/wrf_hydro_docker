@@ -62,8 +62,6 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 #Setup virtual environment
 RUN conda update conda
 RUN conda config --add channels conda-forge --force
-#RUN conda create -n docker_conda python=3.6 
-#RUN source activate docker_conda
 
 #Install modules
 RUN conda install -y cartopy rasterio netcdf4 f90nml xarray
@@ -85,7 +83,6 @@ COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 COPY gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
-RUN echo 'force layer build'
 RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest_file geog_conus.tar.gz \
 	&& tar -xf geog_conus.tar.gz \
 	&& mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus \
@@ -93,14 +90,6 @@ RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest
 
 RUN chmod -R 777 /home/docker/WRF_WPS/utilities/geog_conus
 RUN rm gdrive_download.py
-
-#COPY geog_conus.tar.gz . 
-#RUN	tar -xf geog_conus.tar.gz && \
-#	mv geog_conus /home/docker/WRF_WPS/utilities/geog_conus && \
-#	rm geog_conus.tar.gz
-
-RUN mv /home/docker/WRF_WPS/utilities/geog_conus/GEOGRID.TBL.ARW.wrf_hydro_training \
-	/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW
 
 ####################################
 ########## DOCKER USER #############
@@ -110,7 +99,5 @@ WORKDIR /home/docker
 
 RUN mkdir /home/docker/tmp/ \
 	&& chmod 777 -R /home/docker/tmp/
-
-#ENV NETCDF=/usr/local
 
 ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]

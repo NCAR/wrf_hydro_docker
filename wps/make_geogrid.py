@@ -252,36 +252,27 @@ def main():
                         help="Path to directory to hold outputs")
     parser.add_argument("--plot_only",
                         dest="plot_only",
+                        action='store_true',
                         default='false',
                         help="Only create a plot of the domain. Geogrid will not be created if "
                              "plot_only = true, only a plot of the domain will be created.")
-    #parser.add_argument("--display",
-    #                    dest="display",
-    #                    default='false',
-    #                    help="Display the image in python. Warning may cause issues in a terminal"
-    #                         "session.")
-
-    # parser.add_argument("--orig_nml_path",
-    #                     dest="new_nml_path",
-    #                     default='/home/docker/WRF_WPS/WPS/namelist.wps_orig',
-    #                     help="Path to the complete, default WPS namelist.wps file.")
-    # parser.add_argument("--new_nml_path",
-    #                     dest="new_nml_path",
-    #                     default='/home/docker/WRF_WPS/WPS/namelist.wps',
-    #                     help="Path to write the new namelist file with updates applied."
-    #                          "Note this path must be the same as the directory containing "
-    #                          "geogrid.exe")
 
     args = parser.parse_args()
 
     patch_nml_path = pathlib.Path(args.namelist_path)
     output_dir = args.output_dir
     plot_only = args.plot_only
-    #display = args.display
     display = 'false'
 
-    # orig_nml_path = args.orig_nml_path
-    # new_nml_path = args.new_nml_path
+    # Move modifiged geogrid.tbl into geogrid folder if running utility
+    # File will be moved back after finish
+    modified_geogrid_tbl_path = pathlib.Path("/home/docker/WRF_WPS/utilities/geog_conus/" \
+                                "GEOGRID.TBL.ARW.wrf_hydro_training")
+    original_geogrid_tbl_path= pathlib.Path("/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW")
+    backup_geogrid_tbl_path = original_geogrid_tbl_path.parent.joinpath('GEOGRID.TBL.ARW_tempbak')
+    shutil.move(str(original_geogrid_tbl_path),str(backup_geogrid_tbl_path))
+    shutil.copy(str(modified_geogrid_tbl_path),str(original_geogrid_tbl_path))
+
     orig_nml_path = pathlib.Path('/home/docker/WRF_WPS/utilities/namelist.wps_orig')
     new_nml_path = pathlib.Path('/home/docker/WRF_WPS/WPS/namelist.wps')
 
@@ -290,30 +281,36 @@ def main():
     else:
         display = False
 
-    if plot_only.lower() == 'true':
-        plot_from_wps(patch_nml_path=str(patch_nml_path),
-                      figFilename=output_dir + '/domain.png',
-                      display=display)
-    else:
-        print('Plotting domain')
-        plot_from_wps(patch_nml_path=str(patch_nml_path),
-                      figFilename=output_dir + '/domain.png',
-                      display=display)
-        
-        print('Generating geogrid file')
-        # First patch the namelist
-        patch_namelist(orig_nml_path=str(orig_nml_path),
-                       patch_nml_path=str(patch_nml_path),
-                       new_nml_path=str(new_nml_path))
+    try:
+        if plot_only is True:
+            plot_from_wps(patch_nml_path=str(patch_nml_path),
+                          figFilename=output_dir + '/domain.png',
+                          display=display)
+        else:
+            print('Plotting domain')
+            plot_from_wps(patch_nml_path=str(patch_nml_path),
+                          figFilename=output_dir + '/domain.png',
+                          display=display)
 
-        # Now run geogrid.exe
-        new_nml_path = pathlib.Path(new_nml_path)
-        subprocess.run(['./geogrid.exe'],
-                       cwd=new_nml_path.parent)
+            print('Generating geogrid file')
+            # First patch the namelist
+            patch_namelist(orig_nml_path=str(orig_nml_path),
+                           patch_nml_path=str(patch_nml_path),
+                           new_nml_path=str(new_nml_path))
 
-        shutil.copy(str(new_nml_path.parent / 'geo_em.d01.nc'),
-                    output_dir + '/geo_em.d01.nc')
+            # Now run geogrid.exe
+            new_nml_path = pathlib.Path(new_nml_path)
+            subprocess.run(['./geogrid.exe'],
+                           cwd=new_nml_path.parent)
 
+            shutil.copy(str(new_nml_path.parent / 'geo_em.d01.nc'),
+                        output_dir + '/geo_em.d01.nc')
+            shutil.move(str(backup_geogrid_tbl_path),str(original_geogrid_tbl_path))
+
+    except Exception as e:
+        print('Error, cleaning up and exiting')
+        shutil.move(str(backup_geogrid_tbl_path),str(original_geogrid_tbl_path))
+        raise ChildProcessError(e)
 
 
 if __name__ == '__main__':

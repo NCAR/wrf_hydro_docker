@@ -45,31 +45,18 @@ ENV PATH=$NCARG_ROOT/bin:$PATH
 ############################
 ## Python
 #Install modules
-RUN conda install -y jupyterlab jupyter_contrib_nbextensions
+RUN conda install -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
 RUN chmod -R 777 /home/docker/.jupyter
 
-#Update nc-config with manually edited one to fix miniconda path bug
-RUN rm /home/docker/miniconda3/bin/nc-config
-COPY ./nc-config /home/docker/miniconda3/bin/nc-config
-RUN chmod 777 /home/docker/miniconda3/bin/nc-config
-
 ############################
 ## R
 #install R and libraries
-RUN apt-get update \
-    && apt-get install -yq --no-install-recommends \
-    r-base \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
-RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
-	&& R CMD INSTALL ncdf4_1.13.tar.gz --configure-args="--with-nc-config=/home/docker/miniconda3/bin/nc-config" \
-	&& rm ncdf4_1.13.tar.gz
-
-RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")'
+RUN conda install -c r r
+RUN Rscript -e 'install.packages(c("optparse","ncdf4"), repos="https://cran.rstudio.com")'
 
 ############################
 #Get the entrypoint script to download the code release, start jupyter, etc
