@@ -46,7 +46,7 @@ echo "$coupledCaseURL" | wget -qi -
 tar -xf *coupled*.tar.gz
 rm *coupled*.tar.gz
 #chmod -R 777 ~/example_case
-mv /home/docker/example_case /home/docker/wrf-hydro-training/example_case
+mv /home/docker/frontrange_coupled_domain_files /home/docker/wrf-hydro-training
 
 echo "Retrieved the coupled test case for release: $version"
 

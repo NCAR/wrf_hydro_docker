@@ -271,7 +271,7 @@ def main():
     original_geogrid_tbl_path= pathlib.Path("/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW")
     backup_geogrid_tbl_path = original_geogrid_tbl_path.parent.joinpath('GEOGRID.TBL.ARW_tempbak')
     shutil.move(str(original_geogrid_tbl_path),str(backup_geogrid_tbl_path))
-    shutil.move(str(modified_geogrid_tbl_path),str(original_geogrid_tbl_path))
+    shutil.copy(str(modified_geogrid_tbl_path),str(original_geogrid_tbl_path))
 
     orig_nml_path = pathlib.Path('/home/docker/WRF_WPS/utilities/namelist.wps_orig')
     new_nml_path = pathlib.Path('/home/docker/WRF_WPS/WPS/namelist.wps')

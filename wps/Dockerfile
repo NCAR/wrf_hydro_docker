@@ -62,8 +62,6 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 #Setup virtual environment
 RUN conda update conda
 RUN conda config --add channels conda-forge --force
-#RUN conda create -n docker_conda python=3.6 
-#RUN source activate docker_conda
 
 #Install modules
 RUN conda install -y cartopy rasterio netcdf4 f90nml xarray
@@ -82,7 +80,6 @@ COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 
 # Get geog data from google drive
 ## Get download script
-RUN echo 'force3'
 COPY gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
@@ -102,7 +99,5 @@ WORKDIR /home/docker
 
 RUN mkdir /home/docker/tmp/ \
 	&& chmod 777 -R /home/docker/tmp/
-
-#ENV NETCDF=/usr/local
 
 ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]
