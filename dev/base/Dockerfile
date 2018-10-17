@@ -97,7 +97,7 @@ RUN NETCDF_C_VERSION="4.4.1.1" \
     && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
     && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
-    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
+    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=${NCDIR} --disable-shared \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
     && make \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
@@ -112,7 +112,7 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
     && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
     && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
-    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
+    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} --disable-shared \
     && make \
     && make install \
     && cd / \
