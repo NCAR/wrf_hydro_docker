@@ -27,6 +27,7 @@ RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     && apt-get update \
     && apt-get install -yq --no-install-recommends \
     curl \
+    file \
     emacs-snapshot \
     emacs-snapshot-el \
     && apt-get clean \
