@@ -1,17 +1,4 @@
 ###################################
-# WRF-Hydro Development docker
-# Purpose:
-#   1) Compile code on the host system (non-interactive mode)
-#   2) Run code on the host system     (non-interactive mode)
-#   3) Interactive use. 
-# The above is achieved through entrypoint and host-side scripting.
-#
-# Authors: James McCreight, Joe Mills
-# Email:  jamesmcc-at-ucar.edu, jmills-at-ucar.edu
-# Date:  2018-02-08
-###################################
-
-###################################
 # Author: James McCreight <jamesmcc -at- ucar.edu>
 # Author: Joe Mills <jmills -at- ucar.edu>
 # Date:  2018-02-08
@@ -34,6 +21,7 @@ RUN apt-get update \
 	software-properties-common \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
 #Install additional tools
 RUN add-apt-repository ppa:ubuntu-elisp/ppa \
     && apt-get update \
