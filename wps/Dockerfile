@@ -1,6 +1,6 @@
 ###################################
 # Author: Joe Mills <jmills@ucar.edu>
-# Date:  9.27.2017
+# Date:  10.15.2017
 ###################################
 #
 # This Dockerfile compiles WRF and WPS from source using the bare-bones requirements for training purposes.
@@ -15,35 +15,48 @@ USER root
 ###WRF and WPS
 
 #Set WRF and WPS version argument
-ARG WRFWPS_VERSION="3.9"
+ARG WRFWPS_VERSION="4.0.1"
 
-#Install WRF AND WPS
+#Set WRF-Hydro version argument
+ARG HYDRO_VERSION="4.0.2"
+
+#Install coupled WRF | WRF-Hydro AND WPS
 WORKDIR /home/docker/WRF_WPS
 #
 # Download sources for version specified by WRFWPS_VERSION argument
 #
-RUN wget http://www2.mmm.ucar.edu/wrf/src/WRFV${WRFWPS_VERSION}.TAR.gz \
-	&& \
-	mkdir WRFV${WRFWPS_VERSION} \
-	&& tar -zxf WRFV${WRFWPS_VERSION}.TAR.gz \
-	&& rm WRFV${WRFWPS_VERSION}.TAR.gz
-RUN wget http://www2.mmm.ucar.edu/wrf/src/WPSV${WRFWPS_VERSION}.TAR.gz \
-	&& mkdir WPSV${WRFWPS_VERSION} \
-	&& tar -zxf WPSV${WRFWPS_VERSION}.TAR.gz \
-	&& rm WPSV${WRFWPS_VERSION}.TAR.gz
+RUN wget https://github.com/wrf-model/WRF/archive/v${WRFWPS_VERSION}.tar.gz \
+	&& tar -zxf v${WRFWPS_VERSION}.tar.gz \
+        && mv WRF-${WRFWPS_VERSION} WRF \
+	&& rm v${WRFWPS_VERSION}.tar.gz
+RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
+        && tar -zxf v${HYDRO_VERSION}.tar.gz \
+        && rm -r WRF/hydro \
+        && mv wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
+        && rm v${HYDRO_VERSION}.tar.gz
+RUN wget https://github.com/wrf-model/WPS/archive/$v{WRFWPS_VERSION}.tar.gz \
+	&& tar -zxf v${WRFWPS_VERSION}.tar.gz \
+        && mv WPS-${WRFWPS_VERSION} WPS \
+	&& rm v${WRFWPS_VERSION}.tar.gz
+
+# Set WRF-Hydro environment variables
+ENV WRF_HYDRO=1
+ENV HYDRO_D=0
+ENV SPATIAL_SOIL=0
+ENV WRF_HYDRO_RAPID=0
+ENV WRFIO_NCD_LARGE_FILE_SUPPORT=1
+ENV NCEP_WCOSS=0
+ENV WRF_HYDRO_NUDGING=0
 
 # Build WRF first, required for WPS
-WORKDIR /home/docker/WRF_WPS/WRFV3
-RUN printf '32\n0' | ./configure \
+WORKDIR /home/docker/WRF_WPS/WRF
+RUN printf '34\n1' | ./configure \
 	&& ./compile em_real
 
 # Build WPS second after WRF is built
 WORKDIR /home/docker/WRF_WPS/WPS
 RUN printf '1' | ./configure \
-	&& ./compile geogrid
-
-RUN rm -r /home/docker/WRF_WPS/WPSV3.9 \
-	&& rm -r /home/docker/WRF_WPS/WRFV3.9
+	&& ./compile
 
 RUN chmod -R 777 /home/docker/WRF_WPS
 
