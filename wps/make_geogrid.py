@@ -241,7 +241,21 @@ def patch_namelist(orig_nml_path: str,patch_nml_path: str,new_nml_path: str):
 
 def main():
 
-    parser = ArgumentParser()
+    parser = ArgumentParser(description="Step 1: Pull the image\n"
+                                        "docker pull wrfhydro/dev:conda\n"
+                                        "Step 2: Create a directory to bind-mount to Docker for "
+                                        "passing files between your system and docker\n"
+                                        "mkdir /home/dockerMount\n"
+                                        "Step 3: Create a namelist.wps file for your domain using the above example as a starting point and save it in your mount directory from step 1.\n"
+                                        "Step 4: Run Docker invoking the python make_geogrid.py "
+                                        "utility with the required arguments.\n"
+                                        "NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM. ALSO NOTE THAT ALL PATHS MUST BE ABSOLUTE"
+                                        "docker run -v "
+                                        "<path-to-your-local-mount-folder>:/home/docker/mount\n"
+                                        "wrfhydro/wps\n"
+                                        "--namelist_path /home/docker/mount/namelist.wps\n"
+                                        "--output_dir /home/docker/mount/\n"
+                                        "Note: Windows users will need to remove the \ from the end of each line of the above commands.")
     parser.add_argument("--namelist_path",
                         dest="namelist_path",
                         default='/home/docker/mount/namelist.wps',
@@ -267,7 +281,7 @@ def main():
     # Move modifiged geogrid.tbl into geogrid folder if running utility
     # File will be moved back after finish
     modified_geogrid_tbl_path = pathlib.Path("/home/docker/WRF_WPS/utilities/geog_conus/" \
-                                "GEOGRID.TBL.ARW.wrf_hydro_training")
+                                             "GEOGRID.TBL.ARW.wrf_hydro_training")
     original_geogrid_tbl_path= pathlib.Path("/home/docker/WRF_WPS/WPS/geogrid/GEOGRID.TBL.ARW")
     backup_geogrid_tbl_path = original_geogrid_tbl_path.parent.joinpath('GEOGRID.TBL.ARW_tempbak')
     shutil.move(str(original_geogrid_tbl_path),str(backup_geogrid_tbl_path))

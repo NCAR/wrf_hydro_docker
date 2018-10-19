@@ -8,8 +8,6 @@ FROM wrfhydro/wps
 MAINTAINER jmills@ucar.edu
 USER root
 
-RUN rm -r /home/docker/runTimeScripts
-
 ##################################
 # Geospatial
 #Get create_wrfinput.r
@@ -23,14 +21,11 @@ RUN wget https://ral.ucar.edu/sites/default/files/public/ESMFregrid_NLDAS.tar_.g
 	&& mv NLDAS /home/docker/wrf-hydro-training/regridding \
 	&& rm ESMFregrid_NLDAS.tar_.gz
 
-#Get NLDAS forcing for regridding exercise
-#COPY ./nldas_forcing.tar.gz /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
-
 COPY ./gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
 RUN mkdir /home/docker/wrf-hydro-training/regridding/data/ \
-  && python gdrive_download.py --file_id 1PrDTA-hMFNqQrDag1Dm7tX1rT1gQ_25e --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz 
+  && python gdrive_download.py --file_id 1PrDTA-hMFNqQrDag1Dm7tX1rT1gQ_25e --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
 
 RUN rm gdrive_download.py
 # install NCL
@@ -45,7 +40,7 @@ ENV PATH=$NCARG_ROOT/bin:$PATH
 ############################
 ## Python
 #Install modules
-RUN conda install -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
+RUN pip install jupyterlab jupyter_contrib_nbextensions
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
@@ -55,8 +50,17 @@ RUN chmod -R 777 /home/docker/.jupyter
 ## R
 #install R and libraries
 
-RUN conda install -c r r
-RUN Rscript -e 'install.packages(c("optparse","ncdf4"), repos="https://cran.rstudio.com")'
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    r-base \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
+	&& R CMD INSTALL ncdf4_1.13.tar.gz  \
+	&& rm ncdf4_1.13.tar.gz
+
+RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")'
 
 ############################
 #Get the entrypoint script to download the code release, start jupyter, etc
@@ -67,8 +71,6 @@ RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
 USER docker
 WORKDIR /home/docker
-
-#Make a temp directory needed for matplotlib
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]

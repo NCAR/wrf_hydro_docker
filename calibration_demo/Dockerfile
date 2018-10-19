@@ -15,19 +15,8 @@ USER root
 ## Python
 WORKDIR /home/docker
 
-#Fetch latest miniconda and install
-RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh \
-    && bash Miniconda2-latest-Linux-x86_64.sh -b -p /home/docker/miniconda2 \
-    && rm Miniconda2-latest-Linux-x86_64.sh
-
-#Set environment variables
-ENV PATH="/home/docker/miniconda2/bin:${PATH}"
-
-#Setup environment
-RUN conda update conda
-
 #Install modules
-RUN conda install -c conda-forge -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 numpy pandas psutil
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 numpy pandas psutil
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
@@ -44,7 +33,7 @@ RUN Rscript -e 'install.packages(c("data.table","ggplot2","ncdf4","plyr","boot",
 RUN mkdir /home/docker/wrf-hydro-training
 
 ############################
-## WRF-Hydro code and testcast for v5.0.2
+## WRF-Hydro code and testcase for v5.0.2
 RUN version=v5.0.2 \
     && release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_nwm_public/releases/tags/$version) \
     && git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public \

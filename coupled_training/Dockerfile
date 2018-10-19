@@ -20,6 +20,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* 
 
+
 ############################
 ###WRF | WRF-Hydro and WPS
 
@@ -73,19 +74,8 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 ## Python
 WORKDIR /home/docker
 
-#Fetch latest miniconda and install
-RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
-    && rm Miniconda3-latest-Linux-x86_64.sh
-
-#Set environment variables
-ENV PATH="/home/docker/miniconda3/bin:${PATH}"
-
-#Setup virtual environment
-RUN conda update conda
-
 #Install modules
-RUN conda install -c conda-forge -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
@@ -102,10 +92,6 @@ RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest
 	&& rm geog_conus.tar.gz
 RUN chmod -R 777 /home/docker/geog_conus
 RUN rm gdrive_download.py
-
-################################
-# Cleanup a bunch of uneeded dirs
-RUN rm -rf /home/docker/runTimeScripts
 
 ####################################
 ########## DOCKER USER #############
