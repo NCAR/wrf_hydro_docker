@@ -16,7 +16,7 @@ USER root
 WORKDIR /home/docker
 
 #Install modules
-RUN conda install -c conda-forge -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 numpy pandas psutil
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 numpy pandas psutil
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/

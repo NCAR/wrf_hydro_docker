@@ -52,8 +52,9 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 WORKDIR /home/docker
 
 #Install modules
-RUN conda install -c conda-forge -y numpy cartopy rasterio netcdf4 f90nml xarray
-RUN pip install wrf-python Image
+RUN pip install --upgrade pip
+RUN pip install numpy cython rasterio netcdf4 f90nml xarray Image
+RUN conda install -y cartopy
 
 ############################
 # Setup stuff for geogrid script

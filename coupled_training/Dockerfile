@@ -67,7 +67,7 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 WORKDIR /home/docker
 
 #Install modules
-RUN conda install -c conda-forge -y jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython hdf5 netcdf4 xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
