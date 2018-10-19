@@ -1,20 +1,28 @@
 ###################################
 # Author: Joe Mills <jmills@ucar.edu>
-# Date:  10.15.2017
+# Date:  10.19.2018
 ###################################
 #
-# This Dockerfile compiles WRF and WPS from source using the bare-bones requirements for training purposes.
-# See https://ral.ucar.edu/projects/ncar-docker-wrf for more complete WRF and WPS docker builds with additional functionality
+# This Dockerfile compiles coupled WRF | WRF-Hydro and WPS from source using the bare-bones requirements for training purposes.
 
 FROM wrfhydro/dev:base
 
 MAINTAINER jmills@ucar.edu
 USER root
 
-RUN rm -rf /home/docker/runTimeScripts
+####################################
+##Additional WRF and WPS dependencies and tools used for compilation
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    file \
+    libpng-dev \
+    libjasper-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* 
+
 
 ############################
-###WRF and WPS
+###WRF | WRF-Hydro and WPS
 
 #Set WRF and WPS version argument
 ARG WRFWPS_VERSION="4.0.1"
