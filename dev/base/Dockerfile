@@ -81,7 +81,7 @@ RUN MPICH_VERSION="3.2" \
 ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 ENV HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 
-ENV NCDIR=/usr/local
+
 RUN NETCDF_C_VERSION="4.4.1.1" \
     && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
     && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
@@ -108,10 +108,22 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
 
 ENV NETCDF=/usr/local
+ENV NCDIR=/usr/local
+ENV NETCDF_LIB=/usr/local/lib
+ENV NETCDF_INC=/usr/local/include
 
 ## just to be sure 
 RUN rm -rf /tmp/*
 
+###################################
+# Python
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+
+#Set environment variables
+ENV PATH="/home/docker/miniconda3/bin:${PATH}"
+RUN conda update conda
 
 ###################################
 ## build nco and nccmp here. really not what I was hpoing for.
@@ -128,12 +140,7 @@ RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
 ## create docker user
 RUN useradd -ms /bin/bash docker
 RUN usermod -aG sudo docker
-
-###################################
-## wrf-hydro development docker interface script
-COPY ./interface.sh /home/docker/runTimeScripts/
-RUN chmod -R 777 /home/docker/runTimeScripts/
-
+RUN chmod -R 777 /home/docker/
 ####################################
 ######### docker user ###########
 ####################################

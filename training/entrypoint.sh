@@ -36,22 +36,6 @@ echo "Retrieved the test case for release: $version"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
-echo -e "\e[7;49;32mRetrieving coupled test case domain files\e[0m"
-
-coupledCaseURL=$(echo "$release" | grep 'coupled' \
-| grep "browser_download_url" \
-| cut -d : -f 2,3 |  tr -d \")
-
-echo "$coupledCaseURL" | wget -qi -
-tar -xf *coupled*.tar.gz
-rm *coupled*.tar.gz
-#chmod -R 777 ~/example_case
-mv /home/docker/frontrange_coupled_domain_files /home/docker/wrf-hydro-training
-
-echo "Retrieved the coupled test case for release: $version"
-
-echo
-echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
 git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training

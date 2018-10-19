@@ -49,23 +49,12 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 
 ############################
 ## Python
-WORKDIR /
-
-#Fetch latest miniconda and install
-RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
-    && rm Miniconda3-latest-Linux-x86_64.sh
-
-#Set environment variables
-ENV PATH="/home/docker/miniconda3/bin:${PATH}"
-
-#Setup virtual environment
-RUN conda update conda
-RUN conda config --add channels conda-forge --force
+WORKDIR /home/docker
 
 #Install modules
-RUN conda install -y cartopy rasterio netcdf4 f90nml xarray
-RUN pip install wrf-python Image
+RUN pip install --upgrade pip
+RUN pip install numpy cython rasterio netcdf4 f90nml xarray Image
+RUN conda install -y cartopy
 
 ############################
 # Setup stuff for geogrid script
