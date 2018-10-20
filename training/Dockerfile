@@ -8,13 +8,9 @@ FROM wrfhydro/dev:base
 MAINTAINER jmills@ucar.edu
 USER root
 
+RUN mkdir /home/docker/wrf-hydro-training \
+    && chmod -R 777 /home/docker/wrf-hydro-training
 ##################################
-# Geospatial
-#Get create_wrfinput.r
-RUN mkdir /home/docker/wrf-hydro-training
-RUN chmod -R 777 /home/docker/wrf-hydro-training
-COPY ./create_wrfinput.R /home/docker/wrf-hydro-training/wrf_hydro_model_tools/create_wrfinput.R
-
 #get regridding scripts
 RUN wget https://ral.ucar.edu/sites/default/files/public/ESMFregrid_NLDAS.tar_.gz \
 	&& tar -xf ESMFregrid_NLDAS.tar_.gz \
@@ -40,34 +36,16 @@ ENV PATH=$NCARG_ROOT/bin:$PATH
 ############################
 ## Python
 #Install modules
-RUN pip install jupyterlab jupyter_contrib_nbextensions ipython netcdf4 xarray
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib netcdf4 dask toolz xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
 RUN chmod -R 777 /home/docker/.jupyter
 
 ############################
-## R
-#install R and libraries
-
-RUN apt-get update \
-    && apt-get install -yq --no-install-recommends \
-    r-base \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
-	&& R CMD INSTALL ncdf4_1.13.tar.gz  \
-	&& rm ncdf4_1.13.tar.gz
-
-RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")'
-
-############################
 #Get the entrypoint script to download the code release, start jupyter, etc
 COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
-
-
 RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
 USER docker

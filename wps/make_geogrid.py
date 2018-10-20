@@ -16,7 +16,7 @@
 
 import f90nml
 import subprocess
-import sys
+import shlex
 from argparse import ArgumentParser
 import pathlib
 import shutil
@@ -270,13 +270,18 @@ def main():
                         default='false',
                         help="Only create a plot of the domain. Geogrid will not be created if "
                              "plot_only = true, only a plot of the domain will be created.")
-
+    parser.add_argument("--create_wrf_input",
+                        dest="create_wrf_input",
+                        action='store_true',
+                        default='true',
+                        help="create a wrfinput initial condition file for WRF-Hydro")
     args = parser.parse_args()
 
     patch_nml_path = pathlib.Path(args.namelist_path)
     output_dir = args.output_dir
     plot_only = args.plot_only
     display = 'false'
+    create_wrf_input = args.create_wrf_input
 
     # Move modifiged geogrid.tbl into geogrid folder if running utility
     # File will be moved back after finish
@@ -320,6 +325,14 @@ def main():
             shutil.copy(str(new_nml_path.parent / 'geo_em.d01.nc'),
                         output_dir + '/geo_em.d01.nc')
             shutil.move(str(backup_geogrid_tbl_path),str(original_geogrid_tbl_path))
+
+            if create_wrf_input:
+                print('Generating wrfinput file')
+                geoem_path = new_nml_path.parent / 'geo_em.d01.nc'
+                Rstring = "Rscript /home/docker/create_wrfinput.R --geogrid " + \
+                str(geoem_path) + " " + \
+                "--outfile " + output_dir + '/wrfinput_d01.nc'
+                subprocess.run(shlex.split(Rstring))
 
     except Exception as e:
         print('Error, cleaning up and exiting')

@@ -54,7 +54,28 @@ WORKDIR /home/docker
 #Install modules
 RUN pip install --upgrade pip
 RUN pip install numpy cython rasterio netcdf4 f90nml xarray Image
+RUN pip install wrf-python
 RUN conda install -y cartopy
+
+############################
+## R
+#install R and libraries
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    r-base \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
+	&& R CMD INSTALL ncdf4_1.13.tar.gz  \
+	&& rm ncdf4_1.13.tar.gz
+
+RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")'
+
+#Get create_wrfinput.r
+COPY ./create_wrfinput.R /home/docker/create_wrfinput.R
+RUN chmod 777 /home/docker/create_wrfinput.R
 
 ############################
 # Setup stuff for geogrid script
