@@ -16,7 +16,7 @@ USER root
 WORKDIR /home/docker
 
 #Install modules
-RUN pip install jupyterlab jupyter_contrib_nbextensions ipython netcdf4 numpy pandas psutil
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib netcdf4 numpy pandas psutil
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
