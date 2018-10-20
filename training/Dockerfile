@@ -3,7 +3,7 @@
 # Author: Joe Mills <jmills@ucar.edu>
 # Date:  2018-05-22
 ###################################
-FROM wrfhydro/wps
+FROM wrfhydro/dev:base
 
 MAINTAINER jmills@ucar.edu
 USER root
@@ -40,7 +40,7 @@ ENV PATH=$NCARG_ROOT/bin:$PATH
 ############################
 ## Python
 #Install modules
-RUN pip install jupyterlab jupyter_contrib_nbextensions
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython netcdf4 xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
@@ -66,6 +66,7 @@ RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com"
 #Get the entrypoint script to download the code release, start jupyter, etc
 COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
+
 
 RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
