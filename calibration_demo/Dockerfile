@@ -11,23 +11,44 @@ FROM wrfhydro/dev:base
 MAINTAINER jmills@ucar.edu
 USER root
 
+
 ############################
 ## Python
 WORKDIR /home/docker
+RUN rm -rf /home/docker/miniconda3
+
+#Fetch latest miniconda and install
+RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh \
+    && bash Miniconda2-latest-Linux-x86_64.sh -b -p /home/docker/miniconda2 \
+    && rm Miniconda2-latest-Linux-x86_64.sh
+
+#Set environment variables
+ENV PATH="/home/docker/miniconda2/bin:${PATH}"
 
 #Install modules
-RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib netcdf4 numpy pandas psutil
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 numpy pandas psutil
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
 RUN chmod -R 777 /home/docker/.jupyter
+############################
 
 ############################
 ## R
 #install R and libraries
 
+#RUN apt-get update \
+#    && apt-get install -yq --no-install-recommends \
+#    r-base \
+#    && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
+
 RUN conda install -c r r
-RUN Rscript -e 'install.packages(c("data.table","ggplot2","ncdf4","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
+RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
+	&& R CMD INSTALL ncdf4_1.13.tar.gz  \
+	&& rm ncdf4_1.13.tar.gz
+
+RUN Rscript -e 'install.packages(c("data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
 ############################
 
 RUN mkdir /home/docker/wrf-hydro-training
