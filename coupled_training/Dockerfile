@@ -75,7 +75,7 @@ RUN chmod -R 777 /home/docker/WRF_WPS
 WORKDIR /home/docker
 
 #Install modules
-RUN pip install jupyterlab jupyter_contrib_nbextensions ipython netcdf4 matplotlib dask toolz xarray
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 matplotlib dask toolz xarray
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/

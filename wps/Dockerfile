@@ -53,7 +53,7 @@ WORKDIR /home/docker
 
 #Install modules
 RUN pip install --upgrade pip
-RUN pip install numpy cython rasterio netcdf4 f90nml xarray Image
+RUN pip install numpy cython rasterio h5py netcdf4 f90nml xarray Image
 RUN pip install wrf-python
 RUN conda install -y cartopy
 
