@@ -88,6 +88,10 @@ RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
 COPY make_geogrid.py /home/docker/WRF_WPS/utilities/make_geogrid.py
 COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 
+
+RUN mkdir /home/docker/tmp/ \
+	&& chmod 777 -R /home/docker/tmp/
+
 # Get geog data from google drive
 ## Get download script
 COPY gdrive_download.py gdrive_download.py
@@ -106,8 +110,5 @@ RUN rm gdrive_download.py
 ####################################
 USER docker
 WORKDIR /home/docker
-
-RUN mkdir /home/docker/tmp/ \
-	&& chmod 777 -R /home/docker/tmp/
 
 ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]
