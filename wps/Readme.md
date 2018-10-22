@@ -16,6 +16,10 @@ If you have general questions about Docker, there are ample online resources inc
 The best place ask questions or post issues is via the Issues page of the GitHub repository at
 https://github.com/NCAR/wrf_hydro_docker/issues.
 
+You can also access a training tutorial here:
+https://github.com/jmills-ncar/wrf_hydro_training/blob/master/lessons/Lesson-S1-wps.html
+**NOTE: the file is to large to display in GitHub so you must download and open in your browser**
+
 ## Data sources
 WRF Preprocessing System (WPS) geographical input data are one of the primary datasets used by the NoahMP Land Surface Model (LSM). These datasets can be obtained from the [WPS geographical input data download page](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). However, these data are rather large (~50GB) and contain a number of datasets that are not used in most implementations of WRF-Hydro. We have reduced the data by removing various resolutions of the data that are not commonly used by WRF-Hydro. Furthermore, the dataset provided with this container has been subset to the Continental United States (CONUS). Thus, the dataset provided with this container is considerably smaller than the complete WRF-WPS dataset.
 
