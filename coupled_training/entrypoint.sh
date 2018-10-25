@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ###Change the version here
-version=v5.0.2
+version=v5.0.3
 ###########################
 
 
 ###########################
 ###No need to edit below here
-echo -e "\e[4;49;34m WRF-Hydro Training Container\e[0m"
+echo -e "\e[4;49;34m Coupled WRF | WRF-Hydro Training Container\e[0m"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
@@ -21,8 +21,7 @@ coupledCaseURL=$(echo "$release" | grep 'coupled' \
 echo "$coupledCaseURL" | wget -qi -
 tar -xf *coupled*.tar.gz
 rm *coupled*.tar.gz
-#chmod -R 777 ~/example_case
-mv /home/docker/frontrange_coupled_domain_files /home/docker/wrf-hydro-training
+mv /home/docker/example_case_coupled /home/docker/wrf-hydro-training
 
 echo "Retrieved the coupled test case for release: $version"
 
@@ -32,7 +31,7 @@ echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
 git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training
 mkdir /home/docker/wrf-hydro-training/lessons
-mv /home/docker/wrf_hydro_training/lessons/Lesson-S3-coupled.ipynb /home/docker/wrf-hydro-training/lessons/Lesson-S3-coupled.ipynb
+mv /home/docker/wrf_hydro_training/lessons/Lesson-S4-coupled.ipynb /home/docker/wrf-hydro-training/lessons/Lesson-S4-coupled.ipynb
 rm -rf /home/docker/wrf_hydro_training/
 
 echo "Retrieved the following coupled training: ${version: 0:4}.x"
