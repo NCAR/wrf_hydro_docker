@@ -23,7 +23,7 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving testcase\e[0m"
 
-exampleCaseURL=$(echo "$release" | grep 'testcase' \
+exampleCaseURL=$(echo "$release" | grep 'croton_NY_example_testcase' \
 | grep "browser_download_url" \
 | cut -d : -f 2,3 |  tr -d \")
 
