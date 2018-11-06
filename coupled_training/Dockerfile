@@ -167,6 +167,7 @@ RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest
 	&& tar -xf geog_conus.tar.gz \
 	&& rm geog_conus.tar.gz
 RUN chmod -R 777 /home/docker/geog_conus
+RUN mv /home/docker/geog_conus /home/docker/WRF_WPS/geog_conus 
 RUN rm gdrive_download.py
 
 ####################################
