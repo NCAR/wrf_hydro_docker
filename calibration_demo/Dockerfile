@@ -59,7 +59,7 @@ RUN version=v5.0.2 \
     && release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_nwm_public/releases/tags/$version) \
     && git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public \
     && mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public \
-    && exampleCaseURL=$(echo "$release" | grep 'testcase' | grep "browser_download_url" | cut -d : -f 2,3 |  tr -d \") \
+    && exampleCaseURL=$(echo "$release" | grep 'croton_NY_example_testcase' | grep "browser_download_url" | cut -d : -f 2,3 |  tr -d \") \
     && echo "$exampleCaseURL" | wget -qi -
 
 RUN tar -xf *testcase*.tar.gz \
