@@ -55,7 +55,7 @@ RUN mkdir /home/docker/wrf-hydro-training
 
 ############################
 ## WRF-Hydro code and testcase for v5.0.2
-RUN version=v5.0.2 \
+RUN version=v5.0.3 \
     && release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_nwm_public/releases/tags/$version) \
     && git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public \
     && mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public \
@@ -70,6 +70,12 @@ RUN tar -xf *testcase*.tar.gz \
 ## Calib workflow code for v5.0.2
 RUN git clone --branch v5.0_release https://github.com/NCAR/PyWrfHydroCalib.git \
 && mv PyWrfHydroCalib /home/docker/wrf-hydro-training/PyWrfHydroCalib
+
+############################
+## Trainging lesson
+RUN git clone --branch v5.0.x https://github.com/NCAR/wrf_hydro_training \
+    && mv /home/docker/wrf_hydro_training/lessons/Lesson-S3-calibration.ipynb /home/docker/wrf-hydro-training \
+    && rm -rf /home/docker/wrf_hydro_training/
 
 ############################
 #Get the entrypoint script to start jupyter
