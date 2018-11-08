@@ -23,7 +23,7 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving testcase\e[0m"
 
-exampleCaseURL=$(echo "$release" | grep 'testcase' \
+exampleCaseURL=$(echo "$release" | grep 'croton_NY_example_testcase' \
 | grep "browser_download_url" \
 | cut -d : -f 2,3 |  tr -d \")
 
@@ -39,7 +39,7 @@ echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
 git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training
-mv /home/docker/wrf_hydro_training/lessons /home/docker/wrf-hydro-training/lessons
+mv /home/docker/wrf_hydro_training/lessons/training /home/docker/wrf-hydro-training/lessons
 rm -rf /home/docker/wrf_hydro_training/
 
 echo "Retrieved the following training: ${version: 0:4}.x"

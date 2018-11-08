@@ -1,4 +1,4 @@
-# WRF-Hydro coupled training container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
+# WRF | WRF-Hydro coupled training container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # Overview
 This is a container used for coupled WRF | WRF-Hydro training sessions and can be run locally.
@@ -9,8 +9,8 @@ This container includes the following:
 * All system libraries required by WRF and WRF-Hydro
 * Coupled WRF | WRF-Hydro and WPS built with the GNU compilers
 * Geographical input data for the WPS geogrid utility
-* Text editors - VIM, Nano, Emacs
-* git version control system
+* Text editors - Vim, Nano
+* Git version control system
 
 ## Requirements
 
