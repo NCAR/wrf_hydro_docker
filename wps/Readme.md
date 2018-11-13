@@ -1,4 +1,4 @@
-![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+# WPS container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # Overview
 This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system.
@@ -7,8 +7,8 @@ This container includes the following:
 
 * Ubuntu base image
 * WRF and WPS built with the GNU Fortran compiler ‘gfortran’
-* Python 3.6 command line utility for create WRF-Hydro geogrid files using the WPS geogrid.exe program.
-* WRF-WPS Geographical input data for the Continental United States. **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
+* Python 3.6 command line utility for creating WRF-Hydro geogrid files using the WPS geogrid.exe program.
+* WRF-WPS geographical input data for the Continental United States. **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
 
 ## Where to get help and/or post issues
 If you have general questions about Docker, there are ample online resources including the excellent Docker documentation at https://docs.docker.com/.
@@ -17,11 +17,10 @@ The best place ask questions or post issues is via the Issues page of the GitHub
 https://github.com/NCAR/wrf_hydro_docker/issues.
 
 You can also access a training tutorial here:
-https://github.com/jmills-ncar/wrf_hydro_training/blob/master/lessons/Lesson-S1-wps.html
-**NOTE: the file is to large to display in GitHub so you must download and open in your browser**
+https://github.com/NCAR/wrf_hydro_training/blob/master/lessons/internal/Lesson-wps.ipynb
 
 ## Data sources
-WRF Preprocessing System (WPS) geographical input data are one of the primary datasets used by the NoahMP Land Surface Model (LSM). These datasets can be obtained from the [WPS geographical input data download page](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). However, these data are rather large (~50GB) and contain a number of datasets that are not used in most implementations of WRF-Hydro. We have reduced the data by removing various resolutions of the data that are not commonly used by WRF-Hydro. Furthermore, the dataset provided with this container has been subset to the Continental United States (CONUS). Thus, the dataset provided with this container is considerably smaller than the complete WRF-WPS dataset.
+The WRF Preprocessing System (WPS) geographical input data are one of the primary datasets used by the Noah-MP land surface model (LSM). These datasets can be obtained from the [WPS geographical input data download page](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). However, these data are rather large (~50GB) and contain a number of datasets that are not used in most implementations of WRF-Hydro. We have reduced the data by removing various resolutions of the data that are not commonly used by WRF-Hydro. Furthermore, the dataset provided with this container has been subset to the Continental United States (CONUS). Thus, the dataset provided with this container is considerably smaller than the complete WRF-WPS dataset.
 
 ## Creating the geo_em_d01.nc (geogrid) file
 ### geogrid.exe
@@ -30,7 +29,7 @@ The WPS program `geogrid.exe` is used to create the geo_em_d01.nc, hereafter ref
 We will cover the steps to create the geogrid file using this method in the section 'Usage and invocations'. For more non-standard, advanced usage please see the WRF-WPS documentation.
 
 ### Defining domain boundaries
-WRF-Hydro uses domains boundaries defined by the `namelist.wps` input namelist to the geogrid.exe program. The first step to creating the geogrid file is to define our domain boundaries. The `geogrid.exe` program takes a centerpoint, x and y coordinates, and other projection information to define a bounding box for the domain. There are a number of resources available to assists users with defining this bounding box, including the NOAA supported [DomainWizard](https://esrl.noaa.gov/gsd/wrfportal/DomainWizard.html). If you have no knowledge of your coordinates, the [DomainWizard](https://esrl.noaa.gov/gsd/wrfportal/DomainWizard.html) is the best starting point. 
+WRF-Hydro uses domains boundaries defined by the `namelist.wps` input namelist to the geogrid.exe program. The first step to creating the geogrid file is to define our domain boundaries. The `geogrid.exe` program takes a centerpoint, x and y coordinates, and other projection information to define a bounding box for the domain.
 
 ### Exploring the abbreviated namelist.wps file
 The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`. As previously stated, there are many options in the `namelist.wps` file that are not relevant to most WRF-Hydro users. Therefore, the Python command line utility supplied with this container accepts an abbreviated `namelist.wps` file.
@@ -79,7 +78,7 @@ The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`
 ### Usage
 **Step 1: Pull the image**
 ```
-docker pull wrfhydro/dev:conda
+docker pull wrfhydro/wps
 ```
 
 **Step 2:  Create a directory to bind-mount to Docker for passing files between your system and docker**

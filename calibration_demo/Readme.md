@@ -1,4 +1,4 @@
-![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+# WRF-Hydro calibration demo container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # Overview
 This container is used for WRF-Hydro training sessions and can be run locally.
@@ -12,7 +12,7 @@ This container includes the following:
 
 ## Requirements
 
-The easiest and recommended way to run the training lessons is via the wrfhydro/training Docker container, which has all software dependencies and data pre-installed.
+The easiest and recommended way to run the calibration demo is via the wrfhydro/calibdemo Docker container, which has all software dependencies and data pre-installed.
 
 * Docker >= v.17.12
 * Web browser (Google Chrome recommended)
@@ -32,23 +32,20 @@ Docker installations accepting all defaults will have this configuration.
 
 **Step 1: Open a terminal or PowerShell session**
 
-**Step 2: Pull the wrfhydro/training Docker container for the desired code version**
-Each training container is specific to a release version of the WRF-Hydro source code, which can be found at https://github.com/NCAR/wrf_hydro_nwm_public/releases.
-Issue the following command in your terminal to pull a specific version of the training
-corresponding to your code release version. In this example, we will pull the training container for v5.0.x.
+**Step 2: Pull the wrfhydro/calibdemo Docker container**
 
-`docker pull wrfhydro/coupled_training:v5.0.x`
+`docker pull wrfhydro/calibdemo`
 
-**Step 3: Start the training Docker container**
+**Step 3: Start the Docker container**
 Issue the following command in your terminal session to start the training Docker container.
-`docker run --name wrf-hydro-coupled-training -p 8484:8888 -it wrfhydro/coupled_training:v5.0.x`
+`docker run --name wrf-hydro-calib -p 8484:8888 -it wrfhydro/calibdemo`
 
 **Note: Port forwarding is setup with the -p 8484:8888 argument, which maps your localhost port to
 the container port. If you already have something running on port 8484 on your localhost you will
 need to change this number**
 
 The container will start and perform a number of actions before starting the training.
-* First, the container will pull the model code corresponding to the specified major version, in this case v5.0.x
+* First, the container will pull the model code.
 * Second, the container will pull an example test case compatible with the model code release.
 * Third, the container will pull the training lessons corresponding to the psecified major version.
 * Fourth, the container will launch a Jupyter Notebook server and echo the address to your terminal.
