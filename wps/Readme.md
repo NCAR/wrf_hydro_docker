@@ -1,7 +1,7 @@
 # WPS container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # Overview
-This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system.
+This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It will also generate wrfinput files (initial conditions for the land surface model) and domain plots.
 
 This container includes the following:
 
@@ -24,7 +24,7 @@ The WRF Preprocessing System (WPS) geographical input data are one of the primar
 
 ## Creating the geo_em_d01.nc (geogrid) file
 ### geogrid.exe
-The WPS program `geogrid.exe` is used to create the geo_em_d01.nc, hereafter referred to as the 'geogrid' file. The `geogrid.exe` program takes a fortran namelist (`namelist.wps`) and the [WPS geographical input data](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html) as inputs and creates the geogrid file. However, the `geogrid.exe.` program requires that WRF and WPS be built according to your system specification, and building WRF and WPS can be difficult on some systems. Additionally, much of the functionality of WRF and WPS is not utilized for creating a geogrid file for WRF-Hydro, and many of the options in the `namelist.wps` are not relevant to this process. Therefore, we have created a Docker container and Python command line utility to abstract much of the WRF/WPS complexity and simplify the process of creating a geogrid file for WRF-Hydro users. 
+The WPS program `geogrid.exe` is used to create the `geo_em_d01.nc` file, hereafter referred to as the 'geogrid' file. The `geogrid.exe` program takes a Fortran namelist (`namelist.wps`) and the [WPS geographical input data](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html) as inputs and creates the geogrid file. However, the `geogrid.exe.` program requires that WRF and WPS be built according to your system specification, and building WRF and WPS can be difficult on some systems. Additionally, much of the functionality of WRF and WPS is not utilized for creating a geogrid file for WRF-Hydro, and many of the options in the `namelist.wps` are not relevant to this process. Therefore, we have created a Docker container and Python command line utility to abstract much of the WRF/WPS complexity and simplify the process of creating a geogrid file for WRF-Hydro users. 
 
 We will cover the steps to create the geogrid file using this method in the section 'Usage and invocations'. For more non-standard, advanced usage please see the WRF-WPS documentation.
 
@@ -89,6 +89,10 @@ mkdir /home/dockerMount
 **Step 3: Create a namelist.wps file for your domain using the above example as a starting point and save it in your mount directory from step 1.**
 
 **Step 4: Run Docker invoking the python make_geogrid.py utility with the required arguments.**
+
+Note that by default a domain plot (`domain.png`) and wrfinput file (`wrfinput_d01.nc`) are also generated for the specified domain. This wrfinput file is a very basic WRF-Hydro initialization file created from the geogrid file and a set of specified conditions. The file contains fields of spatially uniform initial model states of soil moisture, soil temperature, soil liquid water content and skin temperature among a few other variables necessary for model cold-start initialization. This file can be used as a 'cold start' for long-term model spin-up or users can overwrite the fields in the file created. Sophisticated and WRF-savvy users can use the WRF utility real.exe to create a wrfinput file from model or reanalysis products for more realistic initial conditions.
+
+The R script used to create this file can be downloaded at https://ral.ucar.edu/projects/wrf_hydro/pre-processing-tools. 
 
 **NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM. ALSO NOTE THAT ALL PATHS MUST BE ABSOLUTE**
 
