@@ -242,7 +242,7 @@ def patch_namelist(orig_nml_path: str,patch_nml_path: str,new_nml_path: str):
 def main():
 
     parser = ArgumentParser(description="Step 1: Pull the image\n"
-                                        "docker pull wrfhydro/dev:conda\n"
+                                        "docker pull wrfhydro/wps\n"
                                         "Step 2: Create a directory to bind-mount to Docker for "
                                         "passing files between your system and docker\n"
                                         "mkdir /home/dockerMount\n"
