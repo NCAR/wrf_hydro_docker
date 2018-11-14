@@ -331,8 +331,10 @@ def main():
                 geoem_path = new_nml_path.parent / 'geo_em.d01.nc'
                 Rstring = "Rscript /home/docker/create_wrfinput.R --geogrid " + \
                 str(geoem_path) + " " + \
-                "--outfile " + output_dir + '/wrfinput_d01.nc'
+                "--outfile /home/docker/wrfinput_d01.nc"
                 subprocess.run(shlex.split(Rstring))
+                shutil.copy('/home/docker/wrfinput_d01.nc',
+                            output_dir + '/wrfinput_d01.nc')
 
     except Exception as e:
         print('Error, cleaning up and exiting')

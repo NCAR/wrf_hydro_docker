@@ -38,10 +38,11 @@ Docker installations accepting all defaults will have this configuration.
 
 **Step 3: Start the Docker container**
 Issue the following command in your terminal session to start the training Docker container.
-`docker run --name wrf-hydro-calib -p 8484:8888 -it wrfhydro/calibdemo`
 
-**Note: Port forwarding is setup with the -p 8484:8888 argument, which maps your localhost port to
-the container port. If you already have something running on port 8484 on your localhost you will
+`docker run --name wrf-hydro-calib -p 8888:8888 -it wrfhydro/calibdemo`
+
+**Note: Port forwarding is setup with the -p 8888:8888 argument, which maps your localhost port to
+the container port. If you already have something running on port 8888 on your localhost you will
 need to change this number**
 
 The container will start and perform a number of actions before starting the training.
