@@ -41,10 +41,10 @@ corresponding to your code release version. In this example, we will pull the tr
 
 **Step 3: Start the training Docker container**
 Issue the following command in your terminal session to start the training Docker container.
-`docker run --name wrf-hydro-coupled-training -p 8484:8888 -it wrfhydro/coupled_training:v5.0.x`
+`docker run --name wrf-hydro-coupled-training -p 8888:8888 -it wrfhydro/coupled_training:v5.0.x`
 
-**Note: Port forwarding is setup with the -p 8484:8888 argument, which maps your localhost port to
-the container port. If you already have something running on port 8484 on your localhost you will
+**Note: Port forwarding is setup with the -p 8888:8888 argument, which maps your localhost port to
+the container port. If you already have something running on port 8888 on your localhost you will
 need to change this number**
 
 The container will start and perform a number of actions before starting the training.
