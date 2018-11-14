@@ -1,4 +1,4 @@
-![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+# WRF-Hydro <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # wrf_hydro_docker
 
@@ -6,12 +6,12 @@
 
 # Overview
 
-This repository contains all Dockerfiles and assosciated container contents for all images
-available on the [WRF-Hydro Dockerhub page](https://hub.docker.com/u/wrfhydro/). Some of these
-containers require large datasets. These datasets are avilable on a public GoogleDrive folder at 
+This repository contains Dockerfiles and associated container contents for all images
+available on the [WRF-Hydro Docker Hub page](https://hub.docker.com/u/wrfhydro/). Some of these
+containers require large datasets. These datasets are avilable on a public Google Drive folder at 
 [WRF_HYDRO_DOCKER_DATA](https://drive.google.com/open?id=1NY9YdVLcJMIqE6ibLVyKe1fJ-Eoj74Kr).
 
-Each subdirectory in this repository cooresponds to a Docker image on [WRF-Hydro Dockerhub page]
+Each subdirectory in this repository corresponds to a Docker image on the [WRF-Hydro Docker Hub page]
 (https://hub.docker.com/u/wrfhydro/).
 
 ## Where to get help and/or post issues
