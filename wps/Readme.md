@@ -93,6 +93,9 @@ mkdir /home/dockerMount
 
 Note that by default a domain plot (`domain.png`) and wrfinput file (`wrfinput_d01.nc`) are also generated for the specified domain. This wrfinput file is a very basic WRF-Hydro initialization file created from the geogrid file and a set of specified conditions. The file contains fields of spatially uniform initial model states of soil moisture, soil temperature, soil liquid water content and skin temperature among a few other variables necessary for model cold-start initialization. This file can be used as a 'cold start' for long-term model spin-up or users can overwrite the fields in the file created. Sophisticated and WRF-savvy users can use the WRF utility real.exe to create a wrfinput file from model or reanalysis products for more realistic initial conditions.
 
+**Windows users will also need to remove the extensions from the wrfinput file
+filename so that it matches wrfinput_d01.nc before using it in WRF-Hydro.**
+
 The R script used to create this file can be downloaded at https://ral.ucar.edu/projects/wrf_hydro/pre-processing-tools. 
 
 **NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM. ALSO NOTE THAT ALL PATHS MUST BE ABSOLUTE**
