@@ -1,5 +1,6 @@
-# WPS container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
+![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
 
+# WPS container 
 # Overview
 This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It will also generate wrfinput files (initial conditions for the land surface model) and domain plots.
 

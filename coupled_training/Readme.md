@@ -1,5 +1,6 @@
-# WRF | WRF-Hydro coupled training container <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
+![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
 
+# WRF | WRF-Hydro coupled training container 
 # Overview
 This is a container used for coupled WRF | WRF-Hydro training sessions and can be run locally.
 
