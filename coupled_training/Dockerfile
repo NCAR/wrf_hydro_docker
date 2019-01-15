@@ -163,7 +163,7 @@ RUN chmod -R 777 /home/docker/.jupyter
 COPY gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
-RUN python gdrive_download.py --file_id 1EICBJ8-pRpkox27Bnq3mrBAqyZQsV662 --dest_file geog_conus.tar.gz \
+RUN python gdrive_download.py --file_id 1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl --dest_file geog_conus.tar.gz \
 	&& tar -xf geog_conus.tar.gz \
 	&& rm geog_conus.tar.gz
 RUN chmod -R 777 /home/docker/geog_conus

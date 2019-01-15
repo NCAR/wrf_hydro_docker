@@ -21,7 +21,7 @@ COPY ./gdrive_download.py gdrive_download.py
 RUN chmod 777 gdrive_download.py
 
 RUN mkdir /home/docker/wrf-hydro-training/regridding/data/ \
-  && python gdrive_download.py --file_id 1PrDTA-hMFNqQrDag1Dm7tX1rT1gQ_25e --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
+  && python gdrive_download.py --file_id 1yyfO2ofec49H4SqR-RuFly9mJPqs73Hw --dest_file /home/docker/wrf-hydro-training/regridding/data/nldas_forcing.tar.gz
 
 RUN rm gdrive_download.py
 # install NCL
