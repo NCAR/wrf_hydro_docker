@@ -1,8 +1,8 @@
 ###################################
-# WRF-Hydro testing container
+# Hydro-DART (WRF-Hydro) testing container
 # Purpose:
 #   Given a candidate and optionally a reference code repository, execute 
-#   wrf_hydro_nwm_public tests
+#   wrf_hydro_dart tests
 # The above is achieved through entrypoint and host-side scripting.
 #
 # Authors: James McCreight
@@ -16,8 +16,11 @@ FROM wrfhydro/dev:base
 ### Python installations ##########
 ###################################
 
-#Install modules
-RUN pip install netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.11
+# pip fails to install yaml, so go this route.
+RUN conda install -c conda-forge -y pyyaml yaml
+
+# Install modules
+RUN pip install netCDF4 pytest pytest-datadir-ng wrfhydropy
 
 ####################################
 ######### entrypoint ###########
