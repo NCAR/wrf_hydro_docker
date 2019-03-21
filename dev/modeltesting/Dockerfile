@@ -18,7 +18,7 @@ MAINTAINER jmills@ucar.edu
 ###################################
 
 #Install modules
-RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.15
+RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.16
 
 ####################################
 ######### entrypoint ###########
