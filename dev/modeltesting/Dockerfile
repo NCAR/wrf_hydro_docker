@@ -11,7 +11,7 @@
 ###################################
 
 FROM wrfhydro/dev:base
-MAINTAINER jmills@ucar.edu
+MAINTAINER jamesmcc@ucar.edu
 
 ###################################
 ### Python installations ##########

@@ -44,6 +44,7 @@ RUN apt-get update \
     vim \ 
     libhdf5-dev \
     gfortran \
+    g++ \
     valgrind \
     m4 \
     make \ 
