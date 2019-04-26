@@ -35,13 +35,13 @@ Docker installations accepting all defaults will have this configuration.
 **Step 2: Pull the wrfhydro/rfc-training Docker container for the desired code version**
 Each training container is specific to a release version of the WRF-Hydro source code, which can be found at https://github.com/NCAR/wrf_hydro_nwm_public/releases.
 Issue the following command in your terminal to pull a specific version of the training
-corresponding to your code release version. In this example, we will pull the training container for v5.1.0.
+corresponding to your code release version. In this example, we will pull the training container for v2.0.
 
-`docker pull wrfhydro/rfc-training:v5.1.0`
+`docker pull wrfhydro/nwm-training:v2.0`
 
 **Step 3: Start the training Docker container**
 Issue the following command in your terminal session to start the training Docker container.
-`docker run --name wrf-hydro-training -p 8888:8888 -it wrfhydro/rfc-training:v5.1.0`
+`docker run --name wrf-hydro-training -p 8888:8888 -it wrfhydro/nwm-training:2.0`
 
 **Note: Port forwarding is setup with the -p 8888:8888 argument, which maps your localhost port to
 the container port. If you already have something running on port 8888 on your localhost you will

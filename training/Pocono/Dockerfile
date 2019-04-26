@@ -1,5 +1,5 @@
 ###################################
-# Image name: wrfhydro/rfc-training:latest
+# Image name: wrfhydro/nwm-training:v2.0
 # Author: Ryan Cabell <rcabell@ucar.edu>
 # Date:  2019-04-24
 ###################################
