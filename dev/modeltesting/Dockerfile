@@ -11,14 +11,14 @@
 ###################################
 
 FROM wrfhydro/dev:base
-MAINTAINER jmills@ucar.edu
+MAINTAINER jamesmcc@ucar.edu
 
 ###################################
 ### Python installations ##########
 ###################################
 
 #Install modules
-RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.15
+RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.16
 
 ####################################
 ######### entrypoint ###########
