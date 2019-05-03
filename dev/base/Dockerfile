@@ -53,14 +53,15 @@ RUN apt-get update \
     nano \
     tcsh \
     bc \
+    less \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
 
 ## Download, build, and install MPICH
 RUN MPICH_VERSION="3.2" \
-    && MPICH_CONFIGURE_OPTIONS="--disable-cxx" \
-    && MPICH_MAKE_OPTIONS='' \
+    && MPICH_CONFIGURE_OPTIONS="" \
+    && MPICH_MAKE_OPTIONS='-j 2' \
     && mkdir /tmp/mpich-src \
     && cd /tmp/mpich-src \
     && wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
@@ -89,7 +90,7 @@ RUN NETCDF_C_VERSION="4.4.1.1" \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
     && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
-    && make \
+    && make -j 2\
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
     && make install \
     && rm -rf /tmp/netcdf-${NETCDF_C_VERSION}
@@ -103,7 +104,7 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
     && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
     && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
-    && make \
+    && make -j 2\
     && make install \
     && cd / \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
@@ -117,10 +118,17 @@ ENV NETCDF_INC=/usr/local/include
 RUN rm -rf /tmp/*
 
 ###################################
+## create docker user
+RUN useradd -ms /bin/bash docker
+RUN usermod -aG sudo docker
+RUN chmod -R 777 /home/docker/
+
+###################################
 # Python
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
-    && rm Miniconda3-latest-Linux-x86_64.sh
+    && rm Miniconda3-latest-Linux-x86_64.sh \
+    && chown -R docker:docker /home/docker/miniconda3 
 
 #Set environment variables
 ENV PATH="/home/docker/miniconda3/bin:${PATH}"
@@ -137,13 +145,9 @@ RUN add-apt-repository ppa:remik-ziemlinski/nccmp && \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /tmp/*
 
-###################################
-## create docker user
-RUN useradd -ms /bin/bash docker
-RUN usermod -aG sudo docker
-RUN chmod -R 777 /home/docker/
 ####################################
 ######### docker user ###########
 ####################################
 USER docker
 WORKDIR /home/docker
+
