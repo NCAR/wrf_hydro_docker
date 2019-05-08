@@ -29,17 +29,6 @@ ADD example_case.tgz /home/docker/nwm-training
 RUN chown -R docker:docker /home/docker/nwm-training/example_case # && \
     chown -R docker:docker /home/docker/miniconda3
 
-############################
-## R
-#install R and libraries
-
-RUN conda install -c r r
-RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
-        && R CMD INSTALL ncdf4_1.13.tar.gz  \
-        && rm ncdf4_1.13.tar.gz
-
-RUN Rscript -e 'install.packages(c("data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
-
 # Modifying PATH to place conda stuff at the end. 
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin
 
@@ -65,15 +54,15 @@ ENV version=v5.1.0
 
 #RUN rm gdrive_download.py
 
-RUN git clone --branch ${version} https://github.com/NCAR/wrf_hydro_nwm_public
+RUN git clone --single-branch --branch ${version} https://github.com/NCAR/wrf_hydro_nwm_public
 RUN mv /home/docker/wrf_hydro_nwm_public /home/docker/nwm-training/wrf_hydro_nwm_public
 
-RUN git clone --branch RFC_Training https://github.com/NCAR/wrf_hydro_training
+RUN git clone --single-branch --branch RFC_Training https://github.com/NCAR/wrf_hydro_training
 RUN mv /home/docker/wrf_hydro_training/lessons/training /home/docker/nwm-training/lessons
 RUN rm -rf /home/docker/wrf_hydro_training/
 
 # Obtain the latest calibration workflow code. 
-RUN git clone https://github.com/logankarsten/PyWrfHydroCalib
+RUN git clone --single-branch https://github.com/logankarsten/PyWrfHydroCalib
 RUN mv /home/docker/PyWrfHydroCalib /home/docker/nwm-training/PyWrfHydroCalib
 
 # Modifying PATH to place conda stuff at the end.
@@ -83,6 +72,17 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/min
 ### second stage build
 
 FROM wrfhydro/dev:base
+
+## R
+#install R and libraries
+USER root
+RUN apt update && apt install -y r-base-core \
+        && wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
+        && R CMD INSTALL ncdf4_1.13.tar.gz  \
+        && rm ncdf4_1.13.tar.gz \
+        && Rscript -e 'install.packages(c("data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
+
+
 USER docker
 
 # Modifying PATH to place conda stuff at the end.
