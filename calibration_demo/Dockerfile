@@ -1,29 +1,30 @@
 ###################################
-# Author: Joe Mills <jmills@ucar.edu>
-# Date:  9.27.2017
+# Author: Logan Karsten <karsten@ucar.edu>
+# Date:  5.2.2019
 ###################################
 #
-# This Dockerfile compiles WRF and WPS from source using the bare-bones requirements for training purposes.
-# See https://ral.ucar.edu/projects/ncar-docker-wrf for more complete WRF and WPS docker builds with additional functionality
+# This Dockerfile downloads and builds the necessary Python/R
+# libraries to run the WRF-Hydro calibration workflow. 
 
 FROM wrfhydro/dev:base
 
-MAINTAINER jmills@ucar.edu
+MAINTAINER karsten@ucar.edu
 USER root
 
+RUN mkdir /home/docker/wrf-hydro-training
 
 ############################
 ## Python
 WORKDIR /home/docker
-RUN rm -rf /home/docker/miniconda3
+#RUN rm -rf /home/docker/miniconda3
 
 #Fetch latest miniconda and install
-RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh \
-    && bash Miniconda2-latest-Linux-x86_64.sh -b -p /home/docker/miniconda2 \
-    && rm Miniconda2-latest-Linux-x86_64.sh
+#RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh \
+#    && bash Miniconda2-latest-Linux-x86_64.sh -b -p /home/docker/miniconda2 \
+#    && rm Miniconda2-latest-Linux-x86_64.sh
 
 #Set environment variables
-ENV PATH="/home/docker/miniconda2/bin:${PATH}"
+#ENV PATH="/home/docker/miniconda2/bin:${PATH}"
 
 #Install modules
 RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 numpy pandas psutil
@@ -49,13 +50,10 @@ RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
 	&& rm ncdf4_1.13.tar.gz
 
 RUN Rscript -e 'install.packages(c("data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
-############################
-
-RUN mkdir /home/docker/wrf-hydro-training
 
 ############################
-## WRF-Hydro code and testcase for v5.0.2
-RUN version=v5.0.3 \
+## WRF-Hydro code and testcase for v5.1.0
+RUN version=v5.1.0 \
     && release=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_nwm_public/releases/tags/$version) \
     && git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public \
     && mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public \
@@ -68,7 +66,7 @@ RUN tar -xf *testcase*.tar.gz \
 
 ############################
 ## Calib workflow code for v5.0.2
-RUN git clone --branch v5.0_release https://github.com/NCAR/PyWrfHydroCalib.git \
+RUN git clone --branch master https://github.com/NCAR/PyWrfHydroCalib.git \
 && mv PyWrfHydroCalib /home/docker/wrf-hydro-training/PyWrfHydroCalib
 
 ############################
