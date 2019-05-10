@@ -46,6 +46,8 @@ RUN cd /tmp \
     && make \
     && make lib
 
+ENV PATH=/tmp/grib2/wgrib2:${PATH}
+
 ## SWITCH TO USER "DOCKER"
 
 USER docker
@@ -53,19 +55,28 @@ WORKDIR /home/docker
 
 # Set the proper environmental paths
 RUN export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-RUN export PATH=/tmp/grib2/wgrib2:${PATH}
+ENV PATH=/tmp/grib2/wgrib2:${PATH}
 
 RUN mkdir /home/docker/wrf-hydro-training/forcing_engine
 
 # Download the test-case data, including input forcing GRIB2 files
 # and input domain files used for the forcing engine. 
 RUN cd /home/docker/wrf-hydro-training/forcing_engine \
-    && gdown https://drive.google.com/uc?id=1HA_iaVJ2CZKyzMkOuXqiXoVJJHsNcKNl \
+    && gdown https://drive.google.com/uc?id=1CvcNPNBa5vjbFR3lNbWwsfdnTy62RuIa \
     && tar -xf RFC_Training2019_FE.tar \
-    && mv Training_Pocono wrf-hydro-training \
     && rm RFC_Training2019_FE.tar 
 
 # Download the WRF-Hydro forcing engine code.
-RUN cd /home/docker/wrf-hydro-training/forcing_engine/wrf-hydro-training \
-    && git clone https://github.com/NCAR/WrfHydroForcing
+RUN cd /home/docker/wrf-hydro-training/forcing_engine/Pocono_Forcing \
+    && git clone https://github.com/logankarsten/WrfHydroForcing
 
+ENV PATH=/tmp/grib2/wgrib2:${PATH}
+
+WORKDIR /home/docker
+
+COPY --from=build --chown=docker:docker /home/docker /home/docker
+COPY --chown=docker:docker ./entrypoint.sh /.
+COPY --chown=docker:docker ./jupyter_notebook_config.py /home/docker/.jupyter/
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["interactive"]
