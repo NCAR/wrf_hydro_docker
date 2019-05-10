@@ -30,7 +30,7 @@ RUN chown -R docker:docker /home/docker/nwm-training/example_case # && \
     chown -R docker:docker /home/docker/miniconda3
 
 # Modifying PATH to place conda stuff at the end. 
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin
+#ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin
 
 ############################
 ## SWITCH TO USER "DOCKER"
@@ -86,7 +86,7 @@ RUN apt update && apt install -y r-base-core libcurl4-gnutls-dev libssl-dev libx
 USER docker
 
 # Modifying PATH to place conda stuff at the end.
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin 
+#ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin 
 
 WORKDIR /home/docker
 
