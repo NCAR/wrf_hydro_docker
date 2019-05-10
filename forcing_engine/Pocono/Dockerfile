@@ -66,6 +66,12 @@ RUN cd /home/docker/wrf-hydro-training/forcing_engine \
     && tar -xf RFC_Training2019_FE.tar \
     && rm RFC_Training2019_FE.tar 
 
+# Download the training repo.
+RUN cd /home/docker/wrf-hydro-training \
+     && git clone --single-branch --branch RFC_Training https://github.com/NCAR/wrf_hydro_training \
+     && mv /home/docker/wrf_hydro_training/lessons/training /home/docker/nwm-training/lessons \
+     && rm -rf /home/docker/wrf_hydro_training/
+
 # Download the WRF-Hydro forcing engine code.
 RUN cd /home/docker/wrf-hydro-training/forcing_engine/Pocono_Forcing \
     && git clone https://github.com/logankarsten/WrfHydroForcing
