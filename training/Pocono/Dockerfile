@@ -54,16 +54,16 @@ ENV version=v5.1.0
 
 #RUN rm gdrive_download.py
 
-RUN git clone --single-branch --branch ${version} https://github.com/NCAR/wrf_hydro_nwm_public
-RUN mv /home/docker/wrf_hydro_nwm_public /home/docker/nwm-training/wrf_hydro_nwm_public
+RUN git clone --single-branch --branch ${version} https://github.com/NCAR/wrf_hydro_nwm_public \
+    && mv /home/docker/wrf_hydro_nwm_public /home/docker/nwm-training/wrf_hydro_nwm_public
 
-RUN git clone --single-branch --branch RFC_Training https://github.com/NCAR/wrf_hydro_training
-RUN mv /home/docker/wrf_hydro_training/lessons/training /home/docker/nwm-training/lessons
-RUN rm -rf /home/docker/wrf_hydro_training/
+RUN git clone --single-branch --branch RFC_Training https://github.com/NCAR/wrf_hydro_training \
+     && mv /home/docker/wrf_hydro_training/lessons/training /home/docker/nwm-training/lessons \
+     && rm -rf /home/docker/wrf_hydro_training/
 
 # Obtain the latest calibration workflow code. 
-RUN git clone --single-branch https://github.com/logankarsten/PyWrfHydroCalib
-RUN mv /home/docker/PyWrfHydroCalib /home/docker/nwm-training/PyWrfHydroCalib
+RUN git clone --single-branch https://github.com/logankarsten/PyWrfHydroCalib \
+    && mv /home/docker/PyWrfHydroCalib /home/docker/nwm-training/PyWrfHydroCalib
 
 # Modifying PATH to place conda stuff at the end.
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin
@@ -75,13 +75,13 @@ FROM wrfhydro/dev:base
 
 ## R
 #install R and libraries
-USER root
-RUN apt update && apt install -y r-base-core \
+USER root 
+RUN apt update && apt install -y r-base-core libcurl4-gnutls-dev libssl-dev libxml2-dev \
         && wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
         && R CMD INSTALL ncdf4_1.13.tar.gz  \
         && rm ncdf4_1.13.tar.gz \
-        && Rscript -e 'install.packages(c("data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra"), repos="https://cran.rstudio.com")'
-
+        && Rscript -e 'install.packages(c("devtools","data.table","ggplot2","plyr","boot","sensitivity","randtoolbox","gridExtra","raster"), repos="https://cran.rstudio.com")' \
+        && Rscript -e 'devtools::install_github("NCAR/rwrfhydro")'
 
 USER docker
 
@@ -93,6 +93,10 @@ WORKDIR /home/docker
 COPY --from=build --chown=docker:docker /home/docker /home/docker
 COPY --chown=docker:docker ./entrypoint.sh /.
 COPY --chown=docker:docker ./jupyter_notebook_config.py /home/docker/.jupyter/
+
+RUN chmod -R ugo-s /home/docker/nwm-training/example_case && \
+    chmod -R o-w /home/docker/nwm-training/example_case && \
+    chmod o-w /home/docker
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]
