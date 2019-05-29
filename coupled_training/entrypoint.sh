@@ -29,7 +29,8 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
-git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training
+#git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training
+git clone https://github.com/NCAR/wrf_hydro_training
 mkdir /home/docker/wrf-hydro-training/lessons
 mv /home/docker/wrf_hydro_training/lessons/internal/Lesson-coupled.ipynb /home/docker/wrf-hydro-training/lessons/Lesson-coupled.ipynb
 rm -rf /home/docker/wrf_hydro_training/
