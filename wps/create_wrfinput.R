@@ -7,7 +7,11 @@
 #          Mirrors the HRLDAS routines here:
 #          https://github.com/NCAR/hrldas-release/blob/release/HRLDAS/HRLDAS_forcing/lib/module_geo_em.F
 #          from M. Barlage.
+# Modified:
+#  - Added command line arguments (J. Mills)
+#  - Added treatment for dealing with 0 SOILTEMP values over water cells
 ############################################################
+
 library(optparse)
 library(ncdf4)
 
@@ -108,7 +112,13 @@ mminlu <- ncatt_get(ncid, 0)[["MMINLU"]]
 
 # New Variables
 
-tmn <- ncvar_get(ncid, "SOILTEMP") - 0.0065 * ncvar_get(ncid, "HGT")
+# SOILTEMP will show 0 value over water. This can cause issues when varying land cover fields
+# from default. Setting to mean non-zero values for now to have something reasonable.
+soilt <- ncvar_get(ncid, "SOILTEMP")
+soilt[soilt < 100] <- NA
+soilt_mean <- mean(c(soilt), na.rm=TRUE)
+soilt[is.na(soilt)] <- soilt_mean
+tmn <- soilt - 0.0065 * ncvar_get(ncid, "HGT")
 
 use <- ncvar_get(ncid, "IVGTYP")
 
