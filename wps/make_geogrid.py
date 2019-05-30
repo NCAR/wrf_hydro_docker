@@ -85,7 +85,7 @@ def plot_from_wps(patch_nml_path: str,
                   display: bool = True,
                   useCartopy: bool = True,
                   TileService: bool = False,
-                  xyzTiles: str = 'http://tile.openstreetmap.org/{z}/{x}/{y}.png'):
+                  xyzTiles: str = 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg'):
 
     # namelist options to be passed as kwargs dict to projparams
     namelist_patch = f90nml.read(patch_nml_path)
