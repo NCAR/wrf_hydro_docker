@@ -1,7 +1,8 @@
 #!/bin/bash
 
-###Change the version here
-version=v5.0.3
+###Change the versions here
+version=v5.1.0
+training_branch=master
 ###########################
 
 
@@ -38,7 +39,7 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
-git clone --branch ${version: 0:4}.x https://github.com/NCAR/wrf_hydro_training
+git clone --branch ${training_branch} https://github.com/NCAR/wrf_hydro_training
 mv /home/docker/wrf_hydro_training/lessons/training /home/docker/wrf-hydro-training/lessons
 rm -rf /home/docker/wrf_hydro_training/
 
