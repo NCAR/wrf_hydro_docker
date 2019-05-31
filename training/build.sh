@@ -1,5 +1,5 @@
 
  
-docker build "$@" -t wrfhydro/training:v5.0.x . 
+docker build "$@" -t wrfhydro/training:v5.1.x .
 
 exit $?
