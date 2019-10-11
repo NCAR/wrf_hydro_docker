@@ -105,10 +105,18 @@ RUN python gdrive_download.py --file_id 1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl --dest
 RUN chmod -R 777 /home/docker/WRF_WPS/utilities/geog_conus
 RUN rm gdrive_download.py
 
-####################################
-########## DOCKER USER #############
-####################################
+RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib h5py netcdf4 dask toolz xarray
+
+COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
+RUN chmod -R 777 /home/docker/.jupyter
+
+COPY ./entrypoint.sh /.
+RUN chmod 777 /entrypoint.sh
+RUN chmod -R 777 /home/docker/wrf-hydro-training/
+
 USER docker
 WORKDIR /home/docker
+ENV SHELL=bash
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["interactive"]
 
-ENTRYPOINT ["python", "/home/docker/WRF_WPS/utilities/make_geogrid.py"]
