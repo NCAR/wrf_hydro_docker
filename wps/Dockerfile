@@ -11,6 +11,9 @@ FROM wrfhydro/dev:base
 MAINTAINER jmills@ucar.edu
 USER root
 
+RUN mkdir /home/docker/wrf-hydro-training \
+    && chmod -R 777 /home/docker/wrf-hydro-training
+
 ############################
 ###WRF and WPS
 
