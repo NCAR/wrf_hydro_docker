@@ -84,7 +84,7 @@ RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
 	&& mv /home/docker/WRF_WPS/WPS/namelist.wps \
 	/home/docker/WRF_WPS/WPS/namelist.wps_orig
 
-COPY make_geogrid.py /home/docker/WRF_WPS/utilities/make_geogrid.py
+COPY make_geogrid_training.py /home/docker/WRF_WPS/utilities/make_geogrid.py
 COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 
 COPY ./create_wrfinput.R /home/docker/WRF_WPS/utilities/create_wrfinput.R
@@ -108,7 +108,7 @@ RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib h5py 
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
 RUN chmod -R 777 /home/docker/.jupyter
 
-COPY ./entrypoint.sh /.
+COPY ./entrypoint_training.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
