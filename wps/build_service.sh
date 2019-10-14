@@ -1,5 +1,4 @@
 #!/bin/bash
-mv Dockerfile.service Dockerfile
-docker build "$@" -t wrfhydro/wps .
+docker build "$@" -f Dockerfile.service -t wrfhydro/wps:conus .
 
 exit $?

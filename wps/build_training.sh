@@ -1,5 +1,4 @@
 #!/bin/bash
-mv Dockerfile.training Dockerfile
-docker build "$@" -t wrfhydro/wps .
+docker build "$@" -f Dockerfile.training -t wrfhydro/wps:conus-training-v5.1.1 .
 
 exit $?
