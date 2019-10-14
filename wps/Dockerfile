@@ -76,10 +76,6 @@ RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
 
 RUN Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")'
 
-#Get create_wrfinput.r
-COPY ./create_wrfinput.R /home/docker/create_wrfinput.R
-RUN chmod 777 /home/docker/create_wrfinput.R
-
 ############################
 # Setup stuff for geogrid script
 COPY ./namelist.wps_orig /home/docker/WRF_WPS/utilities/namelist.wps_orig
@@ -91,9 +87,8 @@ RUN mkdir -p /home/docker/WRF_WPS/WPS/utilities/ \
 COPY make_geogrid.py /home/docker/WRF_WPS/utilities/make_geogrid.py
 COPY wrf_hydro_namelist.wps /home/docker/WRF_WPS/utilities/
 
-
-RUN mkdir /home/docker/tmp/ \
-	&& chmod 777 -R /home/docker/tmp/
+COPY ./create_wrfinput.R /home/docker/WRF_WPS/utilities/create_wrfinput.R
+RUN chmod 777 /home/docker/WRF_WPS/utilities/create_wrfinput.R
 
 # Get geog data from google drive
 ## Get download script
