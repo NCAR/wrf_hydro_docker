@@ -1,7 +1,7 @@
 ###################################
 # Author: Joe Mills
 # Author: Katelyn FitzGerald
-# Date:  10.24.2018
+# Date:  05.28.2018
 ###################################
 #
 # This Dockerfile compiles coupled WRF | WRF-Hydro and WPS from source for training purposes.
@@ -21,7 +21,7 @@ RUN apt-get update \
 	&& apt-get install -yq --no-install-recommends \
 	software-properties-common \
 	&& apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/*
 
 ####################################
 ##WRF, WRF-Hydro, and WPS dependencies and tools used for compilation
@@ -94,10 +94,10 @@ RUN conda update conda
 ###WRF | WRF-Hydro and WPS
 
 #Set WRF and WPS version argument
-ARG WRFWPS_VERSION="4.0.1"
+ARG WRFWPS_VERSION="4.1"
 
 #Set WRF-Hydro version argument
-ARG HYDRO_VERSION="5.0.3"
+ARG HYDRO_VERSION="5.1.0-beta2"
 
 #Install coupled WRF | WRF-Hydro AND WPS
 WORKDIR /home/docker/WRF_WPS

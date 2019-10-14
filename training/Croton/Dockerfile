@@ -50,6 +50,6 @@ RUN chmod -R 777 /home/docker/wrf-hydro-training/
 
 USER docker
 WORKDIR /home/docker
-
+ENV SHELL=bash
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]

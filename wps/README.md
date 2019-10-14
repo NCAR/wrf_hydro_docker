@@ -1,15 +1,16 @@
-![](https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png) WRF-HYDRO
+# WRF-Hydro <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # WPS container 
+
 # Overview
-This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It will also generate wrfinput files (initial conditions for the land surface model) and domain plots.
+This is a container used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It also generates wrfinput files (these files are used to specify the initial conditions for the land surface model in WRF-Hydro) and maps of the specified model domain.
 
 This container includes the following:
 
 * Ubuntu base image
-* WRF and WPS built with the GNU Fortran compiler ‘gfortran’
-* Python 3.6 command line utility for creating WRF-Hydro geogrid files using the WPS geogrid.exe program.
-* WRF-WPS geographical input data for the Continental United States. **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
+* WRF and WPS v3.9 built with the GNU Fortran compiler ‘gfortran’
+* Python 3.6 command line utility for creating WRF-Hydro geogrid files using the WPS geogrid.exe program
+* WRF-WPS geographical input data for the Continental United States **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
 
 ## Where to get help and/or post issues
 If you have general questions about Docker, there are ample online resources including the excellent Docker documentation at https://docs.docker.com/.
@@ -92,9 +93,6 @@ mkdir /home/dockerMount
 **Step 4: Run Docker invoking the python make_geogrid.py utility with the required arguments.**
 
 Note that by default a domain plot (`domain.png`) and wrfinput file (`wrfinput_d01.nc`) are also generated for the specified domain. This wrfinput file is a very basic WRF-Hydro initialization file created from the geogrid file and a set of specified conditions. The file contains fields of spatially uniform initial model states of soil moisture, soil temperature, soil liquid water content and skin temperature among a few other variables necessary for model cold-start initialization. This file can be used as a 'cold start' for long-term model spin-up or users can overwrite the fields in the file created. Sophisticated and WRF-savvy users can use the WRF utility real.exe to create a wrfinput file from model or reanalysis products for more realistic initial conditions.
-
-**Windows users will also need to remove the extensions from the wrfinput file
-filename so that it matches wrfinput_d01.nc before using it in WRF-Hydro.**
 
 The R script used to create this file can be downloaded at https://ral.ucar.edu/projects/wrf_hydro/pre-processing-tools. 
 
