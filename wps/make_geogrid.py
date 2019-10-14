@@ -326,7 +326,7 @@ def main():
             if create_wrf_input:
                 print('Generating wrfinput file')
                 geoem_path = new_nml_path.parent / 'geo_em.d01.nc'
-                Rstring = "Rscript /home/docker/create_wrfinput.R --geogrid " + \
+                Rstring = "Rscript /home/docker/WRF_WPS/utilities/create_wrfinput.R --geogrid " + \
                 str(geoem_path) + " " + \
                 "--outfile /home/docker/wrfinput_d01.nc"
                 subprocess.run(shlex.split(Rstring))
