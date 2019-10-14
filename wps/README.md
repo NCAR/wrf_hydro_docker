@@ -3,14 +3,16 @@
 # WPS container 
 
 # Overview
-This is a container used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It also generates wrfinput files (these files are used to specify the initial conditions for the land surface model in WRF-Hydro) and maps of the specified model domain.
+This container is used primarily to create geogrid files for a specified domain to be used with the WRF-Hydro modeling system. It also generates wrfinput files (these files are used to specify the initial conditions for the land surface model in WRF-Hydro) and maps of the specified model domain.
 
-This container includes the following:
+There are both standard and training versions of this container.  The former run as a service using the directions posted here and the latter include the JupyterLab server allowing users to work with the container interactively and through training notebooks.
+
+The containers include the following:
 
 * Ubuntu base image
 * WRF and WPS v3.9 built with the GNU Fortran compiler ‘gfortran’
 * Python 3.6 command line utility for creating WRF-Hydro geogrid files using the WPS geogrid.exe program
-* WRF-WPS geographical input data for the Continental United States **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
+* WRF-WPS geographical input data for the contiguous United States **ONLY USGS+DEFAULT DATASETS ARE SUPPORTED, lai_modis_30s, nlcd2011_30m, and topo_30s are subsets for training purposes only**
 
 ## Where to get help and/or post issues
 If you have general questions about Docker, there are ample online resources including the excellent Docker documentation at https://docs.docker.com/.
@@ -18,17 +20,42 @@ If you have general questions about Docker, there are ample online resources inc
 The best place ask questions or post issues is via the Issues page of the GitHub repository at
 https://github.com/NCAR/wrf_hydro_docker/issues.
 
-You can also access a training tutorial here:
-https://github.com/NCAR/wrf_hydro_training/blob/master/lessons/internal/Lesson-wps.ipynb
-
 ## Data sources
-The WRF Preprocessing System (WPS) geographical input data are some of the primary datasets used by the Noah-MP land surface model (LSM). These datasets can be obtained from the [WPS geographical input data download page](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). However, these data are rather large (~50GB) and contain a number of datasets that are not used in most implementations of WRF-Hydro. We have reduced the data by removing various resolutions of the data that are not commonly used by WRF-Hydro. Furthermore, the dataset provided with this container has been subset to the Continental United States (CONUS). Thus, the dataset provided with this container is considerably smaller than the complete WRF-WPS dataset.
+The WRF Preprocessing System (WPS) geographical input data are one of the primary datasets used by the Noah-MP land surface model (LSM). These datasets can be obtained from the [WPS geographical input data download page](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). However, these data are rather large (~50GB) and contain a number of datasets that are not used in most implementations of WRF-Hydro. We have reduced the data by removing various resolutions of the data that are not commonly used by WRF-Hydro. Furthermore, the dataset provided with this container has been subset to the contiguous United States (CONUS). Thus, the dataset provided with this container is considerably smaller than the complete WRF-WPS dataset.
 
-## Creating the geo_em.d01.nc (geogrid) file
+# Running the training version(s) of this container:
+Make sure you have Docker installed and that it can access your localhost ports. Most out-of-the-box
+Docker installations accepting all defaults will have this configuration. 
+
+**Step 1: Open a terminal or PowerShell session**
+
+**Step 2: Pull the appropriate Docker container for the desired code version**
+Each training container is specific to a release version of the WRF-Hydro source code, which can be found at https://github.com/NCAR/wrf_hydro_nwm_public/releases.
+Issue the following command in your terminal to pull a specific version of the training
+corresponding to your code release version. In this example, we will pull the training container for v5.1.1.
+
+`docker pull wrfhydro/wps:conus-training-v5.1.1`
+
+**Step 3: Start the training Docker container**
+Issue the following command in your terminal session to start the training Docker container.
+`docker run --name wrf-hydro-training -p 8889:8888 -it wrfhydro/wps:conus-training-v5.1.1`
+
+**Note: Port forwarding is setup with the -p 8889:8888 argument, which maps your localhost port to
+the container port. If you already have something running on port 8889 on your localhost you will
+need to change this number**
+
+**Step 4: Open the training lesson in Jupyter Lab**
+All lessons for this training are contained in the `~/wrf-hydro-training/lessons` folder. The
+lessons are interactive and can execute code commands live. For more information on Jupyter
+visit the project page at http://jupyter.org/.
+
+# Running the standard version(s) of this container:
+
+## Creating the geo_em_d01.nc (geogrid) file
 ### geogrid.exe
-The WPS program `geogrid.exe` is used to create the `geo_em.d01.nc` file, hereafter referred to as the 'geogrid' file. The `geogrid.exe` program takes a Fortran namelist (`namelist.wps`) and the [WPS geographical input data](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html) as inputs and creates the geogrid file. However, the `geogrid.exe.` program requires that WRF and WPS be built according to your system specification, and building WRF and WPS can be difficult on some systems. Additionally, much of the functionality of WRF and WPS is not utilized for creating a geogrid file for WRF-Hydro, and many of the options in the `namelist.wps` are not relevant to this process. Therefore, we have created a Docker container and Python command line utility to abstract much of the WRF/WPS complexity and simplify the process of creating a geogrid file for WRF-Hydro users. 
+The WPS program `geogrid.exe` is used to create the `geo_em_d01.nc` file, hereafter referred to as the 'geogrid' file. The `geogrid.exe` program takes a Fortran namelist (`namelist.wps`) and the [WPS geographical input data](http://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html) as inputs and creates the geogrid file. However, the `geogrid.exe.` program requires that WRF and WPS be built according to your system specification, and building WRF and WPS can be difficult on some systems. Additionally, much of the functionality of WRF and WPS is not utilized for creating a geogrid file for WRF-Hydro, and many of the options in the `namelist.wps` are not relevant to this process. Therefore, we have created a Docker container and Python command line utility to abstract much of the WRF/WPS complexity and simplify the process of creating a geogrid file for WRF-Hydro users. 
 
-We will cover the steps to create the geogrid file using this method in the section 'Usage'. For more non-standard, advanced usage please see the WRF and WPS documentation ().
+We will cover the steps to create the geogrid file using this method in the section 'Usage and invocations'. For more non-standard, advanced usage please see the WRF-WPS documentation.
 
 ### Defining domain boundaries
 WRF-Hydro uses domains boundaries defined by the `namelist.wps` input namelist to the geogrid.exe program. The first step to creating the geogrid file is to define our domain boundaries. The `geogrid.exe` program takes a centerpoint, x and y coordinates, and other projection information to define a bounding box for the domain.
@@ -80,7 +107,7 @@ The WPS `geogrid.exe` utility is controlled by options set in the `namelist.wps`
 ### Usage
 **Step 1: Pull the image**
 ```
-docker pull wrfhydro/wps
+docker pull wrfhydro/wps:conus
 ```
 
 **Step 2:  Create a directory to bind-mount to Docker for passing files between your system and docker**
@@ -99,22 +126,14 @@ The R script used to create this file can be downloaded at https://ral.ucar.edu/
 **NOTE THE PATHS LISTED BELOW IN THE ARUGMENT LIST ARE FOR THE DOCKER FILESYSTEM. ALSO NOTE THAT ALL PATHS MUST BE ABSOLUTE**
 
 ```
-docker run -v <path-to-your-local-mount-folder>:/home/docker/mount \
-    wrfhydro/wps \
-    --namelist_path /home/docker/mount/namelist.wps \
-    --output_dir /home/docker/mount/ \
+docker run -v <path-to-your-local-mount-folder>:/home/docker/mount wrfhydro/wps:conus
 ```
-**Note: Windows users will need to remove the ``` \``` from the end of each line of the above commands.** 
 
-#### We will now dissect the pieces of this Docker command.
+#### We will now dissect the pieces of this Docker command and additional options.
 
 -----------------
 
 `docker run -v <path-to-your-local-mount-folder>:/home/docker/mount...` - Run the container with the `-v` argument to bind mount a volume on your local system to a folder in the docker container. It is best to leave the folder in the docker container unchanged. 
-
-`--namelist_path /home/docker/mount/namelist.wps \` - Path to your `namelist` file **ON THE DOCKER FILE SYSTEM**
-
-`--output_dir /home/docker/mount/  \` - Path to directory **ON THE DOCKER FILE SYSTEM** to hold output. It is easiest to have this be the mounted folder from the `-v` argument
 
  `--plot_only` - Only create a plot and do not run geogrid. Useful for making changes to the domain location and boundaries.
 

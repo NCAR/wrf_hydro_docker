@@ -2,7 +2,7 @@
 
 ############################################################
 # R script to create wrfinput file from geogrid.
-# Usage: Rscript create_Wrfinput.R 
+# Usage: Rscript create_wrfinput.R 
 # Developed: 07/09/2017, A. Dugger
 #          Mirrors the HRLDAS routines here:
 #          https://github.com/NCAR/hrldas-release/blob/release/HRLDAS/HRLDAS_forcing/lib/module_geo_em.F
