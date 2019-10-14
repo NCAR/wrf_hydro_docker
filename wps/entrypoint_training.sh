@@ -4,12 +4,11 @@
 
 ###########################
 ###No need to edit below here
-echo
-echo -e "\e[7;49;32mWPS Container - CONUS\e[0m"
+echo "WPS Container - CONUS"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
-echo -e "\e[7;49;32mRetrieving training materials\e[0m"
+echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
 git clone https://github.com/NCAR/wrf_hydro_training
 mkdir /home/docker/wrf-hydro-training/lessons
@@ -23,7 +22,7 @@ echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "Jupyter notebook server running"
 echo
 echo "Open your browser to the following address to access notebooks"
-echo -e "\033[33;5;7mlocalhost:8889\033[0m"
+echo -e "\033[33;5;7mhttp://localhost:8889\033[0m"
 echo
 echo -e "The password to login is:"
 echo -e "\033[33;5;7mwrfhydrotraining\033[0m"
