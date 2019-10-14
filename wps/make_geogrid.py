@@ -4,13 +4,10 @@
 # National Center for Atmospheric Research(NCAR)
 # Research Applications Laboratory(RAL)
 # P.O.Box 3000, Boulder, Colorado, 80307-3000, USA
-# 24/05/2018
 #
-# Name:        module1
-# Purpose:
-# Author:      $ Kevin Sampson
-# Created:     24/05/2018
-# Licence:     <your licence>
+# Authors:     Kevin Sampson, Joe Mills, Katelyn FitzGerald
+# Created:     05/24/2018
+# Updated:     10/14/2019
 # *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
 
@@ -26,7 +23,7 @@ import cartopy.io.img_tiles as cimgt
 from wrf import (projection, latlonutils)
 import math
 
-#Setup matlob lib to not use any xwindows backend
+#Setup matplotlib to not use any xwindows backend
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -283,7 +280,7 @@ def main():
     display = 'false'
     create_wrf_input = args.create_wrf_input
 
-    # Move modifiged geogrid.tbl into geogrid folder if running utility
+    # Move modified GEOGRID.TBL into geogrid folder if running utility
     # File will be moved back after finish
     modified_geogrid_tbl_path = pathlib.Path("/home/docker/WRF_WPS/utilities/geog_conus/" \
                                              "GEOGRID.TBL.ARW.wrf_hydro_training")
