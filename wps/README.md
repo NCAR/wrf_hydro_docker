@@ -38,7 +38,7 @@ corresponding to your code release version. In this example, we will pull the tr
 
 **Step 3: Start the training Docker container**
 Issue the following command in your terminal session to start the training Docker container.
-`docker run --name wrf-hydro-training -p 8889:8888 -it wrfhydro/wps:conus-training-v5.1.1`
+`docker run --name wps-training -p 8889:8888 -it wrfhydro/wps:conus-training-v5.1.1`
 
 **Note: Port forwarding is setup with the -p 8889:8888 argument, which maps your localhost port to
 the container port. If you already have something running on port 8889 on your localhost you will
