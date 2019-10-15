@@ -1,7 +1,7 @@
 ###################################
 # Author: Joe Mills
 # Author: Katelyn FitzGerald
-# Date:  05.28.2018
+# Date:   10.15.2019
 ###################################
 #
 # This Dockerfile compiles coupled WRF | WRF-Hydro and WPS from source for training purposes.
@@ -94,29 +94,30 @@ RUN conda update conda
 ###WRF | WRF-Hydro and WPS
 
 #Set WRF and WPS version argument
-ARG WRFWPS_VERSION="4.1"
+ARG WRF_VERSION="4.1.2"
+ARG WPS_VERSION="4.1"
 
 #Set WRF-Hydro version argument
-ARG HYDRO_VERSION="5.1.0-beta2"
+ARG HYDRO_VERSION="5.1.1-beta"
 
 #Install coupled WRF | WRF-Hydro AND WPS
 WORKDIR /home/docker/WRF_WPS
 #
 # Download sources for versions specified by the WRFWPS_VERSION and HYDRO_VERSION arguments
 #
-RUN wget https://github.com/wrf-model/WRF/archive/v${WRFWPS_VERSION}.tar.gz \
-        && tar -zxf v${WRFWPS_VERSION}.tar.gz \
-        && mv WRF-${WRFWPS_VERSION} WRF \
-        && rm v${WRFWPS_VERSION}.tar.gz
+RUN wget https://github.com/wrf-model/WRF/archive/v${WRF_VERSION}.tar.gz \
+        && tar -zxf v${WRF_VERSION}.tar.gz \
+        && mv WRF-${WRF_VERSION} WRF \
+        && rm v${WRF_VERSION}.tar.gz
 RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
         && tar -zxf v${HYDRO_VERSION}.tar.gz \
         && rm -r WRF/hydro \
         && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
         && rm v${HYDRO_VERSION}.tar.gz
-RUN wget https://github.com/wrf-model/WPS/archive/v${WRFWPS_VERSION}.tar.gz \
-	&& tar -zxf v${WRFWPS_VERSION}.tar.gz \
-        && mv WPS-${WRFWPS_VERSION} WPS \
-	&& rm v${WRFWPS_VERSION}.tar.gz
+RUN wget https://github.com/wrf-model/WPS/archive/v${WPS_VERSION}.tar.gz \
+	&& tar -zxf v${WPS_VERSION}.tar.gz \
+        && mv WPS-${WPS_VERSION} WPS \
+	&& rm v${WPS_VERSION}.tar.gz
 
 # Set paths to required libraries
 ENV JASPERLIB=/usr/lib
