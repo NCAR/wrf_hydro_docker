@@ -109,8 +109,9 @@ RUN wget https://github.com/wrf-model/WRF/archive/v${WRF_VERSION}.tar.gz \
         && tar -zxf v${WRF_VERSION}.tar.gz \
         && mv WRF-${WRF_VERSION} WRF \
         && rm v${WRF_VERSION}.tar.gz
-RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
-        && tar -zxf v${HYDRO_VERSION}.tar.gz \
+#RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
+#        && tar -zxf v${HYDRO_VERSION}.tar.gz \
+RUN git clone --single-branch --branch v5.1.1 https://github.com/NCAR/wrf_hydro_nwm_public.git \
         && rm -r WRF/hydro \
         && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
         && rm v${HYDRO_VERSION}.tar.gz
