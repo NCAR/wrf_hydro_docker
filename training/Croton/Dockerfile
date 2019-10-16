@@ -36,7 +36,12 @@ ENV PATH=$NCARG_ROOT/bin:$PATH
 ############################
 ## Python
 #Install modules
+
+RUN conda install nodejs
+
 RUN pip install jupyterlab jupyter_contrib_nbextensions ipython matplotlib h5py netcdf4 dask toolz xarray
+
+RUN jupyter labextension install @jupyterlab/toc
 
 #Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
