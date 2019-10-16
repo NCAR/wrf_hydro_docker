@@ -154,10 +154,14 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 WORKDIR /home/docker
 
+RUN conda install nodejs
+
 # Install modules
 RUN pip install --upgrade pip
 RUN pip install numpy cython 
 RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 matplotlib dask toolz xarray
+
+RUN jupyter labextension install @jupyterlab/toc
 
 # Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
