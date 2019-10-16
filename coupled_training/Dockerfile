@@ -162,6 +162,9 @@ RUN pip install numpy cython
 RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 matplotlib dask toolz xarray
 
 RUN jupyter labextension install @jupyterlab/toc
+RUN jupyter labextension install @pyviz/jupyterlab_pyviz
+
+RUN pip install xrviz
 
 # Get jupyter config
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
