@@ -111,10 +111,12 @@ RUN wget https://github.com/wrf-model/WRF/archive/v${WRF_VERSION}.tar.gz \
         && rm v${WRF_VERSION}.tar.gz
 #RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
 #        && tar -zxf v${HYDRO_VERSION}.tar.gz \
+#        && rm -r WRF/hydro \
+#        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
+#        && rm v${HYDRO_VERSION}.tar.gz
 RUN git clone --single-branch --branch v5.1.1 https://github.com/NCAR/wrf_hydro_nwm_public.git \
         && rm -r WRF/hydro \
-        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
-        && rm v${HYDRO_VERSION}.tar.gz
+        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro 
 RUN wget https://github.com/wrf-model/WPS/archive/v${WPS_VERSION}.tar.gz \
 	&& tar -zxf v${WPS_VERSION}.tar.gz \
         && mv WPS-${WPS_VERSION} WPS \
@@ -137,12 +139,12 @@ ENV WRF_HYDRO_NUDGING=0
 # Build WRF first, required for WPS
 WORKDIR /home/docker/WRF_WPS/WRF
 RUN printf '34\n1' | ./configure \
-	&& ./compile em_real  
+	&& ./compile em_real &> compile.log 
 
 # Build WPS second after WRF is built
 WORKDIR /home/docker/WRF_WPS/WPS
-RUN printf '1' | ./configure \
-	&& ./compile 
+RUN printf '1\n1' | ./configure \
+	&& ./compile &> compile.log
 
 RUN chmod -R 777 /home/docker/WRF_WPS
 
