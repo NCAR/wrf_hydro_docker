@@ -20,10 +20,15 @@ RUN mkdir /home/docker/nwm-training && chown docker:docker /home/docker/nwm-trai
 #ENV PATH=$NCARG_ROOT/bin:$PATH
 
 # install python modules
+
+RUN conda install nodejs
+
 RUN pip install --upgrade pip && \
     pip install jupyterlab jupyter_contrib_nbextensions ipython \
     matplotlib h5py netcdf4 dask toolz xarray \
     numpy pandas psutil
+
+RUN jupyter labextension install @jupyterlab/toc
 
 ADD example_case.tgz /home/docker/nwm-training
 RUN chown -R docker:docker /home/docker/nwm-training/example_case # && \
