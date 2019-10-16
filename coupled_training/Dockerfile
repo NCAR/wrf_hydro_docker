@@ -80,7 +80,13 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && cd / \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
 
+###################################
+## create docker user
+RUN useradd -ms /bin/bash docker
+RUN usermod -aG sudo docker
+RUN chmod -R 777 /home/docker/
 ############################
+
 ###WRF | WRF-Hydro and WPS
 
 #Set WRF and WPS version argument
