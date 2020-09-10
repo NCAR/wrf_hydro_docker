@@ -1,7 +1,7 @@
 # WRF-Hydro <img src="https://ral.ucar.edu/sites/default/files/public/wrf_hydro_symbol_logo_2017_09_150pxby63px.png" width=100 align="left" />
 
 # Overview
-This container is used for WRF-Hydro training sessions and can be run locally.
+This container is used for WRF-Hydro training sessions and demos.
 
 This container includes the following:
 
@@ -24,7 +24,7 @@ If you have questions regarding the lessons please contact us here https://ral.u
 
 The best place ask questions or post issues with these lessons is via the Issues page of the GitHub repository at https://github.com/NCAR/wrf_hydro_training/issues.
 
-## How to run
+## How to run locally
 Make sure you have Docker installed and that it can access your localhost ports. Most out-of-the-box Docker installations accepting all defaults will have this configuration. 
 
 **NOTE: THE DEFAULT DOCKER CONFIGURATION IS FOR 2 CPUS, YOU MUST HAVE AT LEAST 2 CPUS AVAILABLE TO THE DOCKER DAEMON FOR THIS TRAINING**
