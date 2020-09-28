@@ -13,4 +13,4 @@ echo
 echo "Press ctrl-C then type 'y' then press return to shut down container." 
 echo "NOTE ALL WORK WILL BE LOST UNLESS copied out of the container"
 
-jupyter notebook --ip 0.0.0.0 --no-browser &> /dev/null
+jupyter lab --ip 0.0.0.0 --no-browser &> /dev/null
