@@ -18,9 +18,12 @@ RUN conda install nodejs
 RUN pip install --upgrade pip && \
     pip install jupyterlab jupyter_contrib_nbextensions ipython \
     matplotlib h5py netcdf4 dask toolz xarray \
-    numpy pandas psutil
+    numpy cython pandas psutil
 
 RUN jupyter labextension install @jupyterlab/toc
+RUN jupyter labextension install @pyviz/jupyterlab_pyviz
+
+RUN pip install xrviz
 
 COPY --chown=docker:docker ./entrypoint.sh /.
 COPY --chown=docker:docker ./jupyter_notebook_config.py /home/docker/.jupyter/
