@@ -3,12 +3,15 @@
 # Overview
 This container is used for WRF-Hydro training sessions and demos.
 
-This container includes the following:
+The container includes the following:
 
 * Ubuntu base image
 * All system libraries required by WRF-Hydro
 * Text editors - Vim, Nano, Emacs
 * Git version control system
+* WRF-Hydro source code
+* WRF-Hydro example case
+* Lessons in the form of Jupyter Notebooks
 
 ## Requirements
 
@@ -45,5 +48,5 @@ Issue the following command in your terminal session to start the training Docke
 The container will launch the JupyterLab server and echo the address to your terminal.
 
 **Step 4: Open the Jupyter Notebook lessons**
-All lessons for this training are contained in the `~/hawaii-training/lessons` folder. The lessons are interactive and can execute code commands live. For more information on Jupyter Notebooks visit the Project Jupyter page at http://jupyter.org/.
+All lessons for this training are contained in the `~/wrf-hydro-training/lessons` folder. The lessons are interactive and can execute code commands live. For more information on Jupyter Notebooks visit the Project Jupyter page at http://jupyter.org/.
 
