@@ -1,37 +1,30 @@
 #!/bin/bash
 
 ###Change the versions here
-version=v5.1.1
-release=v5.1.1-beta
+code_branch=v5.2.x
 training_branch=master
 ###########################
 
 
 ###########################
-###No need to edit below here
 echo -e "\e[4;49;34m WRF-Hydro Training Container\e[0m"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
-echo -e "\e[7;49;32mRetrieving latest community model code release\e[0m"
+echo -e "\e[7;49;32mRetrieving model code\e[0m"
 
-release_json=$(curl -s https://api.github.com/repos/NCAR/wrf_hydro_nwm_public/releases/tags/$release)
-git clone --branch $version https://github.com/NCAR/wrf_hydro_nwm_public
+git clone --branch ${code_branch} https://github.com/NCAR/wrf_hydro_nwm_public
 mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public
 
-echo "Retrieved the following version: $version"
+echo "Retrieved the model code"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving testcase\e[0m"
 
-exampleCaseURL=$(echo "$release_json" | grep 'croton_NY_example_testcase' \
-| grep "browser_download_url" \
-| cut -d : -f 2,3 |  tr -d \")
+gdown https://drive.google.com/uc?id=1_Ivc02C1WWkZcuBaSl9YePrqQE5osiCp
 
-curl -L $exampleCaseURL | tar xzC /home/docker/wrf-hydro-training/
-
-echo "Retrieved the test case for release: $release"
+echo "Retrieved the test case"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
@@ -41,7 +34,15 @@ git clone --branch ${training_branch} https://github.com/NCAR/wrf_hydro_training
 mv /home/docker/wrf_hydro_training/lessons/training /home/docker/wrf-hydro-training/lessons
 rm -rf /home/docker/wrf_hydro_training/
 
-echo "Retrieved the following training: ${training_branch}"
+echo "Retrieved the training"
+
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "\e[7;49;32mRetrieving the GIS training\e[0m"
+
+git clone https://github.com/mcasali/GIS_Training
+
+echo "Retrieved the GIS training"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
