@@ -1,15 +1,18 @@
 ###################################
 # WRF-Hydro Training Dockerfile
 # Author: Katelyn FitzGerald
-# Date:   2020-10-20
+# Date:   2020-10-28
 ###################################
 
 
-FROM ubuntu:xenial
+FROM ubuntu:focal
 
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
     bc\
     bzip2 \
     ca-certificates \
@@ -19,9 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     gfortran \
     git \
+    less \
     libcurl4-gnutls-dev \
     libhdf5-dev \
-    libjasper-dev \
     libnetcdf-dev \
     libnetcdff-dev \
     libopenmpi-dev \
@@ -30,7 +33,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libxml2-dev \
     locales \
-    locales-all \
     m4 \
     make \
     nano \
@@ -43,12 +45,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     wget \
     && rm -rf /var/lib/apt/lists/* 
-    
 
-## Configure default locale
+RUN locale-gen en_US.UTF-8    
+
+ENV LANG en_US.UTF-8 
 ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
 
 ## NetCDF installs
 
@@ -81,7 +82,6 @@ RUN NETCDF_F_VERSION="4.4.4" \
     && make install \
     && cd / \
     && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
-
 
 #################################
 ## Create docker user
@@ -117,7 +117,7 @@ RUN printf '34\n1\n' | ./configure \
 
 # Build WPS second after WRF is built
 WORKDIR /home/docker/WRF_WPS/WPS
-RUN printf '1\n' | ./configure \
+RUN printf '2\n' | ./configure \
 	&& ./compile 
 
 RUN chmod -R 777 /home/docker/WRF_WPS
@@ -158,21 +158,28 @@ RUN conda install -c conda-forge \
     toolz \
     xrviz \
     xarray \
-    gdown
+    gdown 
 
 RUN conda install -c pyviz hvplot
 
 RUN jupyter labextension install @jupyterlab/toc @pyviz/jupyterlab_pyviz @jupyter-widgets/jupyterlab-manager jupyter-leaflet
 
-# Install modules
-# RUN pip install --upgrade pip
-# RUN pip install numpy cython jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 matplotlib dask toolz xarray
+RUN pip install bash_kernel \
+        && python -m bash_kernel.install
 
 ## R installs
 RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
         && R CMD INSTALL ncdf4_1.13.tar.gz  \
         && rm ncdf4_1.13.tar.gz \
         && Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")' 
+
+#################################
+RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl
+	&& tar -xf geog_conus.tar.gz \
+	&& rm geog_conus.tar.gz
+RUN chmod -R 777 /home/docker/geog_conus
+RUN mv /home/docker/geog_conus /home/docker/WRF_WPS/utilities/geog_conus 
+
 
 #################################
 RUN mkdir /home/docker/wrf-hydro-training \
