@@ -175,17 +175,16 @@ RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
 
 #################################
 RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl \
-	&& tar -xf geog_conus.tar.gz \
+	&& tar -xzvf geog_conus.tar.gz \
+        && mkdir /home/docker/WRF_WPS/utilities \
+        && mv geog_conus /home/docker/WRF_WPS/utilities \
 	&& rm geog_conus.tar.gz
-RUN chmod -R 777 /home/docker/geog_conus
-RUN mv /home/docker/geog_conus /home/docker/WRF_WPS/utilities/geog_conus 
-
 
 #################################
 RUN mkdir /home/docker/wrf-hydro-training \
-    && chmod -R 777 /home/docker/wrf-hydro-training \
-    && mkdir /home/docker/GIS_Training \
-    && chmod -R 777 /home/docker/GIS_Training
+        && chmod -R 777 /home/docker/wrf-hydro-training \
+        && mkdir /home/docker/GIS_Training \
+        && chmod -R 777 /home/docker/GIS_Training
 
 #################################
 #Get the Jupyter configuration script
@@ -199,6 +198,7 @@ RUN chmod 777 /entrypoint.sh
 RUN chmod -R 777 /home/docker/wrf-hydro-training/
 RUN chmod -R 777 /home/docker/GIS_Training/
 RUN chmod -R 777 /home/docker/miniconda3/
+RUN chmod -R 777 /home/docker/WRF_WPS/
 
 USER docker
 WORKDIR /home/docker
