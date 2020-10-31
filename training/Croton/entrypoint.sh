@@ -23,6 +23,9 @@ echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving testcase\e[0m"
 
 gdown https://drive.google.com/uc?id=1_Ivc02C1WWkZcuBaSl9YePrqQE5osiCp
+tar -xzvf croton*.tar.gz
+rm croton*.tar.gz
+mv /home/docker/example_case /home/docker/wrf-hydro-training/example_case
 
 echo "Retrieved the test case"
 
@@ -33,6 +36,17 @@ echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 git clone --branch ${training_branch} https://github.com/NCAR/wrf_hydro_training
 mv /home/docker/wrf_hydro_training/lessons/training /home/docker/wrf-hydro-training/lessons
 rm -rf /home/docker/wrf_hydro_training/
+
+git clone https://github.com/NCAR/WrfHydroForcing.git
+mv /home/docker/WrfHydroForcing /home/docker/wrf-hydro-training/WrfHydroForcing
+
+git clone https://github.com/NCAR/wrf_hydro_model_tools.git
+mv /home/docker/wrf_hydro_model_tools /home/docker/wrf-hydro-training/wrf_hydro_model_tools
+
+gdown https://drive.google.com/uc?id=10Q-0eVakrVmFwZ27ftDDtsSHsg0YBQAT
+tar -xzf nldas*.tar.gz
+rm nldas*.tar.gz
+mv /home/docker/NLDAS /home/docker/wrf-hydro-training/NLDAS
 
 echo "Retrieved the training"
 
