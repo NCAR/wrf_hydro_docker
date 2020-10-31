@@ -174,7 +174,7 @@ RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
         && Rscript -e 'install.packages(c("optparse"), repos="https://cran.rstudio.com")' 
 
 #################################
-RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl
+RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl \
 	&& tar -xf geog_conus.tar.gz \
 	&& rm geog_conus.tar.gz
 RUN chmod -R 777 /home/docker/geog_conus
