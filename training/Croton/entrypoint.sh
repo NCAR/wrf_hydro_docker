@@ -44,9 +44,8 @@ git clone https://github.com/NCAR/wrf_hydro_model_tools.git
 mv /home/docker/wrf_hydro_model_tools /home/docker/wrf-hydro-training/wrf_hydro_model_tools
 
 gdown https://drive.google.com/uc?id=10Q-0eVakrVmFwZ27ftDDtsSHsg0YBQAT
-tar -xzf nldas*.tar.gz
-rm nldas*.tar.gz
-mv /home/docker/NLDAS /home/docker/wrf-hydro-training/NLDAS
+mkdir /home/docker/wrf-hydro-training/regridding
+mv nldas*.tar.gz /home/docker/wrf-hydro-training/regridding/nldas_mfe_forcing.tar.gz
 
 echo "Retrieved the training"
 
