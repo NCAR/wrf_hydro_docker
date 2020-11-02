@@ -2,7 +2,7 @@
 
 ###Change the versions here
 code_branch=v5.2.x
-training_branch=master
+training_branch=Hawaii_Training
 ###########################
 
 
@@ -31,7 +31,18 @@ echo "Retrieved the following training: ${training_branch}"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
-echo -e "Training Jupyter notebook server running"
+echo -e "\e[7;49;32mRetrieving WRF-Hydro example case\e[0m"
+
+gdown https://drive.google.com/uc?id=1FZNWLTmAkO7WnaPji9CSmYqYFPfY52Gf
+tar -xzvf oahu*.tar.gz
+rm oahu*.tar.gz
+mv /home/docker/example_case /home/docker/wrf-hydro-training/example_case
+
+echo "Retrieved the WRF-Hydro example case"
+
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "Training JupyterLab server running"
 echo
 echo "Open your browser to the following address to access notebooks"
 echo -e "\033[92;7mhttp://localhost:8888\033[0m"
