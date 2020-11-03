@@ -47,6 +47,11 @@ gdown https://drive.google.com/uc?id=10Q-0eVakrVmFwZ27ftDDtsSHsg0YBQAT
 mkdir /home/docker/wrf-hydro-training/regridding
 mv nldas*.tar.gz /home/docker/wrf-hydro-training/regridding/nldas_mfe_forcing.tar.gz
 
+gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl 
+tar -xzvf geog_conus.tar.gz
+rm geog_conus.tar.gz
+mv /home/docker/geog_conus /home/docker/WRF_WPS/geog_conus
+
 echo "Retrieved the training"
 
 echo
