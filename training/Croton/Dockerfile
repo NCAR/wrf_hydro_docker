@@ -122,6 +122,9 @@ RUN printf '2\n' | ./configure \
 
 RUN chmod -R 777 /home/docker/WRF_WPS
 
+# Now delete WRF to save space
+RUN rm -rf /home/docker/WRF_WPS/WRF
+
 ## Python installs
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
@@ -174,11 +177,11 @@ RUN wget http://cirrus.ucsd.edu/~pierce/ncdf/ncdf4_1.13.tar.gz \
         && Rscript -e 'install.packages(c("optparse","stringr","plyr"), repos="https://cran.rstudio.com")' 
 
 #################################
-RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl \
-	&& tar -xzvf geog_conus.tar.gz \
-        && mkdir /home/docker/WRF_WPS/utilities \
-        && mv geog_conus /home/docker/WRF_WPS/utilities \
-	&& rm geog_conus.tar.gz
+#RUN gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl \
+#        && tar -xzvf geog_conus.tar.gz \
+#        && mkdir /home/docker/WRF_WPS/utilities \
+#        && mv geog_conus /home/docker/WRF_WPS/utilities \
+#	&& rm geog_conus.tar.gz
 
 #################################
 RUN mkdir /home/docker/wrf-hydro-training \
