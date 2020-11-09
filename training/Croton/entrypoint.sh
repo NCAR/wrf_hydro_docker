@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###Change the versions here
-code_branch=v5.2.x
+code_version=v5.2.0-rc1
 training_branch=master
 ###########################
 
@@ -13,8 +13,10 @@ echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
 echo -e "\e[7;49;32mRetrieving model code\e[0m"
 
-git clone --branch ${code_branch} https://github.com/NCAR/wrf_hydro_nwm_public
-mv /home/docker/wrf_hydro_nwm_public /home/docker/wrf-hydro-training/wrf_hydro_nwm_public
+wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/${code_version}.tar.gz
+tar -xzvf ${code_version}.tar.gz
+rm ${code_version}.tar.gz
+mv /home/docker/wrf_hydro_nwm_public* /home/docker/wrf-hydro-training/wrf_hydro_nwm_public
 
 echo "Retrieved the model code"
 
