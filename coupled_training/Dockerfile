@@ -1,127 +1,129 @@
-###################################
-# Author: Joe Mills
+########################################
+# WRF-Hydro Coupled Training Dockerfile
 # Author: Katelyn FitzGerald
-# Date:   10.15.2019
-###################################
-#
-# This Dockerfile compiles coupled WRF | WRF-Hydro and WPS from source for training purposes.
+# Date:   2020-11-03
+########################################
 
-FROM ubuntu:xenial
-MAINTAINER katelynw@ucar.edu
 
-####################################
-########## ROOT USER  ##############
-####################################
+FROM ubuntu:focal
+
 USER root
 
-####################################
-##Additional linux and command-line tools
-#Install add-apt-repository. This needs to be done starting Ubuntu 16.x
-RUN apt-get update \
-	&& apt-get install -yq --no-install-recommends \
-	software-properties-common \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+ARG DEBIAN_FRONTEND=noninteractive
 
-####################################
-##WRF, WRF-Hydro, and WPS dependencies and tools used for compilation
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
-    vim \
-    nano \
-    wget \
-    curl \
-    file \
+    bc\
     bzip2 \
     ca-certificates \
-    libhdf5-dev \
-    gfortran \
-    openmpi-bin \
-    libopenmpi-dev \
-    valgrind \
-    m4 \
-    make \ 
-    libswitch-perl \
-    git \
     csh \
-    bc \
+    curl \
+    file \
+    g++ \
+    gfortran \
+    git \
+    less \
+    libcurl4-gnutls-dev \
+    libhdf5-dev \
+    libnetcdf-dev \
+    libnetcdff-dev \
+    libopenmpi-dev \
     libpng-dev \
-    libjasper-dev \
-    && apt-get clean \
+    libswitch-perl \
+    libssl-dev \
+    libxml2-dev \
+    locales \
+    m4 \
+    make \
+    nano \
+    netcdf-bin \
+    openmpi-bin \
+    openssh-client \
+    tcsh \
+    valgrind \ 
+    vim \
+    wget \
     && rm -rf /var/lib/apt/lists/* 
 
-## install netCDF-C
-ENV NCDIR=/usr/local
-ENV NFDIR=/usr/local
-ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
+RUN locale-gen en_US.UTF-8    
+
+ENV LANG en_US.UTF-8 
+ENV LC_ALL en_US.UTF-8
+
+## NetCDF installs
+
+# Install netCDF-C
+ENV LIB_DIR=/usr/local
 ENV HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 
 RUN NETCDF_C_VERSION="4.4.1.1" \
     && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-${NETCDF_C_VERSION}.tar.gz -P /tmp \
     && tar -xf /tmp/netcdf-${NETCDF_C_VERSION}.tar.gz -C /tmp \
     && cd /tmp/netcdf-${NETCDF_C_VERSION} \
-    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
-    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
+    && CPPFLAGS=-I${HDF5_DIR}/include LDFLAGS=-L${HDF5_DIR}/lib ./configure --prefix=${LIB_DIR} \
     && make \
-    && cd /tmp/netcdf-${NETCDF_C_VERSION} \
     && make install \
-    && rm -rf /tmp/netcdf-${NETCDF_C_VERSION}
+    && rm -rf /tmp/netcdf* 
+    
 
-# install netCDF-Fortran
-ENV LD_LIBRARY_PATH=${NCDIR}/lib
+# Install netCDF-Fortran
+ENV LD_LIBRARY_PATH=${LIB_DIR}/lib
 RUN NETCDF_F_VERSION="4.4.4" \
-    && cd /tmp \
-    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
-    && tar -xf netcdf-fortran-${NETCDF_F_VERSION}.tar.gz \
+    && wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz -P /tmp \
+    && tar -xf /tmp/netcdf-fortran-${NETCDF_F_VERSION}.tar.gz -C /tmp \
     && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
-    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
+    && CPPFLAGS=-I${LIB_DIR}/include LDFLAGS=-L${LIB_DIR}/lib ./configure --prefix=${LIB_DIR} \
     && make \
     && make install \
-    && cd / \
-    && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
+    && rm -rf /tmp/netcdf*
 
-###################################
-## create docker user
+# Install jasper to support grib2
+RUN wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz -P /tmp \
+    && tar -xf /tmp/jasper*tar.gz -C /tmp \
+    && cd /tmp/jasper* \
+    && ./configure --prefix=${LIB_DIR} \
+    && make \
+    && make install \
+    && rm -rf /tmp/jasper* 
+    
+#################################
+## Create docker user
 RUN useradd -ms /bin/bash docker
 RUN usermod -aG sudo docker
 RUN chmod -R 777 /home/docker/
-############################
+#################################
 
-###WRF | WRF-Hydro and WPS
+## WRF and WPS installs
 
 #Set WRF and WPS version argument
-ARG WRF_VERSION="4.1.2"
-ARG WPS_VERSION="4.1"
+ARG WRF_VERSION="4.2.1"
+ARG WPS_VERSION="4.2"
 
 #Set WRF-Hydro version argument
-ARG HYDRO_VERSION="5.1.1-beta"
+ARG HYDRO_VERSION="5.1.2"
 
-#Install coupled WRF | WRF-Hydro AND WPS
 WORKDIR /home/docker/WRF_WPS
-#
-# Download sources for versions specified by the WRFWPS_VERSION and HYDRO_VERSION arguments
-#
+
 RUN wget https://github.com/wrf-model/WRF/archive/v${WRF_VERSION}.tar.gz \
         && tar -zxf v${WRF_VERSION}.tar.gz \
         && mv WRF-${WRF_VERSION} WRF \
         && rm v${WRF_VERSION}.tar.gz
-#RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
-#        && tar -zxf v${HYDRO_VERSION}.tar.gz \
-#        && rm -r WRF/hydro \
-#        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
-#        && rm v${HYDRO_VERSION}.tar.gz
-RUN git clone --single-branch --branch v5.1.1 https://github.com/NCAR/wrf_hydro_nwm_public.git \
+
+RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
+        && tar -zxf v${HYDRO_VERSION}.tar.gz \
         && rm -r WRF/hydro \
-        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro 
+        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
+        && rm v${HYDRO_VERSION}.tar.gz
+
 RUN wget https://github.com/wrf-model/WPS/archive/v${WPS_VERSION}.tar.gz \
 	&& tar -zxf v${WPS_VERSION}.tar.gz \
         && mv WPS-${WPS_VERSION} WPS \
 	&& rm v${WPS_VERSION}.tar.gz
 
 # Set paths to required libraries
+ENV NETCDF=/usr/local
 ENV JASPERLIB=/usr/lib
 ENV JASPERINC=/usr/include
-ENV NETCDF=/usr/local
 
 # Set WRF-Hydro environment variables
 ENV WRF_HYDRO=1
@@ -134,17 +136,16 @@ ENV WRF_HYDRO_NUDGING=0
 # Build WRF first, required for WPS
 WORKDIR /home/docker/WRF_WPS/WRF
 RUN printf '34\n1\n' | ./configure \
-	&& ./compile em_real  
+        && ./compile em_real  
 
 # Build WPS second after WRF is built
 WORKDIR /home/docker/WRF_WPS/WPS
 RUN printf '1\n' | ./configure \
-	&& ./compile 
+        && ./compile 
 
 RUN chmod -R 777 /home/docker/WRF_WPS
 
-###################################
-# Python
+## Python installs
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
     && rm Miniconda3-latest-Linux-x86_64.sh
@@ -154,45 +155,54 @@ ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 
 WORKDIR /home/docker
 
-RUN conda install nodejs
+RUN conda install -c conda-forge \
+    nodejs \
+    gdal \
+    nco \
+    nccmp \
+    numpy \
+    cython \
+    jupyterlab \
+    jupyter_contrib_nbextensions \
+    ipython \
+    h5py \
+    mpi4py \
+    netcdf4 \
+    esmpy \
+    matplotlib \
+    dask \
+    toolz \
+    xrviz \
+    xarray \
+    gdown 
 
-# Install modules
-RUN pip install --upgrade pip
-RUN pip install numpy cython 
-RUN pip install jupyterlab jupyter_contrib_nbextensions ipython h5py netcdf4 matplotlib dask toolz xarray
+RUN conda install -c pyviz hvplot
 
-RUN jupyter labextension install @jupyterlab/toc
-RUN jupyter labextension install @pyviz/jupyterlab_pyviz
+RUN jupyter labextension install @jupyterlab/toc @pyviz/jupyterlab_pyviz 
 
-RUN pip install xrviz
+RUN pip install bash_kernel \
+        && python -m bash_kernel.install
 
-# Get jupyter config
+#################################
+RUN mkdir /home/docker/wrf-hydro-training \
+        && chmod -R 777 /home/docker/wrf-hydro-training 
+
+#################################
+#Get the Jupyter configuration script
 COPY ./jupyter_notebook_config.py /home/docker/.jupyter/
 RUN chmod -R 777 /home/docker/.jupyter
 
-############################
-# Get geog data from google drive
-## Get download script
-COPY gdrive_download.py gdrive_download.py
-RUN chmod 777 gdrive_download.py
-
-RUN python gdrive_download.py --file_id 1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl --dest_file geog_conus.tar.gz \
-	&& tar -xf geog_conus.tar.gz \
-	&& rm geog_conus.tar.gz
-RUN chmod -R 777 /home/docker/geog_conus
-RUN mv /home/docker/geog_conus /home/docker/WRF_WPS/geog_conus 
-RUN rm gdrive_download.py
-
-####################################
-#Get the entrypoint script to download the code release, start jupyter, etc
+#################################
+#Get the entrypoint script to download the code, example case, and lessons and start JupyterLab
 COPY ./entrypoint.sh /.
 RUN chmod 777 /entrypoint.sh
-
-RUN mkdir /home/docker/wrf-hydro-training/ && chmod -R 777 /home/docker/wrf-hydro-training/
+RUN chmod -R 777 /home/docker/wrf-hydro-training/
+RUN chmod -R 777 /home/docker/WRF_WPS/
 
 USER docker
 WORKDIR /home/docker
 
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/home/docker/miniconda3/bin
 ENV SHELL=bash
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["interactive"]
