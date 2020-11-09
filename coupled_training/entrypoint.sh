@@ -1,13 +1,24 @@
 #!/bin/bash
 
 ###Change the version here
-version=v5.1.1-beta
+version=v5.1.2
 ###########################
 
 
 ###########################
 ###No need to edit below here
 echo -e "\e[4;49;34m Coupled WRF | WRF-Hydro Training Container\e[0m"
+
+echo
+echo -e "\e[0;49;32m-----------------------------------\e[0m"
+echo -e "\e[7;49;32mRetrieving WPS geog data subset\e[0m"
+
+gdown --id 1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl
+tar -xf geog*.tar.gz
+rm geog*.tar.gz
+mv /home/docker/geog_conus /home/docker/WRF_WPS
+
+echo "Retrieved the WPS geog data subset"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
@@ -31,10 +42,10 @@ echo -e "\e[7;49;32mRetrieving WRF-Hydro training\e[0m"
 
 git clone https://github.com/NCAR/wrf_hydro_training
 mkdir /home/docker/wrf-hydro-training/lessons
-mv /home/docker/wrf_hydro_training/lessons/internal/Lesson-coupled.ipynb /home/docker/wrf-hydro-training/lessons/Lesson-coupled.ipynb
-rm -rf /home/docker/wrf_hydro_training/
+mv /home/docker/wrf_hydro_training/lessons/coupled_training/* /home/docker/wrf-hydro-training/lessons
+rm -rf /home/docker/wrf_hydro_training
 
-echo "Retrieved the following coupled training: ${version}"
+echo "Retrieved the coupled training lessons"
 
 echo
 echo -e "\e[0;49;32m-----------------------------------\e[0m"
