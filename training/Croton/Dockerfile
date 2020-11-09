@@ -41,6 +41,9 @@ RUN apt-get update \
     openssh-client \
     r-base-core \
     tcsh \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-generic-recommended \
     valgrind \ 
     vim \
     wget \
