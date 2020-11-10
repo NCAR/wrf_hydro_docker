@@ -42,8 +42,8 @@ RUN apt-get update \
     r-base-core \
     tcsh \
     texlive-xetex \
+    texlive-plain-generic \
     texlive-fonts-recommended \
-    texlive-generic-recommended \
     valgrind \ 
     vim \
     wget \
