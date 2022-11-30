@@ -18,7 +18,7 @@ MAINTAINER jamesmcc@ucar.edu
 ###################################
 
 #Install modules
-RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.17
+RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.17 matplotlib importlib-metadata==4.13.0
 
 ####################################
 ######### entrypoint ###########
