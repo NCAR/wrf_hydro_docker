@@ -40,14 +40,14 @@ RUN apt-get update \
     openmpi-bin \
     openssh-client \
     tcsh \
-    valgrind \ 
+    valgrind \
     vim \
     wget \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/*
 
-RUN locale-gen en_US.UTF-8    
+RUN locale-gen en_US.UTF-8
 
-ENV LANG en_US.UTF-8 
+ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 ## NetCDF installs
@@ -63,8 +63,8 @@ RUN NETCDF_C_VERSION="4.4.1.1" \
     && CPPFLAGS=-I${HDF5_DIR}/include LDFLAGS=-L${HDF5_DIR}/lib ./configure --prefix=${LIB_DIR} \
     && make \
     && make install \
-    && rm -rf /tmp/netcdf* 
-    
+    && rm -rf /tmp/netcdf*
+
 
 # Install netCDF-Fortran
 ENV LD_LIBRARY_PATH=${LIB_DIR}/lib
@@ -84,8 +84,8 @@ RUN wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files
     && ./configure --prefix=${LIB_DIR} \
     && make \
     && make install \
-    && rm -rf /tmp/jasper* 
-    
+    && rm -rf /tmp/jasper*
+
 #################################
 ## Create docker user
 RUN useradd -ms /bin/bash docker
@@ -112,7 +112,7 @@ RUN wget https://github.com/wrf-model/WRF/archive/v${WRF_VERSION}.tar.gz \
 RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/v${HYDRO_VERSION}.tar.gz \
         && tar -zxf v${HYDRO_VERSION}.tar.gz \
         && rm -r WRF/hydro \
-        && cp -r wrf_hydro_nwm_public*/trunk/NDHMS WRF/hydro \
+        && cp -r wrf_hydro_nwm_public*/src WRF/hydro \
         && rm v${HYDRO_VERSION}.tar.gz
 
 RUN wget https://github.com/wrf-model/WPS/archive/v${WPS_VERSION}.tar.gz \
@@ -136,12 +136,12 @@ ENV WRF_HYDRO_NUDGING=0
 # Build WRF first, required for WPS
 WORKDIR /home/docker/WRF_WPS/WRF
 RUN printf '34\n1\n' | ./configure \
-        && ./compile em_real  
+        && ./compile em_real
 
 # Build WPS second after WRF is built
 WORKDIR /home/docker/WRF_WPS/WPS
 RUN printf '1\n' | ./configure \
-        && ./compile 
+        && ./compile
 
 RUN chmod -R 777 /home/docker/WRF_WPS
 
@@ -174,18 +174,18 @@ RUN conda install -c conda-forge \
     toolz \
     xrviz \
     xarray \
-    gdown 
+    gdown
 
 RUN conda install -c pyviz hvplot
 
-RUN jupyter labextension install @jupyterlab/toc @pyviz/jupyterlab_pyviz 
+RUN jupyter labextension install @jupyterlab/toc @pyviz/jupyterlab_pyviz
 
 RUN pip install bash_kernel \
         && python -m bash_kernel.install
 
 #################################
 RUN mkdir /home/docker/wrf-hydro-training \
-        && chmod -R 777 /home/docker/wrf-hydro-training 
+        && chmod -R 777 /home/docker/wrf-hydro-training
 
 #################################
 #Get the Jupyter configuration script
