@@ -94,5 +94,4 @@ RUN export PATH=$HOME/grib2/wgrib2:$PATH
 COPY install_python_packages.sh /home/docker
 COPY run_tests.sh /home/docker
 
-CMD ["/home/docker/install_python_packages.sh"]
-CMD ["/home/docker/run_tests.sh"]
+CMD ["/bin/bash","-c", "/home/docker/install_python_packages.sh; /home/docker/run_tests.sh"]

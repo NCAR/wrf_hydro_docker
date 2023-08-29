@@ -7,7 +7,7 @@ source /home/docker/.bashrc
 export PATH=$HOME/grib2/wgrib2:$PATH
 
 if [ ! -e "/home/docker/WrfHydroForcing/requirements.txt" ]; then
-    echo "riequirements.txt not found. Please make sure the WrfHydroForcing branch to test "
+    echo "requirements.txt not found. Please make sure the WrfHydroForcing branch to test "
     echo "has been checked out and is mapped to /home/docker/WrfHydroForcing"
     exit -1
 fi
