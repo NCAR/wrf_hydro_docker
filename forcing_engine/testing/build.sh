@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build "$@" -t wrfhydro/dev:modeltesting .
+docker build "$@" -t wrfhydro/wrf_hydro_forcing:latest .
 
 exit $?
