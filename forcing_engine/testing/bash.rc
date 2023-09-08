@@ -1,0 +1,30 @@
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/docker/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/docker/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/docker/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/docker/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+export WGRIB2=/home/docker/grib2/wgrib2/wgrib2
+
+# make sure we're using mpich and not conda's version
+export PATH=/usr/local/bin:$PATH
+
+export ESMF_DIR=/home/docker/.esmf-src/esmf
+export ESMF_COMM=mpich3
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=/usr/local/lib
+export INCLUDE_PATH=/usr/local/include
+export ESMFMKFILE=/home/docker/.esmf-src/esmf/DEFAULTINSTALLDIR/lib/libO/Linux.gfortran.64.mpich.default/esmf.mk
+
+export PYTHONPATH=/usr/local/lib/python3.10/dist-packages:/home/docker/WrfHydroForcing:$PYTHONPATH

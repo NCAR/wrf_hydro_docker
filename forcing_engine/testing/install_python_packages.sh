@@ -17,8 +17,6 @@ echo "Upgrading pip"
 python -m pip install -q --upgrade pip
 echo "Installing from requirements.txt"
 pip install -q -r requirements.txt
-echo "Installing esmpy and mpi4py"
-conda install -y -q -c conda-forge esmpy mpi4py > /dev/null 2>&1
 echo "Running setup.py"
 python setup.py install > /dev/null 2>&1
 

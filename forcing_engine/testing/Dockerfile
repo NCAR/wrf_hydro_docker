@@ -11,7 +11,7 @@ USER root
 
 # install build environment
 RUN apt-get update \
-    && apt-get -y install wget make cmake gcc gfortran pip vim less rsh-client
+    && apt-get -y install wget make cmake gcc gfortran pip vim less rsh-client libhdf5-serial-dev libnetcdf-dev
 
 # install mpich
 RUN MPICH_VERSION="4.1" \
@@ -32,7 +32,6 @@ RUN mkdir /home/docker \
     && useradd -s /bin/bash -d /home/docker -m docker \
     && chown docker /home/docker
 
-
 USER docker
 
 # Place MPI libraries into the LD path.
@@ -42,8 +41,8 @@ RUN export INCLUDE_PATH=/usr/local/include
 
 # install conda
 RUN cd $HOME \
-    && wget https://repo.anaconda.com/miniconda/Miniconda3-py311_23.5.2-0-Linux-x86_64.sh \
-    && bash Miniconda3-py311_23.5.2-0-Linux-x86_64.sh -b
+    && wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.5.2-0-Linux-x86_64.sh \
+    && bash Miniconda3-py310_23.5.2-0-Linux-x86_64.sh -b
     
 RUN export PATH=$HOME/miniconda3/bin:$PATH \
     && conda init bash
@@ -66,12 +65,16 @@ RUN cd /home/docker/.esmf-src/esmf \
     && export ESMF_COMM=mpich3 \
     && make install
 
-USER docker
-
 RUN pip install mpi4py h5py netcdf4 numpy 
 
+USER docker
+
+COPY bash.rc /home/docker/.bashrc
+
 # install ESMpy
-RUN  cd $HOME/.esmf-src/esmf/src/addon/esmpy \
+RUN source ~/.bashrc \
+    && export ESMFMKFILE=/home/docker/.esmf-src/esmf/DEFAULTINSTALLDIR/lib/libO/Linux.gfortran.64.mpich.default/esmf.mk \
+    && cd /home/docker/.esmf-src/esmf/src/addon/esmpy \
     && make install
 
 # install wgrib2
@@ -83,10 +86,6 @@ RUN cd $HOME \
     && export FC=gfortran \
     && make \
     && make lib
-
-USER docker
-
-RUN export PATH=$HOME/grib2/wgrib2:$PATH
 
 ####################################
 ######### entrypoint ###########
