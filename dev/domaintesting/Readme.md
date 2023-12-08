@@ -21,6 +21,7 @@ docker pull wrfhydro/dev:domaintesting
 Make sure the compile-time options are correct for your intended run of WRF-Hydro. 
 	
 You can get the current setEnvar script from here:
+	
 	https://github.com/NCAR/wrf_hydro_nwm_public/blob/main/src/template/setEnvar.sh
 	
 Make sure the desired version and options in setEnvar.sh are in the repository `/domaintesting/` directory.
@@ -33,10 +34,10 @@ Open Windows PowerShell (Windows) or a Linux shell in your base directory:
 >docker build -f .\Dockerfile -t wrfhydro/dev:domaintesting .
 ```
 
-This will copy the setEnvar.sh script from `./domaintesting` into the compile directory in the container, and 
+This will copy the `setEnvar.sh` script from `./domaintesting` into the compile directory in the container, and 
 it will also configure and compile WRF-Hydro within the container.
 		
-Next, you will want to copy the entire Run directory from compiled WRF-Hydro code to local directory. Make sure the output directory does not yet exist:
+Next, you will want to copy the entire Run directory from compiled WRF-Hydro code to a local directory. Make sure the output directory does not yet exist:
 
 ```
 >docker cp -L <container ID>:/home/docker/wrf_hydro_nwm_public/trunk/NDHMS/Run <target Run directory>
@@ -44,10 +45,10 @@ Next, you will want to copy the entire Run directory from compiled WRF-Hydro cod
 	
 This will create a `./Run` directory with namelists and parameter tables, as well as the WRF-Hydro executable, in your local directory.
 
-**Step 4: Make any modifications you need to the namelists, particularly hydro.namelist and namelist.hrldas.	**
+**Step 4: Make any modifications you need to the namelists, particularly hydro.namelist` and `namelist.hrldas.**
 
 Create a `./Run` directory to store the parameter tables, executables, and model outputs.
-Also create a `./Run/DOMAIN` directory to store domain files to test. Copy all necessary domain files here.
+Also create a `./Run/DOMAIN` directory to store domain files to test. Copy all necessary domain files there.
  
 Edit `hydro.namelist` and `namelist.hrldas` to suit your domain and WRF-Hydro configuration.
 
@@ -57,5 +58,5 @@ Edit `hydro.namelist` and `namelist.hrldas` to suit your domain and WRF-Hydro co
 >docker run --mount type=bind,source=<Path to local Run directory>,target=/home/docker/Run wrfhydro/dev:domaintesting sh -c "cd /home/docker/Run && mpiexec -n 4 /home/docker/Run/wrf_hydro_NoahMP.exe"
 ```
 
-This will execute WRF-Hydro, with all outputs going into the designated Run directory. You can change the number of cores using the `-n` parameter and limit 
+This will execute WRF-Hydro, with all outputs going into the designated local `Run` directory. You can change the number of cores using the `-n` parameter and limit 
 memory usage using the `-m` parameter. However, limiting memory may cause the model to crash for an unspecified reason.
