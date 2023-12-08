@@ -4,3 +4,4 @@ test.files.*
 *.tar
 *.tar.gz
 domain/
+dev/domaintesting/Run*
