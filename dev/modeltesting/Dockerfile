@@ -1,7 +1,7 @@
 ###################################
 # WRF-Hydro testing container
 # Purpose:
-#   Given a candidate and optionally a reference code repository, execute 
+#   Given a candidate and optionally a reference code repository, execute
 #   wrf_hydro_nwm_public tests
 # The above is achieved through entrypoint and host-side scripting.
 #
@@ -18,7 +18,7 @@ MAINTAINER jamesmcc@ucar.edu
 ###################################
 
 #Install modules
-RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.17 matplotlib importlib-metadata==4.13.0
+RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.18 matplotlib importlib-metadata==4.13.0
 
 ####################################
 ######### entrypoint ###########
