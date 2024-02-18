@@ -11,14 +11,14 @@
 ###################################
 
 FROM wrfhydro/dev:base
-MAINTAINER jamesmcc@ucar.edu
 
 ###################################
 ### Python installations ##########
 ###################################
 
 #Install modules
-RUN pip install numpy netCDF4 pytest pytest-datadir-ng wrfhydropy==0.0.18 matplotlib importlib-metadata==4.13.0
+# RUN pip install --upgrade pip
+RUN pip install wrfhydropy>=0.0.21 gdown matplotlib importlib-metadata pytest pytest-datadir-ng numpy netCDF4
 
 ####################################
 ######### entrypoint ###########
