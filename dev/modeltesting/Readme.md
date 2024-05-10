@@ -27,7 +27,7 @@ your local system and need to be volume mounted into the Docker container file s
 EDIT THE DOCKER SYSTEM PATH OF THE VOLUME MOUNTS, THIS IS HARD CODED INTO THE TESTING**
 
 The `--config` argument is required and specifies the configuration to test, which is one of the
-configs listed in the wrf_hydro_nwm_public/trunk/NDHMS/hydro_namelist.json file keys. The `--domain_tag` argument
+configs listed in the wrf_hydro_nwm_public/src/hydro_namelist.json file keys. The `--domain_tag` argument
 specifies a GitHub tagged release version of the testing domain to retrieve. Or, if retrieving the bleeding edge use 'dev' for the tag, in which case the bleeding-edge domain will be retrieved from google drive.
 
 Alternatively, you may mount your
