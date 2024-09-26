@@ -2,7 +2,7 @@
 
 ###Change the versions here
 code_version=v5.2.0-rc1
-training_branch=master
+training_branch=main
 ###########################
 
 
@@ -49,7 +49,7 @@ gdown https://drive.google.com/uc?id=10Q-0eVakrVmFwZ27ftDDtsSHsg0YBQAT
 mkdir /home/docker/wrf-hydro-training/regridding
 mv nldas*.tar.gz /home/docker/wrf-hydro-training/regridding/nldas_mfe_forcing.tar.gz
 
-gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl 
+gdown https://drive.google.com/uc?id=1X71fdaSEJ5GWyNY2MDIy9cC6E7A0kihl
 tar -xzvf geog_conus.tar.gz
 rm geog_conus.tar.gz
 mv /home/docker/geog_conus /home/docker/WRF_WPS/geog_conus
@@ -73,8 +73,8 @@ echo -e "\033[92;7mhttp://localhost:8888\033[0m"
 echo
 echo -e "The password to login is:"
 echo -e "\033[92;7mwrfhydrotraining\033[0m"
-echo 
-echo "Press ctrl-C then type 'y' then press return to shut down container." 
+echo
+echo "Press ctrl-C then type 'y' then press return to shut down container."
 echo "NOTE ALL WORK WILL BE LOST UNLESS copied out of the container"
 
 jupyter lab --ip 0.0.0.0 --no-browser &> /dev/null
