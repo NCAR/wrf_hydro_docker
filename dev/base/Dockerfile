@@ -1,135 +1,57 @@
-###################################
-# Author: James McCreight <jamesmcc -at- ucar.edu>
-# Author: Joe Mills <jmills -at- ucar.edu>
-# Date:  2018-02-08
-###################################
-
-FROM ubuntu:22.04
-
-####################################
-########## ROOT USER  ##############
-####################################
+FROM ubuntu:24.04
 USER root
 
-
-####################################
-##Additional linux and command-line tools
-#Install add-apt-repository. This needs to be done starting Ubuntu 16.x
-RUN apt-get update \
-	&& apt-get install -yq --no-install-recommends \
-	software-properties-common \
-	&& apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-
-####################################
-## WRF-Hydro dependencies
-## Core wrf-hydro compiler stuff
+# WRF-Hydro dependencies
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
-    wget \
+    cmake \
     curl \
     emacs-nox \
     bzip2 \
     ca-certificates \
-    vim \
-    libhdf5-dev \
-    gfortran \
     g++ \
-    valgrind \
-    m4 \
-    make \
-    libswitch-perl \
+    gfortran \
     git \
-    nano \
-    tcsh \
-    bc \
-    mpich \
     less \
-    libxml2-dev \
+    libhdf5-dev \
+    libhdf5-openmpi-dev \
+    libnetcdf-pnetcdf-19 \
+    libnetcdf-dev \
+    libnetcdff-dev \
+    libnetcdff7 \
+    libopenmpi-dev \
+    make \
+    nano \
+    netcdf-bin \
+    openmpi-bin \
+    tcsh \
+    wget \
+    vim \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --config csh
 
-## Download, build, and install MPICH
-RUN MPICH_VERSION="4.1.2" \
-    && MPICH_CONFIGURE_OPTIONS="" \
-    && FCFLAGS="-fallow-argument-mismatch" \
-    && mkdir /tmp/mpich-src \
-    && cd /tmp/mpich-src \
-    && wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
-    && tar xfz mpich-${MPICH_VERSION}.tar.gz \
-    && cd mpich-${MPICH_VERSION}  \
-    && FCFLAGS=${FCFLAGS} ./configure ${MPICH_CONFIGURE_OPTIONS}  \
-    && make -j 2 && make install \
-    && rm -rf /tmp/mpich-src
+# install nccmp manually instead of with conda to save space
+ENV NCCMP=nccmp-1.9.1.0
+WORKDIR /tmp
+RUN wget -q https://gitlab.com/remikz/nccmp/-/archive/1.9.1.0/${NCCMP}.tar.gz \
+    && tar zxf ${NCCMP}.tar.gz \
+    && cmake -B ${NCCMP}/build -S ${NCCMP} \
+    && make -C ${NCCMP}/build -j install
 
-#### TEST MPICH INSTALLATION ####
-## Where is this from? Should we run the test?
-# #WORKDIR /tmp/mpich-test
-# #COPY mpich-test .
-# #RUN mkdir /tmp/mpich-test \
-# #    && test.sh \
-# #    && RUN rm -rf /tmp/mpich-test
+# cleanup
+RUN rm -rf /tmp/*
 
-## install netcdf-C
-ENV H5DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
-ENV HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
-
-
-RUN NETCDF_C_VERSION="4.9.2" \
-    && wget https://github.com/Unidata/netcdf-c/archive/refs/tags/v${NETCDF_C_VERSION}.tar.gz -P /tmp \
-    && tar -xf /tmp/v${NETCDF_C_VERSION}.tar.gz -C /tmp \
-    && cd /tmp/netcdf-c-${NETCDF_C_VERSION} \
-    && CPPFLAGS=-I${H5DIR}/include LDFLAGS=-L${H5DIR}/lib ./configure --prefix=/usr/local \
-    && cd /tmp/netcdf-c-${NETCDF_C_VERSION} \
-    && make -j 2 \
-    && cd /tmp/netcdf-c-${NETCDF_C_VERSION} \
-    && make install \
-    && rm -rf /tmp/netcdf-c-${NETCDF_C_VERSION}
-
-# install netcdf-Fortran
-ENV NFDIR=/usr/local
-ENV LD_LIBRARY_PATH=${NCDIR}/lib
-RUN NETCDF_F_VERSION="4.6.1" \
-    && cd /tmp \
-    && wget https://github.com/Unidata/netcdf-fortran/archive/refs/tags/v${NETCDF_F_VERSION}.tar.gz \
-    && tar -xf v${NETCDF_F_VERSION}.tar.gz \
-    && cd /tmp/netcdf-fortran-${NETCDF_F_VERSION} \
-    && CPPFLAGS=-I${NCDIR}/include LDFLAGS=-L${NCDIR}/lib ./configure --prefix=${NFDIR} \
-    && make -j 2\
-    && make install \
-    && cd / \
-    && rm -rf /tmp/netcdf-fortran-${NETCDF_F_VERSION}
-
+# setup environment
 ENV NETCDF=/usr/local
 ENV NCDIR=/usr/local
 ENV NETCDF_LIB=/usr/local/lib
 ENV NETCDF_INC=/usr/local/include
 
-## just to be sure
-RUN rm -rf /tmp/*
+# create docker user
+RUN useradd -ms /bin/bash docker \
+    && usermod -aG sudo docker \
+    && chmod -R 777 /home/docker/
 
-###################################
-## create docker user
-RUN useradd -ms /bin/bash docker
-RUN usermod -aG sudo docker
-RUN chmod -R 777 /home/docker/
-
-###################################
-# Python
-RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/docker/miniconda3 \
-    && rm Miniconda3-latest-Linux-x86_64.sh \
-    && chown -R docker:docker /home/docker/miniconda3
-
-#Set environment variables
-ENV PATH="/home/docker/miniconda3/bin:${PATH}"
-RUN conda update conda
-RUN conda install numpy>=1.23.5 conda-forge::nccmp
-
-####################################
-######### docker user ###########
-####################################
 USER docker
 WORKDIR /home/docker
