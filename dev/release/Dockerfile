@@ -1,20 +1,10 @@
-###################################
-# Image name: wrfhydro/training:c5_0_0
-# Author: Joe Mills <jmills@ucar.edu>
-# Date:  2018-05-22
-###################################
 FROM wrfhydro/dev:base
-
-MAINTAINER jmills@ucar.edu
-USER root
-
-############################
-#Get the entrypoint script to download the code release
-COPY ./entrypoint.sh /.
-RUN chmod 777 /entrypoint.sh
-
 USER docker
 WORKDIR /home/docker
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["interactive"]
+ENV VERSION=5.3.0
+RUN wget https://github.com/NCAR/wrf_hydro_nwm_public/archive/refs/tags/v${VERSION}.tar.gz \
+    && tar zxf v${VERSION}.tar.gz \
+    && cd wrf_hydro_nwm_public-${VERSION} \
+    && cmake -B build \
+    && make -C build -j
