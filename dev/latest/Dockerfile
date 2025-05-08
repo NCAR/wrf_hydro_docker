@@ -16,6 +16,7 @@ RUN apt-get update \
     nco \
     nodejs \
     pkg-config \
+    python3.12 \
     python3-dask \
     python3-geopandas \
     python3-ipython \
@@ -49,6 +50,7 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 ENV PATH="/home/docker/miniconda3/bin:${PATH}"
 RUN conda install mamba -n base -c conda-forge
 RUN mamba install -y -c conda-forge \
+    python=3.12 \
     bash_kernel \
     conda-project \
     dask \
